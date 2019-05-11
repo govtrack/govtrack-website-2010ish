@@ -1,0 +1,136 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1">
+
+	<Title PrependSiteTitle="1"><PageTitle/></Title>
+
+	<AllowEmail/>
+	<Param>title</Param>
+
+	<ShowOutline/>
+	
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a> &gt; <a href="legislation.xpd">Legislation</a>
+	</Breadcrumbs>
+	
+	<Body-A>
+		<h1>
+			<PageTitle/>
+		</h1>
+		
+		<p>Browse bills in the current session by the sections in
+		the United States Code referenced by the bill.  Note that
+		this is an experimental feature.  In the future, you will probably be
+		able to 'monitor' sections of the Code as you do with subject
+		terms.</p>
+	</Body-A>
+	
+	<Body-B>
+		<ShowTitles/>
+		<ShowSections/>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		>
+		
+		<xsl:variable name="session" select="110" />
+		<xsl:variable name="title" select="http-context:param('title')" />
+
+		<xsl:template match="PageTitle[$title = '']">
+			Browse Bills by USC Reference
+		</xsl:template>
+
+		<xsl:template match="PageTitle[not($title = '')]">
+			Browse Bills Referencing <xsl:value-of select="$title"/> U.S.C.
+		</xsl:template>
+	
+		<xsl:template match="ShowTitles[$title = '']">
+			<xsl:variable name="data" select="govtrack-util:LoadData($session, 'index.usc/index.xml')"/>
+			<ul>
+			<xsl:for-each select="$data/title">
+				<xsl:sort select="@n" data-type="number"/>
+				<li><a href="billusc.xpd?title={@tid}">
+					Title <xsl:value-of select="@n"/>
+					<xsl:if test="@appendix=1"> Appendix</xsl:if>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="@name"/>
+				</a></li>
+			</xsl:for-each>
+			</ul>
+		</xsl:template>
+
+		<xsl:template match="ShowSections[not($title = '')]">
+			<xsl:variable name="data" select="govtrack-util:LoadData($session, concat('index.usc/title', $title, '.xml'))"/>
+			<p><a href="billusc.xpd">All Titles</a> &gt; Title <xsl:value-of select="$title"/> U.S.C.</p>
+
+			<h2>
+				<xsl:value-of select="govtrack-util:ToUpper(name($data))"/>
+				<xsl:value-of select="' '"/>
+				<xsl:value-of select="$data/@n"/>
+				<xsl:value-of select="': '"/>
+				<xsl:value-of select="$data/@title"/>
+			</h2>
+
+			<xsl:apply-templates select="$data/*" mode="usc"/>
+		</xsl:template>
+
+		<xsl:template match="*" mode="usc">
+			<a name="{generate-id(.)}"/>
+			<h3>
+				<xsl:value-of select="govtrack-util:ToUpper(name(.))"/>
+				<xsl:value-of select="' '"/>
+				<xsl:value-of select="@n"/>
+				<xsl:value-of select="': '"/>
+				<xsl:value-of select="@title"/>
+			</h3>
+			<div style="margin-left: 2em">
+				<xsl:if test="name()='section'">
+				<div>Go to the <a href="http://www4.law.cornell.edu/uscode/html/uscode{govtrack-util:TwoDigits2($title)}/usc_sec_{govtrack-util:TwoDigits2($title)}_{govtrack-util:Pad(@n, 8)}----000-.html">text of the code</a> at Cornell LII.</div>
+				</xsl:if>
+				<xsl:apply-templates select="*[not(name(.)='bill')]" mode="usc"/>
+			</div>
+			<ul>
+				<xsl:for-each select="bill">
+					<li><a href="bill.xpd?bill={@type}{$session}-{@number}"><xsl:value-of select="@title"/></a></li>
+				</xsl:for-each>
+			</ul>
+		</xsl:template>
+
+		<xsl:template match="ShowOutline[not($title = '')]">
+			<Sidebar>
+			<xsl:variable name="data" select="govtrack-util:LoadData($session, concat('index.usc/title', $title, '.xml'))"/>
+			<Section Name="{govtrack-util:ToUpper(name($data))} {$data/@n}: {$data/@title} OUTLINE">
+				<xsl:apply-templates select="$data/*" mode="usc-outline"/>
+			</Section>
+			</Sidebar>
+		</xsl:template>
+
+		<xsl:template match="*" mode="usc-outline">
+			<div style="margin-top: .5em">
+				<a href="#{generate-id(.)}">
+				<xsl:if test="not(name(.) = 'section')">
+					<xsl:value-of select="govtrack-util:ToUpper(name(.))"/>
+				</xsl:if>
+				<xsl:if test="name(.) = 'section'">
+					SEC
+				</xsl:if>
+				<xsl:value-of select="' '"/>
+				<xsl:value-of select="@n"/>
+				<xsl:value-of select="': '"/>
+				<xsl:value-of select="@title"/>
+				</a>
+			</div>
+			<div style="margin-left: 1em">
+				<xsl:apply-templates select="*[not(name(.)='bill')]" mode="usc-outline"/>
+			</div>
+		</xsl:template>
+	</Templates>
+   
+ </Page>

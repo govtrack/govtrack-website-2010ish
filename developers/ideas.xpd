@@ -1,0 +1,91 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title>Project Ideas for GovTrack Development</Title>
+	
+	<Breadcrumbs><a href="/about.xpd">About GovTrack</a> &gt; <a href="/developers">Developers</a></Breadcrumbs>
+	
+	<Body-A>
+
+		<h1 class="PageTitle">Project Ideas for GovTrack Development</h1>
+		
+		<p>If you're thinking about getting involved in the development of GovTrack or
+		starting a new related civic project (great!!) check out some of the ideas
+		below. Some funding may be available for you to work on these ideas.
+		A longer but more informal list of ideas is <a href="http://wiki.govtrack.us/index.php/Projects">on the wiki</a>.
+		And if you have ideas of your own, even better!</p>
+		
+		<h3>Earmarks</h3>
+		
+		<p>Earmarks are spending items inserted by legislators that are directed
+		to projects in the legislator's district. Let's include some statistics
+		about earmarks in the pages for Members of Congress: are they a big
+		leader in earmarks or an icon of reform? <a href="http://www.taxpayer.net/">Taxpayers for Common Sense</a>
+		and <a href="http://www.EarmarkWatch.org">EarmarkWatch.org</a> have done
+		the hard work of creating a database of earmarks. We just have to
+		tie the data into our system, generate some statistics, and add the info
+		to the website.</p>
+		
+		<h3>Law Diffs and Patches</h3>
+		
+		<p>Bills are written in a precise legal language that describe how they update the United States Code
+		to revise the law. But bills are like patches without any context, making it sometimes very difficult
+		to understand their intent and ramifications. (The United States Code isn't the only aspect of law, but it's the most relevant
+		to GovTrack. See <a href="http://www.govtrack.us/formoreinfo.xpd">this page</a>.) Can we make an
+		automated process to show a "diff" of how the U.S.C. is going to be updated by a bill? Can we
+		put bills in context? This is going to involve some text processing.</p>
+		
+		<h3>Election Statistics</h3>
+		
+		<p>How close are the elections? The Federal Elections Commission has a few
+		<a href="http://www.fec.gov/pubrec/fe2006/federalelections2006.shtml">spreadsheets with elections statistics</a>.
+		We want to normalize these spreadsheets and integrate them with our database
+		so we can display some statistics on GovTrack.</p>
+		
+		<h3>Historical Legislative Documents</h3>
+		
+		<p>The Library of Congress has scanned images of historical legislative documents.
+		Can we integrate these into our system to make the most comprehensive legislative
+		database? It might involve some image processing and scanning. See
+		<a href="http://www.govtrack.us/formoreinfo.xpd">this page</a>.</p>
+
+		<h3>Finding Similar Legislation</h3>
+		
+		<p>Often bills are introduced in parallel forms in the House and Senate, and often
+		when they fail to get enough support in one year they are reintroduced as new
+		bills in later years. Can we automatically identify related bills by their content?
+		Can simhash help?</p>
+		
+		<h3>Social Tools</h3>
+		
+		<p>Create a Facebook app for GovTrack. Let people post bills to their
+		profile (OpenCongress has one like this), but there's a lot of
+		untapped potential here. Let people network by congressional district
+		(there's an app in the works about this at the time of writing
+		and there's probably room for collaboration).</p>
+		
+		<h3>Visualization of Legislative Statistics</h3>
+		
+		<p>Create new visualizations of legislative statistics: missed votes, political
+		leaning, how many bills legislators introduced, etc. The goal with new
+		visualizations is to help people put the numbers in context.</p>
+		
+		<h3>Integrate Legislator Blog and Twitter Feeds</h3>
+		
+		<p>Help legislators get their message out to the GovTrack community by
+		excerpting from their blog and twitter feeds. We'd need to collect
+		the feed URLs first.</p>
+		
+		<h3>Integrate the Code of Federal Regulations</h3>
+		
+		<p>The Code of Federal Regulations (CFR) is an aspect of U.S. law primarily due
+		to the work of the executive branch. Anyway, Carl Malamud, GovTrack, and others
+		<i>bought</i> the raw text of the CFR from the Government Printing Office (yes,
+		it was not free), but now we have to put it to use. Carl probably could use
+		a hand getting the raw text into a displayable form. It's in SGML with
+		limited documentation.</p>
+
+	</Body-A>
+	
+ </Page>

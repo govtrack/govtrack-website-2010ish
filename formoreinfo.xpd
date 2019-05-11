@@ -1,0 +1,107 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title PrependSiteTitle="1">For More Information...</Title>
+
+	<Body-A>
+		<h1>For More Information</h1>
+
+		<p>What's a website without a links page?  Here are some other
+		websites that you may find helpful.</p>
+
+		<p style="font-weight: bold">General Information on Legislation</p>
+		<ul>
+			<li>The <a href="http://www.house.gov">House of Representatives</a> and the <a href="http://www.senate.gov">Senate</a> websites have more information on vacancies, procedures, committees, etc.</li>
+			<li><a href="http://www.opencongress.org/wiki">OpenCongress Wiki</a> is a place to collaborate on documenting and analyzing what is happening in Congress.</li>
+			<li><a href="http://metavid.ucsc.edu/">Metavid</a> is a database of video recording from the House and Senate floor.</li>
+			<li>The <a href="http://www.gpoaccess.gov/legislative.html">Government Printing Office</a> has some additional documents.</li>
+			<li>For historical documents: The <a href="http://memory.loc.gov/ammem/amlaw/lawhome.html">Library of Congress: Century of Lawmaking</a> feature has
+			scans of bills and resolutions from 1799-1873, laws (i.e. Statutes at Large) from 1789-1875,
+			and other early records. Statutes from 1789-1919 can be found at <a href="http://homepages.uc.edu/~armstrty/statutes.html">Early United States Statutes</a>. Other founding and early documents from 1775-1814 can be found at the <a href="http://www.loc.gov/rr/program/bib/ourdocs/PrimDocsHome.html">Library of Congress web guide for primary documents in American History</a>,
+			and various other important documents can be found at <a href="http://www.ourdocuments.gov">OurDocuments.gov</a>
+			and <a href="http://www.archives.gov/exhibits/charters/charters_downloads.html">NARA's Charters of Freedom</a>.</li>
+		</ul>
+
+		<p style="font-weight: bold">Digging into Legislation and Spending</p>
+		<ul>
+			<li>The Congressional Research Service (CRS), a nonpartisan arm of Congress, writes research reports at the request of Members of Congress.
+			CRS does not have a website, but the independent <a href="http://www.opencrs.net">OpenCRS.net</a> and <a href="http://www.archive-it.org/collections/1078">CRS Reports</a> collect those reports.</li>
+			<li>The <a href="http://www.cbo.gov/">Congressional Budget Office (CBO)</a>, a nonpartisan arm of Congress, issues reports on the costs of legislation.</li>
+			<li><a href="http://www.taxpayer.net/">Taxpayers for Common Sense</a>, <a href="http://www.earmarkwatch.org/">EarmarkWatch.org</a>, <a href="http://www.earmarks.omb.gov/">Earmarks.omb.gov</a>, and <a href="http://www.washingtonwatch.com/">WashingtonWatch</a> track earmark requests and earmarks in major legislation.</li>
+			<li><a href="http://usaspending.gov/">USASpending.gov</a> and <a href="http://www.fedspending.org/">FedSpending.org</a> are databases of federal contracts and grants.</li>
+		</ul>
+		
+		<p style="font-weight: bold">Campaign Finance, Lobbying, and Congressioanl Staff</p>
+		<ul>
+			<li>The <a href="http://www.opensecrets.org/">Center for Responsive Politics (CRP; opensecrets.org)</a> tracks campaign contributions, representatives' financial disclosures and travel, lobbyists, and the lobbyist lives of representatives after they leave Congress.</li>
+			<li><a href="http://www.legistorm.com">LegiStorm</a> publishes Congressional staff salaries.</li>
+		</ul>
+		
+		<p style="font-weight: bold">Candidates and Positions</p>
+		<ul>
+			<li><a href="http://www.vote-smart.org">Project Vote Smart</a> works tirelessly to collect information on candidates for office, issue positions, and some summaries of legislative events.</li>
+		</ul>
+
+		<p style="font-weight: bold">Other Aspects of Federal Law</p>
+		<ul>
+		<li>The United States Code (Statutes): Statutory law is the component of U.S. law that is enacted by
+		the U.S. Congress. The U.S. Code is the compilation of statutory law,
+		pieced together from the text of the bills enacted by Congress.
+		The text of the U.S. Code can be read at the
+		<a href="http://www4.law.cornell.edu/uscode/">Cornell Legal Information 
+		Institute</a> website. More information can be found at the
+		<a href="http://www.loc.gov/law/help/guide/federal/uscode.html">Library of Congress</a>.  (You can also get the Code from the <a href="http://www.gpoaccess.gov/uscode/index.html">GPO</a>
+		and <a href="http://uscode.house.gov/">The House</a>.)
+		And of course you can track the statutory-law-making process right
+		here on GovTrack.</li>
+		<li>The Code of Federal Regulations and the Register:
+		The U.S. Congress has delegated authority to executive-branch
+		agencies to create regulations, and this is the component of
+		law created by and controlled by the executive branch of government.
+		Regulations are considered a part of the U.S. law. Rule-making is the
+		process of creating regulations, and public-comment periods are often
+		required. This process is published in the Federal Register, which
+		you can access at <a href="http://www.regulations.gov/">Regulations.gov</a>
+		or the independent sites <a href="http://regulationroom.org/">Regulation Room</a>, <a href="http://openregulations.org">OpenRegulations.org</a>,
+		<a href="http://www.govpulse.us">GovPulse.us</a>, and <a href="http://fedthread.org">FedThread.org</a>.
+		The compilation of regulations is called the Code of Federal Regulations,
+		which you can read online at <a href="http://ecfr.gpoaccess.gov">GPOAccess</a>. GPO maintains an exclusive ability to publish the CFR, much to the chagrin of open government advocates.</li>
+		<li>Common Law / Case Law: Common law is the aspect of law that results from judicial
+		decisions. The United States at the time of the revolution
+		generally inherited the common law of England. Today, the common
+		law is the result of rulings of the judicial branch of the government.
+		Case law in the United States, the decisions that determine common law,
+		has been in the past notoriously privileged to lawyers and those who can pay for
+		access to its only publications by private companies.
+		You can find court opinions at 
+		<a href="http://www.justia.com/">Justia</a>,
+		<a href="http://www.law.cornell.edu/co.html">Cornell's Legal Information Institute</a>,
+		<a href="http://www.findlaw.com/">FindLaw</a>, or
+		<a href="http://www.altlaw.org">AltLaw.org</a>.</li>
+		<li>The U.S. Constitution: The <a href="http://www.archives.gov/exhibits/charters/constitution.html">U.S. Constitution</a> outlines the structure of government, supersedes
+		any other aspect of law, and is the hardest aspect of law to change.
+		It and the <a href="http://www.archives.gov/exhibits/charters/bill_of_rights.html">Bill of Rights</a>, the first ten amendments to the constitution,
+		are the only founding documents that are a part of law.</li>
+		</ul>
+		
+		<p style="font-weight: bold">State Law and Legislation</p>
+		
+		<p>The first thing to try to find state law and legislation is to
+		look for your state's official websites with a web search (such as
+		"New York legislature"). More information can be found at <a href="http://www.ncsl.org/programs/lis/lrl/50statetracking.htm">NCSL 50-State Legislative Tracking Web Resources</a>
+		and <a href="http://www.whpgs.org/f.htm">Full-text state statutes and legislation on the Internet</a>.
+		Here are some independent websites that address legislative tracking
+		at the state level, by state:</p>
+		<ul>
+			<li>Massachusetts: <a href="http://www.openmass.org">OpenMass.org</a></li>
+			<li>Illinois: <a href="http://www.illinoistrack.us/">IllinoisTrack.us</a></li>
+			<li>Virginia: <a href="http://richmondsunlight.org/">Richmond Sunlight</a></li>
+			<li>Washington: <a href="http://beta.knowledgeaspower.org/">Knowledge as Power</a></li>
+		</ul>
+
+	</Body-A>
+	
+</Page>
+

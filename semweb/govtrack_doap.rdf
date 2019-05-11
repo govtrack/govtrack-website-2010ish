@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:admin="http://webns.net/mvcb/" xml:lang="en">
+	<doap:Project rdf:about="http://www.govtrack.us/semweb">
+		<doap:name>GovTrack.us Semantic Web Projects</doap:name>
+		<doap:shortname>GovTrack.us</doap:shortname>
+		<doap:homepage rdf:resource="http://www.govtrack.us"/>
+		<doap:created>2005-04-20</doap:created>
+		<doap:description>Semantic web projects of GovTrack.us</doap:description>
+		<doap:maintainer>
+			<foaf:Person>
+				<foaf:name>Joshua Tauberer</foaf:name>
+				<foaf:mbox rdf:resource="mailto:tauberer@for.net"/>
+				<rdfs:seeAlso rdf:resource="http://taubz.for.net/foaf.rdf"/>
+			</foaf:Person>
+		</doap:maintainer>
+	</doap:Project>
+</rdf:RDF>        

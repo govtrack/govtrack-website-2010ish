@@ -1,0 +1,37 @@
+<?xml-stylesheet href="layout.xsl" type="text/xsl" ?>
+
+<Article>
+	<Pub>The Daily Princetonian</Pub>
+	<Title>Tauberer '04 takes Govtrack to Capitol Hill</Title>
+
+	<Author>Kavita Saini</Author>	
+	<Date>3/3/2005</Date>
+	
+	<Abstract>
+		This article appears at
+		<a href="http://www.dailyprincetonian.com/archives/2005/03/03/news/12239.shtml">http://www.dailyprincetonian.com/archives/2005/03/03/news/12239.shtml</a>.
+	</Abstract>
+	
+	<Body>
+    <p>In pursuit of the University's motto, "In the Nation's service," Josh Tauberer '04 will head to Washington, D.C. next week to present his innovative political tracking website to government officials.</p>
+
+    <p>Tauberer, a graduate student in linguistics at the University of Pennsylvania, has gained national attention for founding the website.</p>
+
+    <p>Govtrack.us compiles the latest information about Congress from various sources -- including the Library of Congress and the websites of the House of Representatives and the Senate -- and presents it in a user-friendly format.</p>
+
+    <p>"The site has data about voting records, campaign contributions, status of representatives, what representatives are saying on the House and Senate floors and other such things," Tauberer said. "None of that information is available in a single place anywhere else and if it is, it isn't easily accessible."</p>
+
+    <p>The website sends registered users email notifications about subjects they specifically want to monitor. It also sends updates to users through an RSS feed, which allows other websites to display headlines.</p>
+
+    <p>"It's sort of a neat idea, and the power of putting all this info in one place appealed to me," Tauberer said. "Since I had the time to spend on this project and since it can help the nation, I felt that it would be a good way to spend my time."</p>
+
+    <p>Tauberer will travel to the capitol on Monday to meet with members of the Office of the Clerk of the House of Representatives.</p>
+
+    <p>He, along with a group of other people interested in making such data easier to access on the Internet, will give presentations about why the government should present data in computer-accessible formats.</p>
+
+    <p>Tauberer started thinking about the site during his freshman year at Princeton. A freshman seminar on the intersection of law and computer software with computer science professor Andrew Appel alerted him to the lack of online resources on politics.</p>
+
+    <p>"I got more interested in these kinds of legal issues from that class and realized that there was no way to track these issues," Tauberer said. "I realized that there was so much information about the government available online that it would be more useful to bring it all together."</p>
+	</Body>
+</Article>
+

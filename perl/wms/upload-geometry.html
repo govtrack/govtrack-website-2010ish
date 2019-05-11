@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<title>upload-geometry.cgi API Form</title>
+	</head>
+	<body>
+	
+		<h1>WMS API: upload-geometry</h1>
+		
+		<p>The <tt>upload-geometry.cgi</tt> API access method is used to 
+		create geographic features, using longitude-latitude 
+		coordinates, in what is called a "dataset". Datasets lack any 
+		visual styling information, which is instead set in "layers". 
+		This form facilitates manual calling of this API method, 
+		although the API can be called automatedly through an HTTP POST 
+		interface.</p>
+		
+		<p>Fill out the form below:</p>
+		
+		<form action="upload-geometry.cgi" method="post">
+			<p>API Key: <input name="key" value="test"/> (Your password to access the dataset named next.)</p>
+			<p>Dataset: <input name="dataset" value="test"/> (The name of the dataset to modify.</p>
+			<p>Geometry table:</p>
+			<p><textarea name="geometry" cols="100" rows="12">region1 points:-70,40,-80,40,-75,50
+region2 points:-75,45
+</textarea></p>
+			<p><input type="submit" value="Upload"/></p>
+		</form>
+		
+		<p>When you click submit, the dataset you specified will be 
+		updated. Any layers that use these geographic features will 
+		change. If the test layer uses these features, as it should (but 
+		people playing with these forms can change it at will), you can 
+		see the results <a href="example_testlayer.html">here</a>. You 
+		may need to reload the page to see changes.</p>
+	
+	</body>
+</html>

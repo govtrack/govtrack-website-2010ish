@@ -1,0 +1,88 @@
+<?xml-stylesheet type="text/xsl" xpath="Page/Templates"?>
+<?xml-stylesheet type="text/xsl" href="../style/master.xsl"?>
+<Page>
+	<Title>GovTrack: Embed Congressional District Overlays on Your Google Maps</Title>
+	
+	<Body-A>
+		<h1>Embed Congressional District Overlays/Shapes on Your Own Maps</h1>
+
+		<p>If you're using Google Maps, Google Earth, or are a web developer using the Google Maps API, it is possible to
+		use GovTrack's congressional district maps found on the
+		<a href="/congress/findyourreps.xpd">Legislators</a> page in your
+		own Google Maps. We are providing:</p>
+		
+		<ul>
+			<li>KML files for each state and district (in separate files) which are appropriate for low-resolution needs.</li>
+			<li>A WMS map layer than can be used with the Google Maps API to provide high-resolution (i.e. street level)
+			map tiles.</li>
+		</ul>
+
+		<p><b>Terms: </b> Feel free to use these on your website if you provide credit to GovTrack 
+		with a link back to www.GovTrack.us, or without credit if it is used on the official 
+		(non-campaign) website of a current Member of Congress. Failure to provide a link back
+		when you're supposed to means you risk my replacing the WMS layer map tiles that appear on your
+		site with a message saying "used without permission"! Though we don't intend
+		to cut anyone off, we can't guarantee ongoing service. For that, see
+		the <a href="/developers/license.xpd">license terms</a>.</p>
+		
+		<h3>KML Files</h3>
+		
+		<p>Note that you generally cannot combine multiple KML files onto a single map perfectly. These files
+		are created by reducing the resolution on original map data from the US Census until the files are
+		small enough to be used with Google Maps, and the result is that two neighboring shapes from
+		different files may not line up perfectly.</p>
+		
+		<p>Here are the download links. Please save them to your own server before using.</p>
+		
+		<div style="border: 1px solid #EEA; background-color: #FFE; height: 10em; overflow: auto">
+		<kmllist/>
+		</div>
+
+		<h3>WMS Map Layer</h3>
+		
+		<p>The WMS map layer can be used with the Google Maps V3 API.
+		Here is <a href="googlemaps_example.html">an example</a> of a complete
+		HTML page with a district layer on a Google Maps map.</p>
+
+		<p>The map can be customized to show all U.S. congressional districts, districts in a particular state, or just one district.</p>
+	</Body-A>
+
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		exclude-result-prefixes="govtrack-util">
+		
+		<xsl:template match="kmllist">
+			<xsl:for-each select="govtrack-util:StateNames()">
+				<xsl:sort select="."/>
+				<xsl:variable name="abbr" select="govtrack-util:GetStateAbbr(.)"/>
+				
+				<div>
+				<a href="http://www.govtrack.us/perl/wms/export.cgi?dataset=http://www.rdfabout.com/rdf/usgov/us/states&amp;region=http://www.rdfabout.com/rdf/usgov/geo/us/{$abbr}&amp;format=kml&amp;maxpoints=1000" rel="nofollow">
+					<xsl:value-of select="$abbr"/>
+				</a>
+				
+				<xsl:choose>
+				<xsl:when test="govtrack-util:GetStateApportionment($abbr) = 1">
+				</xsl:when>
+				<xsl:when test="govtrack-util:GetStateApportionment($abbr) = 'delegate'">
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>: </xsl:text>
+					<xsl:for-each select="govtrack-util:range(1, govtrack-util:GetStateApportionment($abbr))">
+					<a href="http://www.govtrack.us/perl/wms/export.cgi?dataset=http://www.rdfabout.com/rdf/usgov/congress/house/110&amp;region=http://www.rdfabout.com/rdf/usgov/geo/us/{$abbr}/cd/110/{.}&amp;format=kml&amp;maxpoints=1000" rel="nofollow">
+						<xsl:value-of select="."/>
+					</a>
+					<xsl:if test="not(position()=last())">, </xsl:if>
+					</xsl:for-each>
+				</xsl:otherwise>
+				</xsl:choose>
+				</div>
+			</xsl:for-each>
+		</xsl:template>
+		
+	</Templates>
+		
+</Page>
+

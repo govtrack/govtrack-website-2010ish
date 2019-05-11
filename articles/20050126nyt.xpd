@@ -1,0 +1,25 @@
+<?xml-stylesheet href="layout.xsl" type="text/xsl" ?>
+
+<Article>
+	<Pub>The New York Times</Pub>
+	<Title>How Did They Vote? Updates by E-Mail of Congressional Ayes and Nays</Title>
+
+	<Author>Daniel Terdiman</Author>	
+	<Date>1/27/2005</Date>
+	
+	<Logo>20050126nyt.jpg</Logo>
+	
+	<Abstract>
+		This article appears at
+		<a href="http://www.nytimes.com/2005/01/27/technology/circuits/27reso.html">http://www.nytimes.com/2005/01/27/technology/circuits/27reso.html</a>.
+		It was in the Circuits section, page G5.
+	</Abstract>
+	
+	<Body>
+		<p>Joshua Tauberer isn't a stereotypical techie with a degree in computer science or engineering. Yet Mr. Tauberer, a 22-year-old doctoral student in linguistics at the University of Pennsylvania, is the brains behind GovTrack (www.govtrack.us), a site for up-to-the-minute information about Congress.</p>
+		<p>GovTrack differentiates itself from other sites devoted to Congress both by being free and by being fresh: it sends users e-mail updates anytime there's activity on legislation they want to monitor.</p>
+		<p>GovTrack lets users track activity of specific legislators. It can also send updates via RSS, or Real Simple Syndication. The site collects information from Thomas (thomas.loc.gov), the Library of Congress's legislation-tracking site, and the official sites of the House of Representatives and the Senate.</p>
+		<p>Mr. Tauberer, a self-taught Web programmer, came up with the idea for GovTrack as a freshman psychology major at Princeton, where he became interested in copyright law. Daniel Terdiman</p>
+	</Body>
+</Article>
+

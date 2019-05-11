@@ -1,0 +1,92 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+<Page>
+	<Title PrependSiteTitle="1">GovChat</Title>
+
+	<Head>
+		<script src="gen_validatorv2.js"/>
+	</Head>
+
+	<Body>
+	
+		<div class="PageTitle">GovChat!</div>
+		
+		<table>
+		<tr valign="top">
+		<td>
+		
+		<p>Chat with others in your state about what <i>your</i>
+		Members of Congress are doing.  This is a new feature
+		of GovTrack.</p>
+
+		<p>Starting in January, come here on <b>Tuesday nights at 9 p.m. 
+		in your
+		local time</b> to chat with others in your state
+		about local politics.  Oh, and encourage others to
+		come because right now no one knows about this!</p>
+		
+		<div style="border: 1px solid #AAAAFF; padding: 1em;">
+		<h3>Start Chatting</h3>
+
+		<form action="chat.xpd" method="get" name="myform">
+		<table cellpadding="4">
+		<tr><td>Nickname or Real Name:</td> <td><input type="text" name="nick" size="15"/></td></tr>
+		<tr><td>Chat Room:</td> <td><select name="room" size="1"><StateList/></select></td></tr>
+		</table>
+		<p><input type="submit" value="Start Chatting"/></p>
+		</form>
+		</div>
+	
+		</td>
+		<td style="padding: 3em">
+			<Status/>
+		</td>
+		</tr>
+		</table>
+	</Body>
+
+	<Scripts>
+		<script language="JavaScript">
+var frmvalidator  = new Validator("myform");
+frmvalidator.addValidation("nick","alpha", "Your nickname must only contain letters.");
+frmvalidator.addValidation("nick","req", "Please enter a nickname that you will be known as in the chat room.");
+frmvalidator.addValidation("nick","maxlen=15", "Please enter a shorter name.");
+frmvalidator.addValidation("room", "dontselect=0", "Please select your state.");
+		</script>
+	</Scripts>
+
+	<Templates
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:xspforms="xspforms"
+	xmlns:http="HttpContext"
+	xmlns:util="assembly://GovTrackWeb/GovTrack.Web.Util"
+	exclude-result-prefixes="http xspforms util">
+	
+	<xsl:template match="StateList">
+		<option>Select Your State</option>
+		<xsl:for-each select="util:StateNames()">
+			<xsl:sort select="."/>
+			<option><xsl:value-of select="."/></option>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template match="Status">
+		<xsl:variable name="status" select="util:LoadFileStringPath('/home/govtrack/sitedata/ircstatus.txt')"/>
+		<xsl:if test="$status=''">
+			<b>No one is chatting right now.</b>
+		</xsl:if>
+		<xsl:if test="not($status='')">
+			<p><b>Here is the number of people chatting in
+			various rooms:</b></p>
+		
+			<pre>
+				<xsl:value-of select="$status"/>
+			</pre>
+		</xsl:if>
+	</xsl:template>
+	
+	</Templates>
+
+</Page>
+
+

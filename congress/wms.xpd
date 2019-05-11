@@ -1,0 +1,261 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideSidebar="1">
+
+	<Title PrependSiteTitle="1">
+		WMS Test
+	</Title>
+	
+	<Head>
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAsrOexgmxnPO4u3qqssNz6BTSWu0oDPXlD672f64CK_i4O7ZO8RTJr2ghyYddfWwwA2du8CiKUg3szQ" type="text/javascript"/>
+		<script src="/scripts/gmap-wms.js"/>
+		<script src="/scripts/markermanager.js"/>
+		<script src="/scripts/jsr_class.js"/>
+	</Head>
+
+	<Body script_onunload="GUnload()">
+		<div class="PageTitle">
+			WMS Test
+		</div>
+
+	<div id="googlemap" style="width: 100%; height: 355px; border: 1px solid blue; margin-top: 1em"></div>
+
+	</Body>
+
+	<Scripts>
+	<script type="text/javascript">
+var markericons = new Array();
+
+for (var i = 0; i != 60; i++) {
+	var icon = new GIcon();
+	icon.image = "http://www.govtrack.us/media/gmapicons/marker" + i + ".png";
+	icon.shadow = "http://www.govtrack.us/media/gmapicons/shadow50.png";
+	icon.iconSize = new GSize(20, 34);
+	icon.shadowSize = new GSize(37, 34);
+	icon.iconAnchor = new GPoint(9, 34);
+	icon.infoWindowAnchor = new GPoint(9, 2);
+	icon.infoShadowAnchor = new GPoint(18, 25);
+	markericons[i] = icon;
+}
+	
+if (!GBrowserIsCompatible()) {
+	//alert("This page uses Google Maps, which is unfortunately not supported by your browser.");
+	DHTML_ShowHide('googlemap', 0);
+	DHTML_ShowHide('googleextra', 0);
+	DHTML_ShowHide('googlecredit', 0);
+	DHTML_ShowHide('staticmap', 1);
+	doneLoading();
+} else {
+	var WMS_URL = 'http://www.govtrack.us/perl/wms/wms.cgi?';
+		// x-site vulnerability here...
+	var G_MAP_LAYER_FILLED = createWMSTileLayer(WMS_URL, "<layer/>", null, "image/png", null, null, null, .5);
+	//var G_MAP_LAYER_OUTLINES = createWMSTileLayer(WMS_URL, "", null, "image/gif", null, null, null, .66);
+	var G_MAP_OVERLAY = createWMSOverlayMapType([G_MAP_TYPE.getTileLayers()[0], G_MAP_LAYER_FILLED], "Overlay");
+
+	document.getElementById("googlemap").style.height = (screen.height - 485) + "px";
+	var map = new GMap2(document.getElementById("googlemap"));
+	map.enableContinuousZoom();
+	map.enableScrollWheelZoom();
+	//map.removeMapType(G_MAP_TYPE);
+	map.removeMapType(G_SATELLITE_TYPE);
+	map.addMapType(G_MAP_OVERLAY);
+	map.addControl(new GLargeMapControl());
+	map.addControl(new GMapTypeControl());
+	//map.addControl(new GOverviewMapControl());
+	map.addControl(new GScaleControl());
+	map.setCenter(new GLatLng(39, -96), 4);
+	map.setMapType(G_MAP_OVERLAY);
+
+	mmgrs = new Object();
+	
+	GEvent.addListener(map, "click", function (overlay, point) {
+		if (point) {
+			req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/get-region.cgi?layer=<layer/>' + amp() + 'lat=' + point.lat() + amp() + 'long=' + point.lng() + amp() + 'format=json' + amp() + 'json_callback=wms_info_callback');
+			req.buildScriptTag();
+			req.addScriptTag();
+		}
+	});	
+	
+	GEvent.addListener(map, "moveend", get_markers_dynamically);
+	GEvent.addListener(map, "zoomend", get_markers_dynamically);
+}
+
+function get_markers_dynamically() {
+	var bounds = map.getBounds();
+	var long1 = bounds.getSouthWest().lng();
+	var lat1 = bounds.getSouthWest().lat();
+	var long2 = bounds.getNorthEast().lng();
+	var lat2 = bounds.getNorthEast().lat();
+	var dlong = long2 - long1;
+	var dlat = lat2 - lat1;
+	long1 -= dlong/4;
+	long2 += dlong/4;
+	lat1 -= dlat/4;
+	lat2 += dlat/4;
+	req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/get-markers.cgi?layer=<layer/>' + amp() + 'BBOX=' + long1 + ',' + lat1 + ',' + long2 + ',' + lat2 + amp() + 'format=json' + amp() + 'json_callback=wms_markers_callback'
+		 + amp() + 'limit=150'
+		 + amp() + 'min_long_size=' + (long2-long1)/10
+		 + amp() + 'min_lat_size=' + (lat2-lat1)/10);
+	req.buildScriptTag();
+	req.addScriptTag();
+}
+
+function wms_info_callback(wms_listing) {
+	if (wms_listing.length == 0) { return; }
+
+	var item = wms_listing[0];
+	var point = new GLatLng(item[2], item[1]);
+	var html = "";
+
+	for (var i=0; i != wms_listing.length; i++) {
+		var item = wms_listing[i];
+		html += tag("p") + item[0] + tag("/p");
+		if (item[3] == "district")
+			point = new GLatLng(item[2], item[1]);
+		html += tag("p") + item[3] + tag("/p");
+	}
+
+	map.openInfoWindowHtml(point, tag("div") + html + tag("/div"))
+
+}
+
+function endsWith(a, b) {
+	if (a == null || b == null) return false;
+	//if (b.length > a.length) return false;
+	return a.substring(a.length-b.length) == b;
+}
+            
+var nmarkers = 0;
+var marker_hash = new Array();
+
+function wms_markers_callback(wms_listing) {
+	if (nmarkers == 50) {
+		map.clearOverlays(); // might not want to clear all overlays...
+		nmarkers = 0;
+	}
+
+	var new_markers = new Array();
+
+	for (var i=0; i != wms_listing.length; i++) {
+		var item = wms_listing[i];
+		
+		if (item[3] == "state") { continue; }
+		
+		var point = new GLatLng(item[2], item[1]);
+
+		var icon = null;
+		for (var j = 0; j != 60; j++) {
+			if (endsWith(item[0], "/" + j)) {
+				icon = markericons[j];
+			}
+		}
+		
+		m = new GMarker(point, icon);
+		
+		map.addOverlay(m);
+		marker_hash[item[0]] = m;
+		new_markers[item[0]] = m;
+		if (nmarkers != 50) nmarkers++;
+	}
+	
+	for (var k in marker_hash) {
+		if (marker_hash[k] != null) {
+			if (new_markers[k] == null) {
+				map.removeOverlay(marker_hash[k]);
+				marker_hash[k] = null;
+			}
+		}
+	}
+}
+
+function tag(s) {
+	return unescape("%3C") + s +  unescape("%3E");
+}
+
+function amp() {
+	return unescape("%26");
+}
+
+function createMarker(x, y, s, d) {
+
+	var marker = new GMarker(new GPoint(x, y));
+	GEvent.addListener(marker, "click", function() {
+		if (d == 0) d = "At Large";
+		marker.openInfoWindowHtml("This is " + s + "'s district " + d + "!");
+	});
+	map.addOverlay(marker);
+}
+
+function createMarker2(x, y, s, d) {
+		if (d == 0) {
+			createMarker(x,y,s,d);
+			return;
+		}
+	
+	var html = tag("div style='width: 250px; font-size: 90%'")
+		+ "This is "
+		+ tag("b")
+		+ "Congressional District " + d
+		+ tag("/b")
+		+ ". Click "
+		+ tag("a href=\"?state=" + s + unescape("%26") + "district=" + d + "\"")
+		+ "here"
+		+ tag("/a")
+		+ " to view the representatives for this district"
+		+ " and to show the district in high detail."
+		+ tag("/div");
+
+	//createMarker(x, y, html);
+
+	var icon = new GIcon();
+	icon.image = "http://www.govtrack.us/media/gmapicons/marker" + d + ".png";
+	icon.shadow = "http://www.govtrack.us/media/gmapicons/shadow50.png";
+	icon.iconSize = new GSize(20, 34);
+	icon.shadowSize = new GSize(37, 34);
+	icon.iconAnchor = new GPoint(9, 34);
+	icon.infoWindowAnchor = new GPoint(9, 2);
+	icon.infoShadowAnchor = new GPoint(18, 25);
+
+	var marker = new GMarker(new GPoint(x, y), icon);
+	GEvent.addListener(marker, "click", function() {
+		//marker.openInfoWindowHtml(html);
+		document.location = "?state=" + s + unescape("%26") + "district=" + d
+	});
+	//map.addOverlay(marker);
+
+	var mmgr = mmgrs[s];
+	if (mmgr == null) {
+		mmgr = new MarkerManager(map, { borderPadding: 25, trackMarkers: false });
+		mmgrs[s] = mmgr;
+	}
+	mmgr.addMarker(marker, 6)
+}
+
+function createMarkerD(x, y, s, d) {
+	var marker = new GMarker(new GLatLng(y, x));
+	GEvent.addListener(marker, "click", function() {
+		document.location = "?state=" + s + unescape("%26") + "district=" + d
+	});
+	map.addOverlay(marker);
+}
+
+function doneLoading() {
+}
+
+	</script>
+
+	</Scripts>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext = "HttpContext"
+		exclude-result-prefixes="HttpContext"
+		>
+		
+		<xsl:template match="layer">
+			<xsl:value-of select="HttpContext:param('layer')"/>
+		</xsl:template>
+		
+	</Templates>
+</Page>

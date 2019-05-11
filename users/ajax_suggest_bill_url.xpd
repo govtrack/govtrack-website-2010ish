@@ -1,0 +1,18 @@
+<?xml-stylesheet xpath="/div/Templates" type="text/xsl" ?>
+
+<div>
+	<Body/>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-bill="assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		>
+		
+		<xsl:template match="Body">
+			<p><xsl:value-of select="govtrack-bill:SubmitUrl()"/></p>
+			<p>(This is a test of a new feature under development.)</p>
+		</xsl:template>
+		
+	</Templates>
+</div>

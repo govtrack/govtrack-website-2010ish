@@ -1,0 +1,87 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1">
+	<Title>Media Coverage and Related Press Releases</Title>
+	
+	<Breadcrumbs><a href="/about.xpd">About GovTrack</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1>Media Coverage of GovTrack</h1>
+		
+		<p>Here are articles on GovTrack in the press, mentions of GovTrack in
+		articles about government transparency, other reviews and related press releases.</p>
+	</Body-A>
+
+	<Body-B>
+		<p>12/27/2010. <u>ReadWriteWeb</u>: <a href="http://www.readwriteweb.com/archives/data_hacker_pageranks_members_of_the_us_congress.php">Data Hacker Pageranks Members of the US Congress</a>, by  Marshall Kirkpatrick.</p>
+		<p>5/23/2010. Open Society Institute: <a href="http://www.soros.org/initiatives/information/focus/communication/articles_publications/publications/open-data-study-20100519">Open Data Study</a>.</p>
+		<p>12/2/2009. <u>The American</u>: <a href="http://american.com/archive/2009/december-2009/opening-a-can-of-worms-government-and-climate-change-data">Opening a Can of Worms: Government and Climate Change Data</a>, by James V. Delong. (It refers to my monograph Open Data Is Civic Capital.)</p>
+		<p>10/19/2009. <u>Columbia Journalism Review</u>: <a href="https://stgcms.journalism.columbia.edu/cs/ContentServer/jrn/1212611716674/page/1212611716651/JRNSimplePage2.htm">The Reconstruction of American Journalism</a> (<a href="http://www.cjr.org/reconstruction/the_reconstruction_of_american.php">CJR</a>), by Leonard Downie, Jr., The Washington Post and Arizona State University, and Michael Schudson, Columbia University.</p>
+		<p>9/28/2009. <u>LA Times</u>: <a href="http://www.latimes.com/business/la-fi-hiltzik28-2009sep28,0,6508895,full.column">These crusaders bring transparency to government</a>, by Michael Hiltzik</p>
+		<p>9/9/2009. <u>Orlando Sentinel</u>: <a href="http://blogs.orlandosentinel.com/news_politics/2009/09/alan-grayson-is-he-one-of-congress-top-leaders.html">Alan Grayson: Is he one of Congress' top "leaders"?</a>. Debate on the leader-follower score.</p>
+		<p>8/26/2009. <u>Government Computer News</u>: <a href="http://gcn.com/articles/2009/08/26/apps-for-america-finalists.aspx">Apps for America 2 finalists announced</a>, by Joab Jackson.</p>
+		<p>6/1/2009. <u>Government Computer News</u>: <a href="http://gcn.com/articles/2009/06/01/datagov-format-for-reuse.aspx">Ready for reuse?</a> by Joab Jackson.</p>
+		<p>5/11/2009. <u>Columbia Journalism Review</u>: <a href="http://www.cjr.org/campaign_desk/senate_goes_xml.php">Senate goes XML</a>, by Clint Hendler</p>
+		<p>5/6/2009. <u>Politico</u>: <a href="http://www.politico.com/news/stories/0509/22143.html">Senate picks up the slack on data</a>, by Victoria McGrane. (Again, no mention of GovTrack, but I count this as a bit of a personal victory.)</p>
+		<p>5/4/2009. <u>O'Reilly Broadcast</u>: <a href="http://broadcast.oreilly.com/2009/05/us-senato-social-graph-1991--.html">Visualizing the U.S. Senate Social Graph, 1991 - 2009 [Part 1]</a>, by Andrew Odewahn.</p>
+		<p>5/1/2009. <u>Politico</u>: <a href="http://www.politico.com/news/stories/0509/21985.html">Group wants Senate to get 'techy'</a>, by Victoria McGrane. (It doesn't mention GovTrack, but I was involved behind the scenes.)</p>
+		<p>5/9/2009. <u>Examiner.com</u>: <a href="http://www.examiner.com/x-9268-Seattle-Libertarian-Examiner~y2009m5d9-Online-democracy">Online democracy</a>, by Alexandra de Scheel</p>
+		<p>4/30/2009. <u>Government Computer News</u>: <a href="http://gcn.com/articles/2009/05/04/data-democratized.aspx">Remixing government data</a> by Joab Jackson.</p>
+		<p>4/27/2009. <u>Politico</u>: <a href="http://www.politico.com/news/stories/0409/21726.html">Online voting records user unfriendly</a>, by Victoria McGrane</p>
+		<p>3/5/2009. <u>Mother Jones</u>: <a href="http://www.motherjones.com/politics/2009/03/congressional-data-mining-coming-soon">Congressional Data Mining: Coming Soon?</a>, by Jonathan Stein</p>
+		<p>3/3/2009. <u>TechNewsWorld</u>: <a href="http://www.technewsworld.com/story/How-to-Use-the-Web-to-Track-Government-Goings-On-66357.html?wlc=1236252767">How to Use the Web to Track Government Goings-On</a>, by Erika Morphy.</p>
+		<p>2/28/2009. <u>Newsweek</u>: <a href="http://www.newsweek.com/id/186991">The People's Data: Government should make data openly available and then let outside talent reimagine how it can be used online</a>, by Christopher Werth.</p>
+		<p>1/10/2009. <u>Miller-McCune</u>: <a href="http://www.miller-mccune.com/article/deep-throat-meets-data-mining">Deep Throat Meets Data Mining: In the nick of time, the digital revolution comes to democracy's rescue. And, perhaps, journalism's</a>, by John Mecklin.</p>
+		<p>January 2009. <u>The Atlantic</u>: <a href="http://www.theatlantic.com/doc/200901/technology-government">iGov: How geeks are opening up government on the Web</a>, by Douglas McGray.</p>
+		<p>7/24/2008. <u>linux.com</u>: <a href="http://www.linux.com/feature/142232">GovTrack opens up information on US legislature</a>, by Tina Gasperson.</p>
+		<p>7/21/2008. <a href="http://itc.conversationsnetwork.org/shows/detail3749.html">IT Conversations: Jon Udell's Interviews with Innovators</a></p>
+		<p>7/16/2008. <u>Princeton Alumni Weekly</u>: <a href="http://www.princeton.edu/~paw/archive_new/PAW07-08/15-0715/features_tauberer.html">Data Crusader: Josh Tauberer '04 is someone a policy wonk could love</a>, by Brett Tomlinson.</p>
+		<p>7/3/2008. <u>SemanticWeb.com</u>: <a href="http://www.semanticweb.com/insight/article.php/3758406">The Semantic Web and The Democratic Tradition</a>, by Jennifer Zaino</p>
+		<p>7/3/2008. <u>ZDNet</u>: <a href="http://blogs.zdnet.com/Ratcliffe/?p=346">Seven Tech ways to make America better this July 4</a>, by Mitch Ratcliffe</p>
+		<p>6/30/2008. <u>TIME</u> (just online?): <a href="http://www.time.com/time/business/article/0,8599,1819187,00.html">The Citizen Watchdogs of Web 2.0</a>, by Jeremy Caplan</p>
+		<p>6/3/2008. <u>Ars Technica</u>: <a href="http://arstechnica.com/news.ars/post/20080603-study-gov-websites-should-focus-on-rss-xmlnot-redesigns.html">Study: .gov web sites should focus on RSS, XML—not redesigns</a>, by Timothy B. Lee</p>
+		<p>June 2008. Robinson, David, Yu, Harlan, Zeller, William P and Felten, Edward W, "<a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1138083">Government Data and the Invisible Hand</a>" (2008). Yale Journal of Law &amp; Technology, Vol. 11, 2008</p>
+		<p>1/23/2008. <u>National Journal: Technology Daily:</u> <a href="http://www.govexec.com/story_page.cfm?filepath=/dailyfed/0108/012308tdpm1.htm">Lawmakers favor outside access to legislative data</a>, by Aliya Sternstein</p>
+		<p>8/9/2007. <a href="http://www.theopenhouseproject.com/2007/08/09/insanely-useful-sites-govtrackus/">Sunlight Foundation: Insanely Useful Websites</a> (by John Wonderlich and Paul Blumenthal, with an audio-intro by GovTrack's Josh Tauberer)</p>
+		<p>3/2007. <u>Searcher</u>: <a href="http://www.infotoday.com/searcher/mar07/">Mashups, Blogs, Wikis Go Federal</a> (subscribers only) (by Laura Gordon-Murnane)</p>
+		<p>2/13/2007. <u>The American</u> (online): <a href="http://www.american.com/archive/2007/february-0207/legislators-should-live-in-a-glass-house">Legislators Should Live in a Glass House</a> (by GovTrack's creator Josh Tauberer)</p>
+		<p>2/9/2007. <a href="http://www.commondreams.org/news2007/0209-01.htm">Sunlight Foundation Announces Open House Project</a></p>
+		<p>5/9/2006. <a href="http://webbyawards.com/webbys/current.php?season=10#webby_entry_politics">Webby Award 2006 Nominee - Politics</a></p>
+		<p>5/6/2006. <u>Voice of America: Our World</u>: <a href="http://www.voanews.com/english/Science/2006-05-05-voa57.cfm">Web Site of the Week</a></p>
+		<p>4/3/2006. <u>The Daily Pennsylvanian</u>: <a href="http://www.dailypennsylvanian.com/vnews/display.v/ART/4430c7eb4fba7?in_archive=1">Grad student's site helps track new laws</a> (by Katie Vasserman)</p>
+		<p><Article File="20060301wp.xpd"/></p>
+		<p>2/21/2005. <u>Accounting Today</u>: "Government Resources"</p>
+		<p><Article File="20050303prince.xpd"/></p>
+		<p><Article File="20050208bwo.xpd"/></p>
+		<p><Article File="20050126nyt.xpd"/></p>
+		<p>1/13/2005: <u>The Guardian</u> (London): "Life: online: Blog Watch: Bill of progress"</p>
+		
+		<h3>GovTrack's network of influence</h3>
+		
+		<p>GovTrack can also take some credit in the successes of the
+		websites based in part on data sourced from GovTrack, like
+		<a href="http://maplight.org/in_the_news">MAPLight.org</a>.</p>
+		
+		<h3>GovTrack was a source in...</h3>
+		
+		<p><a href="http://www.nj.com/opinion/times/editorials/index.ssf?/base/news-0/1214798716208240.xml&amp;coll=5">Column by Rep. Chris Smith in The Times of Trenton</a>, June 30, 2008</p>
+		<p><a href="http://www.nytimes.com/2008/05/20/nyregion/20nyc.html">Fallibility, Wise Men and Politics, The New York Times</a>, May 20, 2008</p>
+		<p><a href="http://thecaucus.blogs.nytimes.com/2008/03/25/on-the-road-again/">On the Road Again</a>, NYTimes Caucus blog</p>
+	</Body-B>
+	
+	<Templates xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+		<xsl:template match="Article[@File]">
+			<xsl:variable name="doc" select="document(@File)"/>
+			<div>
+				<xsl:value-of select="$doc/Article/Date"/>:
+				<u><xsl:value-of select="$doc/Article/Pub"/></u>:
+				<a href="{@File}">
+					<xsl:value-of select="$doc/Article/Title"/>
+				</a>
+				(by <xsl:value-of select="$doc/Article/Author"/>)
+			</div>
+		</xsl:template>
+	</Templates>
+</Page>
+

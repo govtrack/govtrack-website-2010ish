@@ -1,0 +1,80 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+	<Head>
+		<script src="/scripts/datepicker.js"/>
+		<link rel="stylesheet" type="text/css" href="/scripts/datepicker.css"/>
+	</Head>
+
+	<Title>GovTrack.us Draft Document Upload</Title>
+	
+	<Body>
+		<h1 class="PageTitle">GovTrack Draft Document Upload</h1>
+
+		<p>Use this page to upload draft legislative documents
+		that will not be printed by the Government Printing Office.
+		Examples include unnumbered draft bills, committee markups,
+		unnumbered amendments, and committee amendments.</p>
+
+		<p>You will need a password to upload documents. If you
+		work for a Member of Congress, send an email
+		to <contactemailaddress/> to get a password.</p>
+
+		<form action="/perl/upload-draft-document.cgi" method="post"
+			enctype="multipart/form-data">
+		
+		<h3>Document Information</h3>
+		<table>
+		<tr><td>Author: </td><td><select name="author"><option value="">(No Author)</option><CurrentMembersSelectOptions selected=""/></select></td></tr>
+		<tr><td>Document Type: </td><td><select name="doctype"><option value="bill">Draft Bill</option><option value="amendment">Draft Amendment</option><option value="other">Other</option></select></td></tr>
+		<tr><td>Title: </td> <td><input type="text" size="40" name="title"/></td></tr>
+		<tr><td>Description: </td> <td><input type="text" size="40" name="description"/></td></tr>
+		<tr><td>Publication Date: </td>
+		<td>
+			<input type="button" value="select" onclick="displayDatePicker('pubdate', this);"/>
+			<input name="pubdate" readonly="readonly" value="now" style="border: 0; background-color: inherit; margin-left: 1em"/>
+		</td></tr>
+		<tr><td>Committee: </td> <td><select name="committee"><option value="">(No Committee)</option><CommitteeList/></select></td></tr>
+		<tr><td/><td style="padding-bottom: .33em">(For committee documents only such as committee amendments and markups.)</td></tr>
+		<tr><td>Bill:</td> <td>
+			<select name="billsession"><option value=""></option><option value="111">111th Congress</option></select>
+			<select name="billtype"><option value=""></option><option value="h">H.R.</option><option value="hr">H.Res.</option><option value="hj">H.J.Res.</option><option value="hc">H.Con.Res.</option><option value="s">S.</option><option value="sr">S.Res.</option><option value="sj">S.J.Res.</option><option value="sc">S.Con.Res.</option></select>
+			<input type="text" size="4" maxlength="4" name="billnumber"/>
+		</td></tr>
+		<tr><td/><td style="padding-bottom: .33em">(Enter the bill Congress number, type, and number if this document is related to a bill that
+		has been assigned a number.)</td></tr>
+		<tr><td>PDF URL: </td> <td><input type="text" size="40" name="fileurl"/></td></tr>
+		<tr><td/><td style="padding-bottom: .33em">(If the PDF is already on the web, please paste in the URL (web address) of the PDF here.)</td></tr>
+		</table>
+		
+		<h3>To Continue...</h3>
+
+		<p>Upload Password: <input type="password" size="30" name="password"/> (contact us for details)</p>
+
+		<p><input type="submit" value="Next..." id="sub"/></p>
+		
+		</form>
+	</Body>
+
+	<Templates             
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:httpcontext="HttpContext"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		exclude-result-prefixes="httpcontext govtrack-reps"
+		>
+		
+		<xsl:template match="CommitteeList">
+			<xsl:for-each select="govtrack-reps:GetCommitteeList('House') | govtrack-reps:GetCommitteeList('Senate')">
+				<xsl:sort select="govtrack-reps:GetCommitteeSortString(displayname)"/>
+				<option value="{id}"><xsl:value-of select="displayname"/></option>
+				<xsl:variable name="cid" select="id"/>
+				<xsl:for-each select="govtrack-reps:GetSubcommitteeList($cid)">
+					<xsl:sort select="govtrack-reps:GetCommitteeSortString(displayname)"/>
+					<option value="{id}"> --- <xsl:value-of select="displayname"/></option>
+				</xsl:for-each>
+			</xsl:for-each>
+		</xsl:template>
+	</Templates>
+</Page>

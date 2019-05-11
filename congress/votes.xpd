@@ -1,0 +1,372 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1"><PageTitle/></Title>
+
+	<AllowEmail/>
+	<Download/>
+	<Meta Name="description">Roll call voting records for the U.S. Congress.</Meta>
+
+	<Sidebar>
+		<Section Name="Votes Database">
+			<p>Votes in the: <VoteChambers/></p>
+
+			<p>In the year: <VoteYears/></p>
+
+			<IfYearHasTopic>
+			<p style="margin-bottom: 0px">Narrow by topic:</p>
+			<div style="margin-left: 1em">
+			<HasTopic Value="0">
+				<div style="font-size: 95%; color: #555555">(just start typing <a href="subjects.xpd">one of these subject terms</a>)</div>
+				<input type="text" id="subjectTermField"/>
+			</HasTopic>
+			<HasTopic Value="1">
+				<p><b>Topic: </b> <Topic/></p>
+				<p><a href="javascript:notopic()">Clear Topic/Choose Another</a></p>
+			</HasTopic>
+			</div>
+			</IfYearHasTopic>
+	
+			<NarrowByPerson/>
+		</Section>
+	</Sidebar>
+
+	<Head>
+		<link rel="stylesheet" href="/scripts/autosuggest_inquisitor.css" type="text/css" media="screen" charset="utf-8" />
+		<script src="/scripts/bsn.AutoSuggest_c_2.0.js"/>
+		<script src="/scripts/querystring.js"/>
+		<style>
+			.vrcn { font-size: 95%; color: #555555; }
+			.vv { text-align: center; font-weight: bold; background-color: #EEEEEE }
+			.vd { padding-left: 8px; }
+			.vr { font-size: 95%; color: #555555 }
+		</style>
+	</Head>
+
+	<Scripts>
+	<script type="text/javascript">
+		new AutoSuggest('subjectTermField', { script: "/congress/subjects_ajax.xpd?", varname: "prefix",
+			callback: function(choice) { show("subject", choice.value);  } } );
+		function notopic() { show("subject", ""); }
+		
+		function app(a, b, c) {
+			if (a != "") a += unescape("%26");
+			a += escape(b) + "=" + escape(c);
+			return a;
+		}
+		
+		function show(key, value) {
+			if (value == "") value = null;
+			var qs = new Querystring();
+			var a = "";
+			if (qs.get("chamber") != null) if (key != "chamber") a = app(a, "chamber", qs.get("chamber"));
+			if (key == "chamber") if (value != null) a = app(a, "chamber", value);
+
+			if (qs.get("year") != null) if (key != "year") a = app(a, "year", qs.get("year"));
+			if (key == "year") if (value != null) a = app(a, "year", value);
+
+			if (qs.get("person") != null) if (key != "person") a = app(a, "person", qs.get("person"));
+			if (key == "person") if (value != null) a = app(a, "person", value);
+
+			if (qs.get("person2") != null) if (key != "person2") a = app(a, "person2", qs.get("person2"));
+			if (key == "person2") if (value != null) a = app(a, "person2", value);
+
+			if (qs.get("subject") != null) if (key != "subject") a = app(a, "subject", qs.get("subject"));
+			if (key == "subject") if (value != null) a = app(a, "subject", value);
+
+			if (qs.get("differences") != null) if (key != "differences") a = app(a, "differences", qs.get("differences"));
+			if (key == "differences") if (value != null) a = app(a, "differences", value);
+
+			document.location = "?" + a;
+		}
+	</script>
+	</Scripts>
+	
+	<Breadcrumbs><a href="/congress/">Congress</a></Breadcrumbs>
+		
+	<Body-A>
+		<h1>
+			<PageTitle/>
+		</h1>
+
+		<p>The Senate and House each conduct hundreds of roll call votes each year,
+		used both to pass legislation and amendments as well as to approve motions
+		and for quorum calls.  Use the options below and to the right to navigate the voting
+		records database.<WhoseVotes/></p>
+		
+		<p>The following tracked events feeds are available for votes:</p>
+		<ul style="margin-left: 2em">
+		<PersonFeeds/>
+		<li><a href="/users/events.xpd?monitors=misc:allvotes">All Votes</a></li>
+		</ul>
+			
+		<p>Looking for vote absentee rates?  Check out the <a href="repstats.xpd">Statistics</a> page.</p>
+	</Body-A>
+	
+	<Body-B>
+		<table><tr><td> <!-- don't wrap around sidebar -->
+		<Header/>
+		<ShowVotes/>
+		</td></tr></table>
+	</Body-B>
+	
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-person = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Person"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-login = "assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-vote = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Vote"
+		exclude-result-prefixes="http-context govtrack-util govtrack-bill govtrack-bills govtrack-reps govtrack-person govtrack-subjects govtrack-login govtrack-vote"
+		>
+		
+		<xsl:variable name="votes" select="govtrack-vote:GetVotes()"/>
+
+		<xsl:template match="PageTitle">
+			<xsl:choose>
+			<xsl:when test="not(http-context:param('person')='')">
+				<xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person'), 'now', '')"/>
+				<xsl:if test="not(http-context:param('person2')='')">
+					<xsl:text> and </xsl:text>
+					<xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person2'), 'now', '')"/>
+				</xsl:if>
+				<xsl:text>'s Voting Record</xsl:text>
+			</xsl:when>
+			<xsl:when test="not(http-context:param('bill')='')">
+				<xsl:value-of select="govtrack-bills:GetDisplayNumber2(http-context:param('bill'))"/>: Related Votes
+			</xsl:when>
+			<xsl:otherwise>
+				Roll Call Votes Database
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="Download">
+			<Download Type="XML">votes_download_xml.xpd<xsl:value-of select="http-context:querystring()"/></Download>
+		</xsl:template>
+
+		<xsl:template match="PersonFeeds">
+			<xsl:if test="not(http-context:param('person')='')">
+				<li><a href="/users/events.xpd?monitors=pv:{http-context:param('person')}">
+					<xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person'), 'now', '')"/>'s Votes Tracker
+				</a></li>
+			</xsl:if>
+			<xsl:if test="not(http-context:param('person2')='')">
+				<li><a href="/users/events.xpd?monitors=pv:{http-context:param('person2')}">
+					<xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person2'), 'now', '')"/>'s Votes Tracker
+				</a></li>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="WhoseVotes">
+			<xsl:if test="not(http-context:param('person')='')">
+				<xsl:text xml:space="preserve"> </xsl:text>
+				<a href="person.xpd?id={http-context:param('person')}">
+					<xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person'), 'now', '')"/>
+				</a><xsl:if test="not(http-context:param('person2')='')">
+				<xsl:text xml:space="preserve"> and </xsl:text>
+				<a href="person.xpd?id={http-context:param('person2')}">
+					<xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person2'), 'now', '')"/>
+				</a>
+			</xsl:if>'s votes are shown below.
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="NarrowByPerson">
+			<p style="margin-bottom: 0px"><label for="person">Show the votes of:</label></p>
+			<div style="position: absolute"> <!-- because it's too wide for the sidebar-->
+			<select id="person" onchange="show('person', this.value)" style="font-size: inherit">
+				<option value="">(No Member of Congress)</option>
+				<CurrentMembersSelectOptions selected="{http-context:param('person')}" type="{http-context:param('chamber')}" year="{http-context:param('year')}"/>
+			</select>
+			</div>
+
+			<p style="margin-top: 3em; margin-bottom: 0px"><label for="compareto">Compare to the votes of:</label></p>
+			<div style="position: absolute"> <!-- because it's too wide for the sidebar-->
+			<select id="compareto" onchange="show('person2', this.value)" style="font-size: inherit"><xsl:if test="http-context:param('person')=''"><xsl:attribute name="disabled">1</xsl:attribute></xsl:if> 
+				<option value="">(No Member of Congress)</option>
+				<CurrentMembersSelectOptions selected="{http-context:param('person2')}" type="{http-context:param('chamber')}" year="{http-context:param('year')}"/>
+			</select>
+			</div>
+			
+			<p style="margin-top: 2.5em; margin-bottom: 0px">
+				<xsl:call-template name="Choices">
+					<xsl:with-param name="choices"><item>Show All Votes</item><item value="1">Only Differences</item><item value="2">Only The Same</item></xsl:with-param>
+					<xsl:with-param name="default" select="'Show All Votes'"/>
+					<xsl:with-param name="arg" select="'differences'"/>
+					<xsl:with-param name="disabled" select="http-context:param('person')='' or http-context:param('person2')=''"/>
+				</xsl:call-template>
+				<!--<input id="onlydiffs" type="checkbox" onchange="show('differences', this.checked ? 1 : null)">
+					<xsl:if test="http-context:param('person')='' or http-context:param('person2')=''"><xsl:attribute name="disabled">1</xsl:attribute></xsl:if>
+					<xsl:if test="http-context:param('differences')='1'"><xsl:attribute name="checked">1</xsl:attribute></xsl:if>
+				</input>
+				<label for="onlydiffs">Show Only Different Votes</label>-->
+			</p>
+		</xsl:template>
+
+		<xsl:template match="ShowVotes[count($votes)=0]">
+			<p>No votes matched the chosen
+			<xsl:if test="not(http-context:param('subject')='')">subject term, </xsl:if>
+			year and chamber.</p>
+		</xsl:template>
+
+		<xsl:template match="Header">
+			<h3>
+				<xsl:if test="http-context:param('bill')=''">
+				<xsl:if test="http-context:param('chamber')=''">All</xsl:if>
+				<xsl:if test="http-context:param('chamber')='Senate'">Senate</xsl:if>
+				<xsl:if test="http-context:param('chamber')='House'">House</xsl:if>
+				<xsl:text> votes</xsl:text>
+				
+				<xsl:if test="http-context:param('year')=''"> (this year)</xsl:if>
+				<xsl:if test="not(http-context:param('year')='')"> in <xsl:value-of select="http-context:param('year')"/></xsl:if>
+				
+				<xsl:if test="not(http-context:param('subject')='')"> related to "<xsl:value-of select="http-context:param('subject')"/>"</xsl:if>
+				</xsl:if>
+
+				<xsl:if test="not(http-context:param('bill')='')">
+					Votes related to
+					<xsl:value-of select="govtrack-bills:GetDisplayNumber2(http-context:param('bill'))"/>
+				</xsl:if>
+			</h3>
+		</xsl:template>
+
+		<xsl:template match="ShowVotes[count($votes)&gt;0]">
+			<table cellpadding="3" border="0" cellspacing="0" style="font-size: 90%" class="rowborders">
+			<tr valign="bottom">
+				<th>Vote &amp; Date</th>
+				<xsl:if test="not(http-context:param('person')='')">
+					<th><xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person'), '', '')"/>'s vote</th>
+					<xsl:if test="not(http-context:param('person2')='')">
+						<th><xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person2'), '', '')"/>'s vote</th>
+					</xsl:if>
+				</xsl:if>
+				<xsl:if test="http-context:param('person')=''">
+					<xsl:for-each select="govtrack-login:GetMonitorsOfType('p')">
+						<th>
+							<a href="person.xpd?id={substring(.,3)}">
+								<xsl:if test="govtrack-reps:HasImage(substring(.,3))">
+									<div><img src="/data/photos/{substring(.,3)}-50px.jpeg"/></div>
+								</xsl:if>
+								<div><xsl:value-of select="govtrack-reps:FormatPersonName(substring(.,3), 'now', 'lastname')"/></div>
+							</a>
+						</th>
+					</xsl:for-each>
+				</xsl:if>
+				<th>Vote Description</th>
+			</tr>
+			<xsl:for-each select="$votes">
+				<tr valign="top">
+					<td>
+						<div>
+							<xsl:if test="substring(id, 1, 1) = 's'">Senate</xsl:if>
+							<xsl:if test="substring(id, 1, 1) = 'h'">House</xsl:if>
+							<nobr> Roll #<xsl:value-of select="substring-after(id, '-')"/></nobr>
+						</div>
+						<div><nobr><xsl:value-of select="date"/></nobr></div>
+					</td>
+
+					<xsl:for-each select="votes/*">
+						<xsl:variable name="vote_class">
+						<xsl:choose>
+						<xsl:when test="./*[1]='+'">VoteAye</xsl:when>
+						<xsl:when test="./*[1]='-'">VoteNay</xsl:when>
+						<xsl:when test="./*[1]='0'">VoteNone</xsl:when>
+						<xsl:when test="./*[1]='P'">VoteNone</xsl:when>
+						<xsl:when test="./*[1]='X'">VoteNone</xsl:when>
+						<xsl:otherwise>VoteNotApplicable</xsl:otherwise>
+						</xsl:choose>
+						</xsl:variable>
+						
+						<td class="vv {$vote_class}">
+						<xsl:choose>
+						<xsl:when test="count(./*[2])=0">n/a</xsl:when>
+						<xsl:otherwise><xsl:value-of select="./*[2]"/></xsl:otherwise>
+						</xsl:choose>
+						</td>
+					</xsl:for-each>
+
+					<td class="vd">
+						<div>
+							<a href="vote.xpd?vote={id}">
+								<xsl:value-of select="description"/>
+							</a>
+						</div>
+						<div class="vr">
+							<xsl:value-of select="result"/>
+						</div>
+					</td>
+
+				</tr>
+			</xsl:for-each>
+			</table>
+		</xsl:template>
+
+		<xsl:template match="VoteChambers">
+			<xsl:call-template name="Choices">
+				<xsl:with-param name="choices"><item>Senate</item><item>House</item><item>Senate and House</item></xsl:with-param>
+				<xsl:with-param name="default" select="'Senate and House'"/>
+				<xsl:with-param name="arg" select="'chamber'"/>
+			</xsl:call-template>
+		</xsl:template>
+
+		<xsl:template match="VoteYears">
+			<xsl:call-template name="Choices">
+				<xsl:with-param name="choices" select="govtrack-vote:GetVoteYearsAvailable()"/>
+				<xsl:with-param name="default" select="govtrack-util:GetCurrentYear()"/>
+				<xsl:with-param name="arg" select="'year'"/>
+			</xsl:call-template>
+		</xsl:template>
+
+		<xsl:template name="Choices">
+			<xsl:param name="choices"/>
+			<xsl:param name="default"/>
+			<xsl:param name="arg"/>
+			<xsl:param name="disabled" select="false()"/>
+
+			<select size="1" onchange="show('{$arg}', this.value)" style="font-size: inherit"><xsl:if test="$disabled"><xsl:attribute name="disabled">1</xsl:attribute></xsl:if>
+			<xsl:for-each select="$choices">
+				<option>
+					<xsl:if test="(http-context:param($arg) = '' and .=$default) or (http-context:param($arg) = .) or (http-context:param($arg) = @value)">
+						<xsl:attribute name="selected">1</xsl:attribute>
+					</xsl:if>
+					<xsl:if test=".=$default">
+						<xsl:attribute name="value"></xsl:attribute>
+					</xsl:if>
+					<xsl:if test="not(.=$default) and count(@value)=0">
+						<xsl:attribute name="value"><xsl:value-of select="."/></xsl:attribute>
+					</xsl:if>
+					<xsl:if test="not(.=$default) and not(count(@value)=0)">
+						<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
+					</xsl:if>
+					<xsl:value-of select="."/>
+				</option>
+			</xsl:for-each>
+			</select>
+		</xsl:template>
+
+		<xsl:template match="IfYearHasTopic">
+			<xsl:if test="http-context:param('year')='' or http-context:param('year') &gt; 2000">
+				<xsl:apply-templates select="node()"/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="HasTopic">
+			<xsl:if test="not(http-context:param('subject')='') = (@Value='1')">
+				<xsl:apply-templates select="node()"/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="Topic">
+			<a href="subjects.xpd?type=crs&amp;term={http-context:param('subject')}"><xsl:value-of select="http-context:param('subject')"/></a>
+		</xsl:template>
+
+	</Templates>
+   
+ </Page>

@@ -1,0 +1,42 @@
+<?xml-stylesheet href="layout.xsl" type="text/xsl" ?>
+
+<Article>
+	<Pub>The Washington Post</Pub>
+	<Title>Think Your Lawmakers Don't Read Bills? Do It Yourself.</Title>
+
+	<Author>Zachary A. Goldfarb</Author>	
+	<Date>3/1/2006</Date>
+	
+	<Abstract>
+		This article appears at
+		<a href="http://www.washingtonpost.com/wp-dyn/content/article/2006/02/28/AR2006022801471.html">http://www.washingtonpost.com/wp-dyn/content/article/2006/02/28/AR2006022801471.html</a>.
+		Page A15.
+	</Abstract>
+	
+	<Body>
+<p>On Capitol Hill, there is talk of curtailing the ability of lawmakers to slip pork-barrel items or controversial projects into bills before votes.</p>
+
+<p>But on the Web, activists and creative programmers are working to make sure that kind of legislative information is available online.</p>
+	
+<p>Rafael DeGennaro watched for more than 15 years as lawmakers added "earmarks" to bills that would benefit their home districts, first as a Democratic aide in the House and then as co-founder and president of Taxpayers for Common Sense.</p>
+
+<p>Now he has launched the nonprofit ReadtheBill.org to pressure Congress to post bills online 72 hours before they can be called up on the floor. He hopes citizens will search through proposed legislation for questionable items.</p>
+
+<p>"The Capitol building has become a giant rubber stamp approving any paper dragged out in the dead of night," DeGennaro said. "If citizens read the bills, lawmakers will get worried and start doing their jobs."</p>
+
+<p>Bills -- hundreds of pages long and full of legal and bureaucratic jargon -- are usually drafted in public. But lawmakers are able to slide in questionable provisions when public attention is not focused on legislation, especially during the conference sessions between House and Senate committees that negotiate differences in legislation -- behind closed doors.</p>
+
+<p>The Library of Congress has made legislative language available since 1995 at http://thomas.loc.gov . But it does not make the special late additions available in advance.</p>
+
+<p>Other sites strive to bring together a wealth of data to help educate voters about legislation.</p>
+
+<p>For example, GovTrack.us compiles the text of legislation, House and Senate voting records, and campaign finance data and makes it easily accessible to visitors. Govtrack will e-mail registered users when specific lawmakers vote or make speeches, or when there is legislative activity on a bill related to a specific issue.</p>
+
+<p>Joshua Tauberer, a graduate student in linguistics at the University of Pennsylvania, said he created the site because he "saw that there was a lot of information on legislation already out there on the Internet, but it wasn't in a form that's useful for everyday people to use."</p>
+
+<p>Washingtonpost.com offers a database -- http://projects.washingtonpost.com/congress -- with information about every vote in Congress since 1991. Users can track votes that may have occurred in the dead of night or by margin, type and other criteria.</p>
+
+<p>Thomas E. Mann of the Brookings Institution said these efforts are important because lawmakers have increasingly abused the earmarking practice. Still, he said he doubts ordinary citizens would read through the bills. Rather, "it would be available for people with an interest one way or another to see what got put in."</p>
+	</Body>
+</Article>
+

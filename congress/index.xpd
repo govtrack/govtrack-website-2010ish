@@ -1,0 +1,237 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1">
+	<Title>Research Congress - GovTrack.us</Title>
+	
+	<Body-A>
+		<h1>Research Congress</h1>
+		
+		<p>Research the U.S. Congress using the sections of this site described below.</p>
+	</Body-A>
+	
+	<Body-B>
+		<table>
+		<tr valign="top">
+			<td width="50%" style="padding-right: 2em">
+				<header href="findyourreps.xpd" icon="member" text="Members of Congress"/>
+			
+				<div style="margin-left: 1em">
+				<div style="float: right; margin-left: 10px">
+					<a href="findyourreps.xpd"><img src="/media/findyourreps.png" border="1"/></a>
+				</div> 
+
+				<p>Do you know who represents you in Congress? <a href="findyourreps.xpd">Find a representative
+				or senator</a> using congressional district maps or searching by name or ZIP code.</p>
+				
+				<!--<p>Find a current or past Member of Congress by last name:</p>
+				<form method="post" action="congress/replookup.xpd">
+					<input type="hidden" name="method" value="name"/>
+					<input type="text" value="" name="value" style="margin-left: 1em" size="10" maxlength="30"/>
+					<input type="submit" value="Search"/>
+				</form>-->
+				
+				<statssummary/>
+				
+				<p>You can also <a href="replookup.xpd">browse Congress by state or search former Members</a>.</p>
+				</div>
+
+			<header href="committee.xpd" icon="committee" text="Committees"/>
+			<div style="margin-left: 1em">
+			<p>The Senate and House divide their work into <a href="committee.xpd">committees</a>. Members of Congress sit on one or more committees, where most bills start in the legislative process.</p>
+			</div>
+				
+			<!--
+			<div style="padding: 1em"/>
+
+			<header href="recordindex.xpd" icon="speech" text="The Congressional Record"/>
+			<div style="margin-left: 1em">
+			<p>The Congressional Record is the official journal of Congress's daily proceedings, often a transcript of the debates on the House and Senate floors.
+			GovTrack provides a unique <a href="recordindex.xpd">hyperlinked version of the Congressional Record</a>.</p>
+			</div>
+			-->
+
+			<div style="margin-left: .5em; margin-top: 30px">
+			<div style="border-bottom: 1px dotted #555555; margin: 15px 0px 1em 0px; font-size: 150%; font-weight: bold; font-style: italic">How Congress Works</div>
+				<p><a href="http://www.citizenjoe.org/node/154">Civics 101</a> from citizenJoe or <a href="http://vote-smart.org/resource_govt101_02.php">Government 101</a> from Project Vote Smart
+				explain how a bill becomes a law. Also see <a href="http://www.senatefloor.us/">Senate floor procedure</a>
+				for more detailed information.</p>
+			</div>
+
+			<div style="margin-left: .5em; margin-top: 30px">
+			<div style="border-bottom: 1px dotted #555555; margin: 15px 0px 1em 0px; font-size: 150%; font-weight: bold; font-style: italic">Other Information</div>
+			
+			<p>We cover legislative information on GovTrack, but there is much more to know about the Congress.
+			See our <a href="/formoreinfo.xpd">list of links</a> to other useful websites dealing with the U.S. Congress and U.S. law.</p>
+			
+			</div>
+		</td>
+
+			<td width="50%" style="padding-left: 1em">
+				<header href="legislation.xpd" icon="bill" text="Bills &amp; Resolutions"/>
+				<div style="margin-left: 1em">
+				<!--	
+				<div style="float: right; margin: 3px">
+					<a href="legislation.xpd"><img src="/media/bill.gif" border="0"/></a>
+				</div> 
+				-->
+
+					<p>GovTrack has information on all bills going back to 1993
+					and follows the status of current pending legislation as
+					it goes through the law-making processs.</p>
+
+					<!--<p>If you know a bill number or title, you can enter it here:</p>
+				
+					<linkbullet href="/congress/subjects.xpd">Bills By Subject</linkbullet>
+					<linkbullet href="/congress/billsearch.xpd">Bills By Number or Search Text:</linkbullet>
+
+					<div style="margin-left: 10px; margin-top: .5em">
+					<xspforms:form xmlns:xspforms="xspforms" id="billsearch_frontpage" action="/congress/billsearch.xpd">
+						<xspforms:text name="q" insidecaption="search bills" size="15"/>
+						<xspforms:submit text="Go"/>
+					</xspforms:form>
+					</div>-->
+
+					<p><a href="/congress/legislation.xpd">Search &amp; browse</a> legislation.</p>
+					
+					<p><a href="http://www.govtrackinsider.com/articles/2010-04-27/climate-change">Climate Change Legislation: Where Does it Stand?</a></p>
+
+					<p><a href="http://www.govtrackinsider.com/articles/2010-04-09/health-care-review">Health Care: How did we get here?</a></p>
+					
+					<p style="clear: both"><a href="/twitter.xpd">What bills are people tweeting about?</a></p>
+				</div>
+
+				<header href="votes.xpd" icon="vote" text="Voting Records"/>
+				<div style="margin-left: 1em">
+				<p>Browse <a href="/congress/votes.xpd">roll call votes</a> by year or by subject and compare Members' votes.</p>
+				<h5>Recent Votes:</h5>
+				<div style="font-size: 95%">
+				<mostrecentvotes/>
+				</div>
+				</div>
+	
+			</td>
+		</tr>
+		</table>
+		
+	</Body-B>
+	
+	<Templates             
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:httpcontext="HttpContext"
+		xmlns:govtrack-login = "assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-index = "assembly://GovTrackWeb/GovTrack.Web.Pages.Index"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-comments = "assembly://GovTrackWeb/GovTrack.Web.Comments"
+		xmlns:govtrack-vote = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Vote"
+		exclude-result-prefixes="httpcontext govtrack-login govtrack-util govtrack-index govtrack-bills govtrack-reps govtrack-comments govtrack-vote"
+		>
+		
+		<xsl:template match="header">
+			<div style="clear: both">
+				&#160;
+			</div>
+			<a href="{@href}" style="float: left"><img src="/media/icon-{@icon}.png" border="0" width="62" height="62"/></a>
+			<div style="border-bottom: 1px dotted #555555; margin: 15px 0px 40px 0px">
+				<a href="{@href}" class="h" style="margin-left: .5em; font-size: 150%; font-weight: bold"><xsl:value-of select="@text"/></a>
+			</div>
+		</xsl:template>
+		
+		<xsl:template match="mostrecentvotes">
+			<xsl:variable name="votes" select="govtrack-vote:GetVotes2(0, 5, -1)"/>
+
+			<xsl:for-each select="$votes">
+				<div style="margin-bottom: .5em">
+				<div><a href="/congress/vote.xpd?vote={id}"><xsl:value-of select="govtrack-util:Trunc(description, 150)"/></a></div>
+				<div>
+					<xsl:if test="substring(id, 1, 1) = 's'">Senate</xsl:if>
+					<xsl:if test="substring(id, 1, 1) = 'h'">House</xsl:if>
+					Roll #<xsl:value-of select="substring-after(id, '-')"/>
+					-
+					<xsl:value-of select="date"/>
+				</div>
+				<div><xsl:value-of select="result"/></div>
+				</div>
+			</xsl:for-each>
+		</xsl:template>
+
+
+		<xsl:template match="popularmonitorsbills">
+			<xsl:variable name="popularmonitors_b" select="govtrack-index:GetPopularBills()"/>
+			<xsl:for-each select="$popularmonitors_b[position()&lt;=7]">
+				<tr valign="top"><td>-</td><td style="font-size: 90%">
+					<div><a href="{link}"><xsl:value-of select="title"/></a></div>
+					<div><xsl:value-of select="terms"/></div>
+				</td></tr>
+			</xsl:for-each>
+		</xsl:template>
+		
+		<xsl:template match="popularmonitorspeople">
+			<xsl:variable name="popularmonitors_p" select="govtrack-index:GetPopularMonitors('PersonMonitor')"/>
+
+			<xsl:for-each select="$popularmonitors_p[position()&lt;=5]">
+				<div style="margin-bottom: .2em">
+					<a href="{link}"><xsl:value-of select="title"/></a>
+					(<xsl:value-of select="users"/> users)
+				</div>
+			</xsl:for-each>
+		</xsl:template>
+
+		<xsl:template match="statssummary">
+			<xsl:variable name="stats" select="govtrack-index:StatsSummary()"/>
+
+			<p style="margin-bottom: .5em">GovTrack compiles <a href="repstats.xpd">statistics</a> about Members of Congress. These Members are the most . . .</p>
+			<div style="font-size: 95%">
+
+			<xsl:if test="not(count($stats/enacted/@id)=0)">
+			<div style="padding-bottom: .4em; clear: both">
+			<div style="float: right; padding-bottom: 2px;"><a href="{govtrack-reps:RepLink($stats/enacted/@id)}"><img src="/data/photos/{$stats/enacted/@id}-50px.jpeg" style="border: 1px solid black"/></a></div>
+			<div><b>Successful: </b></div>
+			<div><a href="{govtrack-reps:RepLink($stats/enacted/@id)}"><xsl:value-of select="govtrack-reps:FormatPersonName( $stats/enacted/@id, 'now', 'lastnamestate')"/></a></div>
+			<div><xsl:value-of select="$stats/enacted/@SponsorEnacted"/> bills enacted
+			since <xsl:value-of select="govtrack-util:DTToYearString($stats/enacted/@FirstSponsoredDate)"/></div>
+			</div>
+			</xsl:if>
+
+			<xsl:if test="not(count($stats/novote/@id)=0)">
+			<div style="padding-bottom: .4em; clear: both">
+			<div style="float: right; padding-bottom: 2px;"><a href="{govtrack-reps:RepLink($stats/novote/@id)}"><img src="/data/photos/{$stats/novote/@id}-50px.jpeg" style="border: 1px solid black"/></a></div>
+			<div><b>Absent: </b></div>
+			<div><a href="{govtrack-reps:RepLink($stats/novote/@id)}"><xsl:value-of select="govtrack-reps:FormatPersonName( $stats/novote/@id, 'now', 'lastnamestate')"/></a></div>
+			<div><xsl:value-of select="round($stats/novote/@NoVotePct*100)"/>% votes missed
+			since <xsl:value-of select="govtrack-util:DTToYearString($stats/novote/@FirstVoteDate)"/></div>
+			</div>
+			</xsl:if>
+			
+			<xsl:if test="not(count($stats/introduced/@id)=0)">
+			<div style="padding-bottom: .4em; clear: both">
+			<div style="float: right; padding-bottom: 2px;"><a href="{govtrack-reps:RepLink($stats/introduced/@id)}"><img src="/data/photos/{$stats/introduced/@id}-50px.jpeg" style="border: 1px solid black"/></a></div>
+			<div><b>Unsuccessful: </b></div>
+			<div><a href="{govtrack-reps:RepLink($stats/introduced/@id)}"><xsl:value-of select="govtrack-reps:FormatPersonName( $stats/introduced/@id, 'now', 'lastnamestate')"/></a></div>
+			<div><xsl:value-of select="round($stats/introduced/@SponsorIntroducedPct*100)"/>% of <xsl:value-of select="$stats/introduced/@NumSponsor"/> bills died
+			since <xsl:value-of select="govtrack-util:DTToYearString($stats/introduced/@FirstSponsoredDate)"/></div>
+			</div>
+			</xsl:if>
+
+			<xsl:if test="not(count($stats/leaderfollower/@id)=0)">
+			<div style="padding-bottom: .4em; clear: both">
+			<div style="float: right; padding-bottom: 2px;"><a href="{govtrack-reps:RepLink($stats/leaderfollower/@id)}"><img src="/data/photos/{$stats/leaderfollower/@id}-50px.jpeg" style="border: 1px solid black"/></a></div>
+			<div><b>Leader: </b></div>
+			<div><a href="{govtrack-reps:RepLink($stats/leaderfollower/@id)}"><xsl:value-of select="govtrack-reps:FormatPersonName( $stats/leaderfollower/@id, 'now', 'lastnamestate')"/></a></div>
+			</div>
+			</xsl:if>
+
+			</div>
+		</xsl:template>
+		
+		<xsl:template match="nextsession">
+			<xsl:if test="not(govtrack-index:GetNextSession()='')">
+				<p style="margin-top: 0px; text-align: center"><xsl:value-of select="govtrack-index:GetNextSession()"/></p>
+			</xsl:if>
+		</xsl:template>
+
+	</Templates>
+
+</Page>

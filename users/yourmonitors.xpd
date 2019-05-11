@@ -1,0 +1,194 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<NoCache/>
+	
+	<Title PrependSiteTitle="1">Your Trackers</Title>
+	<Meta Name="ROBOTS">NOINDEX</Meta>
+
+	<Sidebar Float="Right">
+		<IfNotLoggedIn>
+			<Section Name="Log In">
+				<p><b>Be sure to log in</b> if you've already registered to show your trackers here.</p>
+				<LoginForm/>
+			</Section>
+			<Section Name="Cookies">
+			<div>When you are not registered, your trackers are stored in a "cookie" in your computer, which 
+			means that if you go to another computer or if you clear your cookies, you will no longer see the trackers you 
+			chose. If you <a href="register.xpd">sign up</a> (it's free), you'll avoid this problem.</div>
+			</Section>
+		</IfNotLoggedIn>
+		<IfLoggedIn>
+			<Section Name="Logged In">
+				<div>You are logged in as <b><LoginEmail/></b>. <a href="logout.xpd">Log out</a>?</div>
+				<div><a href="account.xpd">Account Settings</a>.</div>
+			</Section>
+		</IfLoggedIn>
+	</Sidebar>
+	
+	<Breadcrumbs><a href="/users">Track Congress</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="PageTitle">Your Trackers</h1>
+
+		<p>Here are the events in Congress you are currently tracking.
+		For more information about using trackers, see <a href="trackers.xpd">Trackers</a>.</p>
+		
+		<p>To view the events matching your trackers, go to <a href="events.xpd">Tracked Events</a>.</p>
+
+		<h3>Email Updates</h3>
+				
+			<IfLoggedIn>
+			<p>GovTrack can send you regular emails to &lt;<email/>&gt; about events that you are tracking.
+			Emails are sent only when there are new tracked events matching your trackers. How often do you want to receive updates?</p>
+			<autostatus/>
+			<xspforms:form xmlns:xspforms="xspforms" id="emailupdates" code="GovTrack.Web.Pages.Users.Account, GovTrackWeb:EditUpdates">
+				<xspforms:hidden name="tab" value="emailupdates"/>
+				<xspforms:formreturn class="formerror"/>
+				<emailupdatesfrequency/>
+				<xspforms:submit text="Update Settings"/>
+<p>(If you've set the option above to get email 
+updates but aren't receiving them after a few days, and your <a
+href="events.xpd">Tracked Events</a> page shows recent events, please
+make sure the emails haven't been classified as junk or moved into a
+spam folder.)</p>
+			</xspforms:form>
+			</IfLoggedIn>
+
+			<IfNotLoggedIn>
+			<p>You're not logged in to a registered account. You don't need to 
+			register to use trackers on this site, but you
+			do need to <a href="register.xpd">register</a> (it's free) to get your tracked events sent to you 
+			by email. If you have an account, log in using the form on the right. </p>
+			</IfNotLoggedIn>
+	
+		<h3>General Trackers</h3>
+			
+			<p>You've subscribed to the following general trackers that cover the activity of the whole Congress.</p>
+			
+			<general-trackers>		
+			<monitor name="misc:allvotes" title="All Roll Call Votes"
+				description="All roll call votes on all legislation will be included in your tracked events."/>
+			<monitor name="misc:activebills" title="Activity on All Legislation"
+				description="All legislative activity, including the introduction of each new bill and all votes on legislation, will be included in your tracked events."/>
+			<monitor name="misc:activebills2" title="Activity on All Legislation Except Newly Introduced Bills"
+				description="All legislative activity, excluding the introduction of each new bill, will be included in your tracked events."/>
+			<monitor name="misc:introducedbills" title="Newly Introduced Bills"
+				description="The introduction of each new bill or resolution will be included in your tracked events."/>
+			<monitor name="misc:enactedbills" title="Enacted Bills"
+				description="The enactment of each bill will be included in your tracked events."/>
+			<monitor name="misc:allcommittee" title="Upcoming Committee Meetings"
+				description="All tracked upcoming committee meetings will be included in your tracked events."/>
+			<monitor name="misc:questions" title="Community Question &amp; Answer"
+				description="All tracked upcoming committee meetings will be included in your tracked events."/>
+			</general-trackers>
+		
+		<p>For more information about using trackers, see <a href="trackers.xpd">Using Trackers</a>.</p>
+
+		<h3>Targetted Trackers</h3>
+		
+		<p>You've subscribed to the following targetted trackers that cover the activity of different slices of Congress.</p>
+		
+		<p>For more information about using trackers, see <a href="trackers.xpd">Using Trackers</a>.</p>
+
+		<h4>Track Members of Congress</h4>
+		<watches type="p" tab="p"/>
+		<watches type="pv" tab="pv"/>
+
+		<h4>Track Issues</h4>
+		<watches type="crs" tab="subjects"/>
+		
+		<h4>Track Particular Bills</h4>
+		<watches type="bill" tab="bill"/>
+		
+		<h4>Track Committees</h4>
+		<watches type="committee" tab="subject"/>
+
+		<h4>Track Community Q&amp;A on Particular Topics</h4>
+		<watches type="questions"/>
+	</Body-A>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:xspforms="xspforms"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		exclude-result-prefixes="govtrack-login govtrack-util"
+		pre-process-addremovemonitor="GovTrack.Web.Pages.Users.AddRemoveMonitor, GovTrackWeb"
+		>
+
+		<xsl:template match="email">
+			<xsl:if test="govtrack-login:IsLoggedIn()">
+			<xsl:value-of select="govtrack-login:GetLoginEmail()"/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="emailupdatesfrequency">
+			<xsl:if test="govtrack-login:IsLoggedIn()">
+			<div><input type="radio" name="frequency" value="0"><xsl:if test="govtrack-login:GetLoginField('emailupdates')='0'"><xsl:attribute name="checked">1</xsl:attribute></xsl:if></input> Don't Send Updates</div>
+			<div><input type="radio" name="frequency" value="1"><xsl:if test="govtrack-login:GetLoginField('emailupdates')='1'"><xsl:attribute name="checked">1</xsl:attribute></xsl:if></input> Send Updates Daily</div>
+			<div><input type="radio" name="frequency" value="2"><xsl:if test="govtrack-login:GetLoginField('emailupdates')='2'"><xsl:attribute name="checked">1</xsl:attribute></xsl:if></input> Send Updates Weekly (on weekends)</div>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="general-trackers">
+			<xsl:if test="count(monitor[govtrack-login:HasMonitor(@name)])=0">
+				<p>You have not chosen any general trackers. To see a list, see <a href="trackers.xpd">Trackers</a>.</p>
+			</xsl:if>
+		
+			<xsl:for-each select="monitor">
+			<xsl:if test="govtrack-login:HasMonitor(@name)">
+			<div style="margin-top: 1em; margin-left: 1em; ">
+				<div>
+				<span style="font-weight: bold;">
+					<xsl:value-of select="@title"/>:
+				</span>
+				<xsl:value-of select="@description"/>
+				<span id="cm{@name}" style="margin-top: 3px; margin-left: .5em; font-size: 95%; font-style: italic">
+					<xsl:choose>
+					<xsl:when test="govtrack-login:HasMonitor(@name)">
+						This tracker is included in your tracked events and email updates. <a href="javascript:SetInnerHtml('cm{@name}', 'Removing tracker...'); SetInnerHTMLFromAjaxResponse('/users/ajax_addmonitor.xpd?monitor={govtrack-util:UrlEncode(@name)}&amp;action=remove&amp;elemid=cm{@name}', 'cm{@name}')">Remove this tracker</a>.
+					</xsl:when>
+					<xsl:otherwise>
+						<a href="javascript:SetInnerHtml('cm{@name}', 'Adding tracker...'); SetInnerHTMLFromAjaxResponse('/users/ajax_addmonitor.xpd?monitor={govtrack-util:UrlEncode(@name)}&amp;elemid=cm{@name}', 'cm{@name}')">Add this tracker</a>.
+					</xsl:otherwise>
+					</xsl:choose>
+				</span>
+				</div>
+			</div>
+			</xsl:if>
+			</xsl:for-each>
+		</xsl:template>
+		
+		<xsl:template match="watches">
+			<xsl:variable name="type" select="@type"/>
+			<xsl:variable name="watches" select="govtrack-login:GetMonitorsOfType(@type)"/>
+			<xsl:if test="count($watches)=0">
+			You have no trackers in this category.
+			</xsl:if>
+				<xsl:for-each select="$watches">
+					<xsl:sort select="."/>
+						<div>
+							<xsl:variable name="m" select="govtrack-login:MonitorLink(.)"/>
+							<a href="{$m/href}">
+								<xsl:value-of select="$m/title"/>
+							</a>
+						</div>
+						<div style="font-size: 75%; margin-left: 2em; margin-bottom: .5em" id="m{$type}{position()}">
+							(<a href="javascript:SetInnerHtml('m{$type}{position()}', 'Removing tracker...'); SetInnerHTMLFromAjaxResponse('/users/ajax_addmonitor.xpd?monitor={govtrack-util:JSEncode(govtrack-util:UrlEncode(.))}&amp;action=remove&amp;elemid=m{$type}{position()}', 'm{$type}{position()}')">Remove Tracker</a>)
+						</div>
+				</xsl:for-each>
+		</xsl:template>
+	
+        <xsl:template match="autostatus">
+			<xsl:if test="govtrack-login:IsLoggedIn()">
+			<xsl:if test="not(govtrack-login:GetLoginField('autostatus')='')">
+				<p class="formerror"><xsl:value-of select="govtrack-login:GetLoginField('autostatus')"/></p>
+			</xsl:if>
+			</xsl:if>
+		</xsl:template>
+
+	</Templates>
+
+</Page>

@@ -1,0 +1,25 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1">I've Registered. Now What?</Title>
+	
+	<Body-A>
+		<h1>I've Registered.  Now what?</h1>
+	
+		<p>The first thing you should do is set up <a href="trackers.xpd">Trackers</a>.
+		Trackers make it easy for you to track representatives and legislation on this site.</p>
+		
+		<p>And, be sure to turn on <a href="account.xpd?tab=emailupdates" style="font-weight: bold">email updates</a>
+		so you can get updated about your trackers by email daily or weekly.</p>
+
+		<!--<p>If you consider yourself a pundit, or if you represent an advocacy group,
+		<a href="blogs.xpd">blog about bills in Congress</a> and provide GovTrack
+		with your <a href="account.xpd?tab=blog">blog syndication feed</a> to have
+		your comments appear on this site.</p>-->
+	</Body-A>
+ 
+	<Script>
+	</Script>	
+	
+ </Page>

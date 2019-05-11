@@ -1,0 +1,220 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1"
+	xmlns:xspforms="xspforms">
+
+	<Title PrependSiteTitle="1"><PageTitle/></Title>
+
+	<Head>
+		<META name="ROBOTS" content="NOINDEX"/>
+	</Head>
+	
+	<Breadcrumbs><a href="/congress/">Congress</a> &gt; <a href="findyourreps.xpd">Members of Congress</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1><PageTitle/></h1>
+	
+		<p>Find a current or former senator or representative in the United States Congress.
+		If you’re not sure who represents you, use the <a href="findyourreps.xpd">congressional district maps</a>.</p>
+	</Body-A>
+	
+	<Body-B>
+		<ShowSearchByName/>
+
+		<FormResult/>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext = "HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		>
+
+		<xsl:template match="PageTitle">
+			<xsl:choose>
+				<xsl:when test="not(HttpContext:param('name')='')">
+					Search Members of Congress by Name
+				</xsl:when>
+				<xsl:when test="not(HttpContext:param('state')='')">
+					<xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>’s Representatives
+				</xsl:when>
+				<xsl:when test="HttpContext:param('all')='1' and HttpContext:param('session')=''">
+					Current Members of Congress
+				</xsl:when>
+				<xsl:when test="HttpContext:param('all')='1' and not(HttpContext:param('session')='')">
+					Members of Congress:
+					<xsl:value-of select="HttpContext:param('session') * 2 + 1787"/>-<xsl:value-of select="HttpContext:param('session') * 2 + 1787 + 1"/>
+					(<xsl:value-of select="govtrack-util:Ordinate(HttpContext:param('session'))"/> Congress)
+				</xsl:when>
+				<xsl:otherwise>Browse Members of Congress</xsl:otherwise>
+			</xsl:choose>
+		</xsl:template>
+		
+		<xsl:template match="FormResult">
+			<xsl:choose>
+				<xsl:when test="not(HttpContext:param('name')='')">
+					<xsl:call-template name="ShowReps">
+						<xsl:with-param name="reps" select="govtrack-reps:FindByName(HttpContext:param('name'), HttpContext:param('historical')='')"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="not(HttpContext:param('state')='')">
+					<xsl:call-template name="ShowReps">
+						<xsl:with-param name="reps" select="govtrack-reps:FindByState(HttpContext:param('state'))"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="HttpContext:param('all')='1' and HttpContext:param('session')=''">
+					<xsl:call-template name="ShowReps">
+						<xsl:with-param name="reps" select="govtrack-reps:FindAll()"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="HttpContext:param('all')='1' and not(HttpContext:param('session')='')">
+					<xsl:call-template name="ShowReps">
+						<xsl:with-param name="reps" select="govtrack-reps:FindBySession(HttpContext:param('session'))"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="ShowReps">
+						<xsl:with-param name="reps" select="BlahBlah"/>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:template>
+		
+		
+		<xsl:template name="ShowReps">
+			<xsl:param name="reps" />
+			
+			<xsl:if test="count($reps) = 0">
+				<xsl:if test="not(HttpContext:param('name')='')">
+				<p>No representatives matched your search.</p>
+				</xsl:if>
+
+				<h3>Browse by state</h3>
+				<ul>
+				<xsl:for-each select="govtrack-util:StateNames()">
+				<xsl:sort select="."/>
+				<li><a href="replookup.xpd?state={govtrack-util:GetStateAbbr(.)}"><xsl:value-of select="."/></a>
+				</li>
+				</xsl:for-each>
+				</ul>
+			</xsl:if>
+
+			<xsl:if test="count($reps) = 1 and not(HttpContext:param('name')='')">
+				<xsl:value-of select="HttpContext:redirect(concat('person.xpd?id=',$reps/id))"/>
+			</xsl:if>
+			
+			<xsl:if test="count($reps/error) = 0 and count($reps) &gt; 0">
+			<h3>Search results</h3>
+			<p><xsl:value-of select="count($reps)"/> representatives matched your search.
+			</p>
+		
+			<table>
+				<tr>
+					<th width="60"></th>
+					<xsl:if test="HttpContext:param('name')=''"><th>State &amp; District</th></xsl:if>
+					<th style="text-align: left">Name</th>
+					<th> </th>
+				</tr>
+					
+				<xsl:for-each select="$reps">
+					<tr>
+						<td>
+						<xsl:choose>
+						<xsl:when test="govtrack-reps:HasImage(id)">
+							<img src="/data/photos/{id}-50px.jpeg" style="border: 1px solid black" width="50" height="61"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<div style="width: 50px; height: 61px; border: 1px solid #AAA">
+							</div>
+						</xsl:otherwise>
+						</xsl:choose>
+						</td>
+
+						<xsl:if test="HttpContext:param('name')=''">
+						<td style="padding-right: 1em"><nobr>
+							<xsl:if test="count(type) and not(type='prez')">
+							<xsl:value-of select="govtrack-util:GetStateName(state)"/>
+							<xsl:if test="type='rep' and district=0"> At Large</xsl:if>
+							<xsl:if test="type='rep' and district &gt; 0"> - <xsl:value-of select="govtrack-util:Ordinate(district)"/></xsl:if>
+							</xsl:if>
+						</nobr>
+						<xsl:if test="type='rep' and district &gt; 0">
+							<div><a href="findyourreps.xpd?state={state}&amp;district={district}" style="font-size: 80%; color: #55A">View Map</a></div>
+						</xsl:if>
+						</td>
+						</xsl:if>
+						
+						<td>
+							<nobr>
+							<a href="person.xpd?id={id}">
+								<xsl:value-of select="name"/>
+							</a>
+							
+							</nobr>
+
+							<xsl:if test="not(HttpContext:param('name')='')">
+							<div>
+								<xsl:value-of select="govtrack-reps:RoleTypeName(type, title)"/>
+								<xsl:if test="not(count(statename)=0)">
+									from
+									<xsl:value-of select="statename"/>
+									<xsl:if test="type='rep' and district &gt; 0">’s
+										<xsl:value-of select="govtrack-util:Ordinate(district)"/> district
+									</xsl:if>
+								</xsl:if>
+							</div>
+							</xsl:if>
+							<xsl:if test="not(count(startdate)=0)">
+							<div>
+								<xsl:value-of select="govtrack-util:DTToDateString(startdate)"/> -
+								<xsl:value-of select="govtrack-util:DTToDateString(enddate)"/>
+							</div>
+							</xsl:if>
+						</td>
+						<td> </td>
+					</tr>
+				</xsl:for-each>
+			</table>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="ShowSearchByName">
+			<xsl:if test="HttpContext:param('state')=''">
+				<table>
+				<tr valign="top">
+				<td>
+				<h3 style="margin-top: 0px">List all Members of Congress</h3>
+				<form action="" method="get" name="bysession">
+				<ul>
+				<li><a href="?all=1">All Current Members of Congress</a></li>
+				<xsl:if test="not(HttpContext:param('all')='') or not(HttpContext:param('name')='')"><li><a href="?">Browse Current Members by State</a></li></xsl:if>
+				<li>Browse by year:
+					<input type="hidden" name="all" value="1"/>
+					<select name="session" onchange="bysession.submit()">
+						<option>Choose Year</option>
+						<xsl:for-each select="govtrack-util:range(1, govtrack-util:GetCurrentSession())">
+							<option value="{.}"><xsl:value-of select=". * 2 + 1787"/> - <xsl:value-of select=". * 2 + 1787 + 1"/></option>
+						</xsl:for-each>
+					</select>
+				</li>
+				</ul>
+				</form>
+				</td>
+				<td width="300" style="padding-left: 3em">
+				<h3 style="margin-top: 0px">Search by name</h3>
+				<form method="get" action="">
+					Last name:<br/>
+					<input type="text" name="name" size="22"/>
+					<input type="submit" value="Find"/>
+					<div style="font-size: 90%"><input type="checkbox" name="historical"/> Search Former Members of Congress</div>
+				</form>
+				</td>
+				</tr>
+				</table>
+			</xsl:if>
+		</xsl:template>
+	</Templates>
+   
+ </Page>

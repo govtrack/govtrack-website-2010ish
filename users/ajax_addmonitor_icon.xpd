@@ -1,0 +1,28 @@
+<?xml-stylesheet xpath="/span/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<span>
+	<Action/>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		>
+		
+		<xsl:template match="Action">
+			<xsl:if test="http-context:param('monitor') = ''">
+			</xsl:if>
+			<xsl:if test="not(http-context:param('action')='remove')">
+				<xsl:value-of select="govtrack-login:AddMonitor(http-context:param('monitor'))"/>
+			</xsl:if>
+			<xsl:if test="http-context:param('action')='remove'">
+				<xsl:value-of select="govtrack-login:RemoveMonitor(http-context:param('monitor'))"/>
+			</xsl:if>
+
+			<MonitorButton name="{govtrack-login:MonitorLink(http-context:param('monitor'))/title}" monitor="{http-context:param('monitor')}" id="{http-context:param('elemid')}"/>
+		</xsl:template>
+		
+	</Templates>
+</span>

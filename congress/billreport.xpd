@@ -1,0 +1,98 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page Width="Max">
+
+	<Title PrependSiteTitle="1"><PageTitle/></Title>
+
+	<AllowEmail/>
+	<Param>bill</Param>
+	<Param>type</Param>
+	
+	<Download/>
+
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a> &gt; <a href="legislation.xpd">Legislation</a> &gt;
+		<BillSessionYears/> (<BillSession/> Congress) &gt;
+        <BillStatusLink/>
+    </Breadcrumbs>
+
+    <Body-A>
+		<h1>
+			<PageTitle/>
+		</h1>
+		
+		<p><ReportType/></p>
+		
+		<p>Related to: <ShowBillInfo/></p>
+		
+	</Body-A>
+	<Body-B>
+		<ShowReport/>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		>
+		
+		<xsl:variable name="bill" select="govtrack-bill:LoadBill()" />
+		<xsl:variable name="text" select="govtrack-bill:LoadBillReport(http-context:param('type'))" />
+
+		<xsl:template match="PageTitle">
+			<xsl:choose>
+				<xsl:when test="http-context:param('type') = 'cbo'">Budget Report</xsl:when>
+			</xsl:choose>
+			<xsl:text xml:space="preserve">: </xsl:text>
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+			<xsl:text xml:space="preserve">: </xsl:text>
+			<xsl:value-of select="govtrack-util:Trunc(govtrack-bills:DisplayTitle($bill), 75)"/>
+		</xsl:template>
+
+        <xsl:template match="BillSession">
+            <xsl:value-of select="govtrack-util:Ordinate($bill/@session)"/>
+        </xsl:template>
+
+        <xsl:template match="BillSessionYears">
+            <xsl:value-of select="$bill/@session * 2 + 1787"/>
+            <xsl:text>-</xsl:text>
+            <xsl:value-of select="$bill/@session * 2 + 1787 + 1"/>
+        </xsl:template>
+
+        <xsl:template match="BillStatusLink">
+            <a href="bill.xpd?bill={http-context:param('bill')}">
+                <xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+            </a>
+        </xsl:template>
+
+		<xsl:template match="ReportType">
+			<xsl:choose>
+				<xsl:when test="http-context:param('type') = 'cbo'">The following is a report prepared by the Congressional Budget Office. It has been coverted to a text-only format below by GovTrack.</xsl:when>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="ShowBillInfo">
+            <a href="bill.xpd?bill={http-context:param('bill')}">
+				<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+				<xsl:text xml:space="preserve">: </xsl:text>
+				<xsl:value-of select="govtrack-util:Trunc(govtrack-bills:DisplayTitle($bill), 75)"/>
+			</a>
+		</xsl:template>
+
+		<xsl:template match="ShowReport">
+			<pre class="pdftext">
+				<xsl:value-of select="$text"/>
+			</pre>
+		</xsl:template>
+		
+		<xsl:template match="Download">
+			<Download Type="PDF">/data/us/<xsl:value-of select="$bill/@session"/>/bills.<xsl:value-of select="http-context:param('type')"/>/<xsl:value-of select="$bill/@type"/><xsl:value-of select="$bill/@number"/>.pdf</Download>
+		</xsl:template>
+
+	</Templates>
+   
+ </Page>

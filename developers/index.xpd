@@ -1,0 +1,48 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page
+	xmlns:xspforms="xspforms">
+
+	<Title PrependSiteTitle="1">Developer Resources</Title>
+	
+	<Breadcrumbs><a href="/about.xpd">About GovTrack</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="PageTitle">Developer Resources</h1>
+		
+		<p>This section is for website developers or other researchers
+		with programming background.</p>
+
+		<h3>Source Data and APIs</h3>
+		
+		<ul>
+		<li>All of the <a href="data.xpd">source data</a> that powers the site is made available in static XML files which you can download in bulk and reuse for other purposes. They are made available under open terms.
+		Sunlight Foundation has provided the <a href="http://services.sunlightlabs.com/docs/Drumbone_API/">Drumbone API</a> around this data if you are looking for an app-friendly way to access it.</li>
+		<li>We also provide several additional <a href="api.xpd">APIs</a> which provide another window into some aspects of the data.</li>
+		<li>If you are a regular user of the source data or APIs, it is important that you join our <a href="http://groups.yahoo.com/group/govtrack/">mail list</a> for notices about any data format changes. If you have any ideas, please post a message to let others know.</li>
+		<li>I also keep a <a href="/downstream.xpd">list of projects using data from GovTrack</a>.</li>
+		<li><a href="license.xpd">License Terms</a></li>
+		</ul>
+		
+		<p>Other items of interest:</p>
+		<ul>
+		<li>On an experimental basis, we also provide a <a href="rdf.xpd">RDF dump and SPARQL endpoint</a> for the data that powers the site.</li>
+		<li>You might also be interested in: <a href="http://blogs.msdn.com/dankasun/archive/2010/02/11/my-first-experience-with-open-government-data.aspx">Open Government Data and .NET</a>.</li>
+		</ul>
+		
+		<h3>Help Develop GovTrack</h3>
+	
+		<p>We would love to have you involved in the development of GovTrack. Some funding may be available.</p>
+		
+		<ul>
+		<li>Take a look at the <a href="ideas.xpd">project ideas</a> for improving this site.</li>
+		<li>Check out the <a href="data.xpd">source data</a>, <a href="scrapers.xpd">data gathering code</a>, and <a href="website.xpd">website source code</a>.</li>
+		<li>Email me, Josh, using the address at the bottom of the page, if you want to talk more about getting involved. I'm happy to give you pointers.</li>
+		<li>You may also want to create a GovTrack-type site for the politics in your own state.  I wrote up some notes on that <a href="localtrack.xpd">here</a>,
+		but these days Sunlight Foundation is heading up the effort of recruiting
+		coders from each state to take this on. See their <a href="http://wiki.sunlightlabs.com/index.php/State_Legislation_Page">Fifty States Project</a>.</li>
+		</ul>
+		
+	</Body-A>
+ </Page>
+

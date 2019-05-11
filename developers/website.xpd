@@ -1,0 +1,76 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1">Website Source Code</Title>
+	
+	<Breadcrumbs><a href="/about.xpd">About GovTrack</a> &gt; <a href="/developers">Developers</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1>Website Source Code</h1>
+		
+		<p>The "front-end" website source code is the code behind the website that you see. It is based on ASP.NET, though it uses a very custom page generation system based on XSLT.
+		This is only half of the source code that makes the site possible. The other half is the <a href="scrapers.xpd">scrapers</a>.</p>
+		
+		<p>To get involved with the development of the front-end of GovTrack (i.e. this website that you see),
+		you can set yourself up to run a version
+		of the GovTrack website on your own computer. You will be able to modify the source code of the website,
+		and if you make changes you can send a patch to me so I can integrate your changes into
+		the production site.</p>
+		
+		<p>The pages and source code of the site are licensed under the GNU AGPL. In short, you may <i>only</i> make modifications to the code if you make your modifications publicly available.</p>
+		
+		<p>I've only tested the steps below on Linux. In principle it should work on Mac OS X fine.
+		It might work on Windows too, but I have no idea.</p>
+		
+		<p>You will need installed <a href="http://mono-project.com">Mono</a> (including "mcs" and "xsp") and <a href="http://subversion.tigris.org">Subversion</a>.</p>
+		
+		<p>Make a directory for GovTrack files.</p>
+		
+		<p>Checkout the website "page" files from the source repository. These files are the XSLT templates (.xpd) that generate the pages of the site. This will create a "www" directory. Then make sure a 'data' directory exists inside that.</p>
+		
+		<pre class="code">svn co svn://occams.info/govtrack/website/www
+cd www
+mkdir data</pre>
+
+		<p>On Windows the page caching system is broken. To disable it, edit www/web.config and delete the &lt;appSettings&gt; section.</p>
+
+		<p>Download the website "code" binary .NET DLLs. These are some helper routines for the front-end files.</p>
+		<pre class="code">wget http://www.govtrack.us/frontend_bin.tgz
+tar -zxf frontend_bin.tgz
+rm frontend_bin.tgz</pre>
+
+		<p>At this point you can start the website in sandbox mode running locally on your system. You can visit the site by visiting http://localhost:8080/index.xpd. On Linux, just run from the command line:</p>
+
+		<pre class="code">SANDBOX=1 xsp2</pre>
+		
+		<p>On Windows, you'll need to set the SANDBOX environment variable to 1. I think you can do this, but it's just off the top of my head:</p>
+
+		<pre class="code">set SANDBOX=1
+xsp2</pre>
+
+		<p>The website will download data files from GovTrack's web server as it needs them and will store them on disk for later. (The running process needs write permission in the <tt>data</tt> directory). And it will connect to GovTrack's MySQL database remotely to access other information (so also if you have a firewall it will need to be able to make outside connections).</p>
+		
+		<p>The sandbox does not have access to the user profiles database, which means you cannot "log in" in the sandbox.</p>
+		
+		<p>If you do a "svn update" to update your website source files, you may need to grab an updated <tt>frontend_bin.tgz</tt> file, since there may have been .NET code changes along with the changes in the pages.</p>
+
+		<p>Some backend .NET code is used as helper functions to generate the pages of the website. The code is compiled to www/bin/GovTrackWeb.dll. To edit this code, check out the backend source files. You don't need to do this just to run the sandbox.</p>
+		<pre class="code">(cd out of the www directory)
+svn co svn://occams.info/govtrack/website/src</pre>
+
+		<p>After editing files, recompile the binary by running make:</p>
+		<pre class="code">cd src
+make</pre>
+		
+		<p>Note that because GovTrack uses .NET 2.0 classes you need to start it with <tt>xsp2</tt> (as indicated above), not <tt>xsp</tt>.
+		(And if you are daring and try mod_mono, you need to add to your httpd.conf <tt>MonoServerPath default /usr/bin/mod-mono-server2</tt>.)</p>
+
+		<p>Once data files are downloaded, they won't be updated from GovTrack's server. So your files will go out of data. To update them efficiently, use this command:</p>
+		<pre class="code">rsync -az --existing govtrack.us::govtrackdata/us/ data/us/</pre>
+
+		<p>The sandbox won't download files needed by the web browser only, so PDFs for bills and automatically generated images like vote maps will not appear. If you really want all of the files, you can download them for a current session of Congress with the command below. It will download almost 500 megabytes, so for both your and my sake, don't do this unless you specifically want the missing files. In fact, if you want to <b>rsync regularly</b> see the <a href="data.xpd">source data</a> page.</p>
+
+	</Body-A>
+	
+ </Page>

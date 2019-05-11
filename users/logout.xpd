@@ -1,0 +1,31 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<NoCache/>
+
+	<Title>Log Out of GovTrack.us</Title>
+	<Meta Name="ROBOTS">NOINDEX</Meta>
+	
+	<Body-A>
+		<DoLogout/>
+	
+		<h1 class="PageTitle">Logged Out</h1>
+	
+		<p>You have been logged out of this site.</p>
+
+		<p><a href="login.xpd">Log in again?</a></p>
+	</Body-A>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		>
+		
+		<xsl:template match="DoLogout">
+			<xsl:value-of select="govtrack-login:DoLogout()"/>
+		</xsl:template>
+		
+	</Templates>
+                         
+</Page>

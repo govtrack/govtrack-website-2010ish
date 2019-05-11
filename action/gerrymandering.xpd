@@ -1,0 +1,84 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+<Page>
+	<Title>Gerrymandering: The Good and the Ugly</Title>
+ <Body>
+
+<div class="PageTitle">Gerrymandering: The Good and the Ugly</div>
+
+<p>Here are some of the best shaped and worst shaped congressional districts.</p>
+
+<h3>The Ugly!</h3>
+
+<table>
+	<district id="FL22" title="Florida's 22nd">
+	</district>
+
+	<district id="CA23" title="California's 23rd">
+	</district>
+
+	<district id="NC12" title="North Carolina's 12th">
+	</district>
+
+	<district id="IL4" title="Illinois's 4th">
+	</district>
+
+	<district id="NC3" title="North Carolina's 3rd">
+	</district>
+
+	<district id="PA12" title="Pennsylvania's 12th">
+	</district>
+
+	<district id="NJ6" title="New Jersey's 6th">
+	</district>
+
+	<district id="PA18" title="Pennsylvania's 18th">
+	</district>
+
+	<district id="FL3" title="Florida's 3rd">
+	</district>
+</table>
+
+<h3>The Good!</h3>
+	
+<table>
+	<district id="AZ6" title="Arizona's 6th">
+	</district>
+
+	<district id="IN1" title="Indiana's 1st">
+	</district>
+
+	<district id="IN3" title="Indiana's 3rd">
+	</district>
+
+	<district id="NY16" title="New York's 16th">
+	</district>
+
+</table>
+
+	</Body>
+
+	<Templates xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-person = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Person"
+		exclude-result-prefixes="govtrack-util govtrack-reps"
+		>
+
+		<xsl:template match="district">
+			<xsl:variable name="id" select="@id"/>
+			<tr valign="top">
+				<td>
+					<center><img src="/media/districts/{@id}.gif"/></center>
+				</td>
+				<td style="padding-left: 2em">
+					<p><b><xsl:value-of select="@title"/></b></p>
+					<xsl:apply-templates/>
+				</td>
+			</tr>
+		</xsl:template>
+
+	</Templates>
+
+</Page>
+  

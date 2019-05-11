@@ -1,0 +1,286 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+
+<!--  Returns a version of the bill with the changes shown side-by-side. -->
+<Page>
+
+<Templates
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+    exclude-result-prefixes="govtrack-bill">
+
+<xsl:include href="cleanup.xsl"/>
+<xsl:include href="common2.xsl"/>
+
+<xsl:template match="/">
+    <xsl:variable name="cleaned">
+        <xsl:apply-templates select="govtrack-bill:LoadBillText()" mode="cleanup"/>
+    </xsl:variable>
+    
+    <!-- Portable usage is 'exsl:node-set($cleaned)', but not supported by Mono -->
+	<xsl:processing-instruction name="cache">server</xsl:processing-instruction>
+    <xsl:apply-templates select="$cleaned"/>
+</xsl:template>
+
+<!-- Real processing -->
+
+<!-- lots of repeated parts and overlap with common.xsl since XSLT can't parameterize modes -->
+
+<xsl:template match="body">
+    <div>
+        <xsl:apply-templates/>
+    </div>
+</xsl:template>
+    
+<xsl:template match="changed">
+    <xsl:apply-templates/>
+</xsl:template>
+
+<xsl:template match="changed" mode="old">
+    <xsl:apply-templates mode="old"/>
+</xsl:template>
+    
+<xsl:template match="changed" mode="new">
+    <xsl:apply-templates mode="new"/>
+</xsl:template>
+
+
+<xsl:template match="inserted|changed-to">
+    <xsl:apply-templates mode="new"/>
+</xsl:template>
+    
+<xsl:template match="removed|changed-from">
+    <xsl:apply-templates mode="old"/>
+</xsl:template>
+    
+<xsl:template match="inserted|changed-to" mode="old">
+</xsl:template>
+
+<!-- can still end up with empty spans b/c '`' might be removed -->
+<xsl:template match="removed|changed-from" mode="old">
+    <xsl:if test="node()">
+        <span class="removed">
+            <xsl:apply-templates mode="old"/>
+        </span>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template match="removed|changed-from" mode="new">
+</xsl:template>
+
+<!-- can still end up with empty spans b/c '`' might be removed -->
+<xsl:template match="inserted|changed-to" mode="new">
+    <xsl:if test="node()">
+      <span class="inserted">
+          <xsl:apply-templates mode="new"/>
+      </span>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template match="usc-reference" mode="old">
+    <xsl:apply-templates select="." mode=""/>
+</xsl:template>
+<xsl:template match="usc-reference" mode="new">
+    <xsl:apply-templates select="." mode=""/>
+</xsl:template>
+<xsl:template match="public-law-reference" mode="old">
+    <xsl:apply-templates select="." mode=""/>
+</xsl:template>
+<xsl:template match="public-law-reference" mode="new">
+    <xsl:apply-templates select="." mode=""/>
+</xsl:template>
+
+<!-- add click handlers to toc links -->
+<xsl:template match="a[@class='toclink']" mode="old">
+    <a onclick="$.btns.click_toclink(this);">
+        <xsl:apply-templates select="@*|node()" mode="old"/>
+    </a>
+</xsl:template>
+
+<xsl:template match="a[@class='toclink']" mode="new">
+    <a onclick="$.btns.click_toclink(this);">
+        <xsl:apply-templates select="@*|node()" mode="new"/>
+    </a>
+</xsl:template>
+
+<xsl:template match="hr">
+    <div class="side_old"><hr/></div>
+    <div class="side_new"><hr/></div>
+    <div style="clear:both;" />
+</xsl:template>
+
+<xsl:template match="hr" mode="old">
+    <div class="side_old"><hr/></div>
+    <div class="side_new" />
+    <div style="clear:both;" />
+</xsl:template>
+
+<xsl:template match="hr" mode="new">
+    <div class="side_old" />
+    <div class="side_new"><hr/></div>
+    <div style="clear:both;" />
+</xsl:template>
+
+<xsl:variable name="chooser">
+    <div class="chooser">
+        <span class="expanded" title="Collapse this section" />
+        <a class="extractor" title="Extract this section" />
+        <a class="linker" title="Link to this section" />
+    </div>
+</xsl:variable>
+
+<!-- only exists to make layout consistent, will never be seen -->
+<xsl:variable name="dummy_chooser">
+    <div class="chooser">
+        <span class="expanded" /><a class="extractor" /><a class="linker" />
+    </div>
+</xsl:variable>
+
+<!-- code to create "sections", which consist of 
+     a p followed optionally by a ul. ignoring attrs other than nid and style. -->
+<xsl:template match="p">
+    <xsl:variable name="margin" select="count(ancestor::ul)*1.4"/>
+    <div class="section" nid="{@nid}" onmouseover="$.btns.section_over(event,this);" onmouseout="$.btns.section_out(event,this);">
+        <xsl:if test="@id"><xsl:copy-of select="@id"/></xsl:if>
+        <xsl:call-template name="haschange"/>
+        <div class="side_old">
+            <xsl:copy-of select="$dummy_chooser"/>
+            <p style="{@style}margin-left:{$margin}em;">
+                <xsl:if test="@class"><xsl:copy-of select="@class"/></xsl:if>
+                <xsl:apply-templates mode="old"/>
+            </p>
+        </div>
+        <div class="side_new">
+            <xsl:copy-of select="$chooser"/>
+            <p style="{@style}margin-left:{$margin}em;">
+                <xsl:if test="@class"><xsl:copy-of select="@class"/></xsl:if>
+                <xsl:apply-templates mode="new"/>
+            </p>
+        </div>
+        <div style="clear:both;" />
+        <xsl:call-template name="copyul"/>
+    </div>
+</xsl:template>
+
+<xsl:template match="p" mode="old">
+    <xsl:variable name="margin" select="count(ancestor::ul)*1.4"/>
+    <div class="section" nid="{@nid}" onmouseover="$.btns.section_over(event,this);" onmouseout="$.btns.section_out(event,this);">
+        <xsl:if test="@id"><xsl:copy-of select="@id"/></xsl:if>
+        <xsl:attribute name="changed">1</xsl:attribute>
+        <div class="side_old">
+            <xsl:copy-of select="$dummy_chooser"/>
+            <p style="{@style}margin-left:{$margin}em;" class="removed {@class}">
+                <xsl:apply-templates mode="old"/>
+            </p>
+        </div>
+        <div class="side_new">
+            <xsl:copy-of select="$chooser"/>
+        </div>
+        <div style="clear:both;" />
+        <xsl:call-template name="copyul_old"/>
+    </div>
+</xsl:template>
+
+<xsl:template match="p" mode="new">
+    <xsl:variable name="margin" select="count(ancestor::ul)*1.4"/>
+    <div class="section" nid="{@nid}" onmouseover="$.btns.section_over(event,this);" onmouseout="$.btns.section_out(event,this);">
+        <xsl:if test="@id"><xsl:copy-of select="@id"/></xsl:if>
+        <xsl:attribute name="changed">1</xsl:attribute>
+        <div class="side_old">
+            <!-- not bothering to copy dummy chooser -->
+        </div>
+        <div class="side_new">
+            <xsl:copy-of select="$chooser"/>
+            <p style="{@style}margin-left:{$margin}em;" class="inserted {@class}">
+                <xsl:apply-templates mode="new"/>
+            </p>
+        </div>
+        <div style="clear:both;" />
+        <xsl:call-template name="copyul_new"/>
+    </div>
+</xsl:template>
+
+<xsl:template name="haschange">
+    <xsl:if test="descendant::changed or descendant::removed or descendant::inserted or
+                  following-sibling::*[1][self::ul][descendant::changed or descendant::removed or descendant::inserted]">
+        <xsl:attribute name="changed">1</xsl:attribute>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template name="copyul">
+    <xsl:if test="following-sibling::*[1][self::ul]">
+        <xsl:apply-templates select="following-sibling::*[1]/*"/>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template name="copyul_old">
+    <xsl:if test="following-sibling::*[1][self::ul]">
+        <xsl:apply-templates select="following-sibling::*[1]/*" mode="old"/>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template name="copyul_new">
+    <xsl:if test="following-sibling::*[1][self::ul]">
+        <xsl:apply-templates select="following-sibling::*[1]/*" mode="new"/>
+    </xsl:if>
+</xsl:template>
+
+<!-- we only copy uls that were not copied by the copyul template. there should not be
+     any such uls (except possibly at the top level), but we do this to make sure we 
+     aren't leaving out any text. -->
+<xsl:template match="ul">
+    <xsl:if test="not(preceding-sibling::*[1][self::p])">
+        <xsl:apply-templates/>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template match="ul" mode="old">
+    <xsl:if test="not(preceding-sibling::*[1][self::p])">
+        <xsl:apply-templates mode="old"/>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template match="ul" mode="new">
+    <xsl:if test="not(preceding-sibling::*[1][self::p])">
+        <xsl:apply-templates mode="new"/>
+    </xsl:if>
+</xsl:template>
+
+<!--  removes the starting '`' from quotes. assumes no other classes -->
+<xsl:template match="p[@class='quote']//text()[not(ancestor::changed-from or ancestor::removed)][1][starts-with(normalize-space(.),'`')]" mode="old">
+    <xsl:value-of select="substring-after(.,'`')"/>
+</xsl:template>
+<xsl:template match="p[@class='quote']//text()[not(ancestor::changed-from or ancestor::removed)][1][starts-with(normalize-space(.),'&#8216;')]" mode="old">
+    <xsl:value-of select="substring-after(.,'&#8216;')"/>
+</xsl:template>
+<xsl:template match="p[@class='quote']//text()[not(ancestor::changed-from or ancestor::removed)][1][starts-with(normalize-space(.),'`')]" mode="new">
+    <xsl:value-of select="substring-after(.,'`')"/>
+</xsl:template>
+<xsl:template match="p[@class='quote']//text()[not(ancestor::changed-from or ancestor::removed)][1][starts-with(normalize-space(.),'&#8216;')]" mode="new">
+    <xsl:value-of select="substring-after(.,'&#8216;')"/>
+</xsl:template>
+
+<xsl:template match="inserted[parent::p[@class='quote']][position()=1][(starts-with(normalize-space(.),'`') and not(substring-after(.,'`'))) or (starts-with(normalize-space(.),'&#8216;') and not(substring-after(.,'&#8216;')))]" mode="new">
+</xsl:template>
+
+
+<xsl:template match="@*|node()">
+    <xsl:copy>
+        <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+</xsl:template>
+
+<xsl:template match="@*|node()" mode="old">
+    <xsl:copy>
+        <xsl:apply-templates select="@*|node()" mode="old"/>
+    </xsl:copy>
+</xsl:template>
+
+<xsl:template match="@*|node()" mode="new">
+    <xsl:copy>
+        <xsl:apply-templates select="@*|node()" mode="new"/>
+    </xsl:copy>
+</xsl:template>
+
+</Templates>
+
+</Page>

@@ -1,0 +1,60 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>A WMS Map with OpenLayers</title>
+        
+        <script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=euzuro-openlayers"></script>
+        <script src="http://www.openlayers.org/dev/lib/OpenLayers.js"></script>
+        <script type="text/javascript">
+            var lon = -85;
+            var lat = 40;
+            var zoom = 5;
+            var map;
+
+            function init(){
+            	options = {
+	            	projection: "EPSG:4326",
+	            	//projection: "EPSG:54004",
+	            };
+            
+                map = new OpenLayers.Map( 'map', options );
+
+                var wms = new OpenLayers.Layer.WMS( "OpenLayers WMS",
+                          "http://labs.metacarta.com/wms/vmap0",
+                          {layers: 'basic'} );
+                var wms2 = new OpenLayers.Layer.WMS( "The Open Planning Project",
+                          "http://sigma4.openplans.org/tilecache-1.3/tilecache.py",
+                          {layers: 'sigma'} );
+                var my_layer1 = new OpenLayers.Layer.WMS( "Congressional Districts 110th",
+                          "http://www.govtrack.us/perl/wms/wms.cgi",
+                          {layers: 'cd-110'} );
+                var my_layer2 = new OpenLayers.Layer.WMS( "Counties",
+                          "http://www.govtrack.us/perl/wms/wms.cgi",
+                          {layers: 'counties'} );
+                var my_layer3 = new OpenLayers.Layer.WMS( "County Subdivisions",
+                          "http://www.govtrack.us/perl/wms/wms.cgi",
+                          {layers: 'cousub'} );
+                var my_layer_overlay = new OpenLayers.Layer.WMS( "My Layer (Overlay)",
+                          "http://www.govtrack.us/perl/wms/wms.cgi",
+                          {layers: 'cd-110', transparent: 'true',
+                           srs: 'EPSG:54004'},
+                          {isBaseLayer: false, opacity: 0.75});
+
+                map.addLayers([wms2, wms, my_layer1, my_layer2, my_layer3, my_layer_overlay]);
+
+                map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+                map.addControl( new OpenLayers.Control.LayerSwitcher() );
+                map.addControl( new OpenLayers.Control.MousePosition() );
+
+            }
+        </script>
+    </head>
+    <body onload="init()">
+    	<p>This is an example of using the WMS server with the <a href="http://openlayers.org/">OpenLayers</a> map widget. View the source of this page to see how it works.</p>
+    	<p>The map below shows color-coded U.S. congressional districts. Change which layer is displayed by changing the <i>layer</i> parameter for the <i>my_layer</i> and <i>my_layer_overlay</i>
+    	variables in the script in this page.</p>
+    	
+        <div id="controls">
+            <div id="map"></div>
+        </div>
+    </body>
+</html>

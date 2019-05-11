@@ -1,0 +1,9 @@
+<?xml-stylesheet type="text/xsl" xpath="xml/Template"?>
+<?xml-stylesheet type="text/xsl" href="rss2.xsl"?>
+<xml>
+	<Template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+		<xsl:template match="/">
+			<xsl:copy-of select="document('/home/govtrack/website/articles/technoratiwatchlist.xml')"/>
+		</xsl:template>
+	</Template>
+</xml>

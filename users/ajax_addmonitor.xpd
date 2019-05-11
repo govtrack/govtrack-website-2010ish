@@ -1,0 +1,37 @@
+<?xml-stylesheet xpath="/div/Templates" type="text/xsl" ?>
+
+<div>
+	<Body/>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		>
+		
+		<xsl:template match="Body">
+			<xsl:if test="http-context:param('monitor') = ''">
+				No tracker specified in URL.
+			</xsl:if>
+			<xsl:if test="not(http-context:param('action')='remove')">
+				<xsl:value-of select="govtrack-login:AddMonitor(http-context:param('monitor'))"/>
+				You are now tracking this item.
+				Your <a href="/users/events.xpd">Tracked Events</a> page will
+				now show events relevant to this item.
+				You may also <a href="/users/yourmonitors.xpd">view</a> all of your trackers.
+				(<a href="javascript:SetInnerHtml('{http-context:param('elemid')}', 'Taking it back...'); SetInnerHTMLFromAjaxResponse('/users/ajax_addmonitor.xpd?monitor={govtrack-util:JSEncode(govtrack-util:UrlEncode(http-context:param('monitor')))}&amp;action=remove&amp;elemid={http-context:param('elemid')}', '{http-context:param('elemid')}')">
+					<xsl:text>Wait, I made a mistake! Don't add this tracker!</xsl:text>
+				</a>)
+			</xsl:if>
+			<xsl:if test="(http-context:param('action')='remove')">
+				<xsl:value-of select="govtrack-login:RemoveMonitor(http-context:param('monitor'))"/>
+				You are no longer tracking this item.
+				(<a href="javascript:SetInnerHtml('{http-context:param('elemid')}', 'Taking it back...'); SetInnerHTMLFromAjaxResponse('/users/ajax_addmonitor.xpd?monitor={govtrack-util:JSEncode(govtrack-util:UrlEncode(http-context:param('monitor')))}&amp;elemid={http-context:param('elemid')}', '{http-context:param('elemid')}')">
+					<xsl:text>Wait, I made a mistake! Add it back!</xsl:text>
+				</a>)
+			</xsl:if>
+		</xsl:template>
+		
+	</Templates>
+</div>

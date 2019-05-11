@@ -1,0 +1,18 @@
+<?xml-stylesheet xpath="*/Templates" type="text/xsl" ?>
+<results>
+	<Results/>
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		>
+		<xsl:template match="Results">
+			<xsl:if test="not(http-context:param('prefix')='')">
+			<xsl:for-each select="govtrack-subjects:GetSubjectsForLetter(http-context:param('prefix'))">
+				<rs id="{position()}" info=""><xsl:value-of select="."/></rs>
+			</xsl:for-each>
+			</xsl:if>
+		</xsl:template>
+	</Templates>
+</results>

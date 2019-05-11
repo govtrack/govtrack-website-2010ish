@@ -1,0 +1,77 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../../style/master.xsl" type="text/xsl" ?>
+<Page>
+	<Title>Tell Congress Why GovTrack, OpenCongress, and MAPLight Matter</Title>
+ <Body>
+	<div class="PageTitle">Tell Congress Why GovTrack Matters</div>
+
+	<div style="float: right; margin-left: 2em; text-align: left; width: 550px">
+		<p style="font-size: 110%; font-weight: bold">1) Go to <a href="http://www.thomas.gov">THOMAS</a> and click the feedback button at the bottom right of the page.</p>
+		
+		<div style="margin-bottom: 1em;">
+			<a href="http://thomas.loc.gov">
+				<img src="locbutton.png" style="border: 1px solid black" title="Fill out THOMAS's feedback form"/>
+			</a>
+		</div>
+	
+		<p style="font-size: 110%; font-weight: bold">2) Fill out the form and ask for "bulk data". You can copy the suggested
+		text on the left.</p>
+
+		<div>
+			<div style="position: absolute">
+				<div style="position: absolute; top: 43px; left: 12px; width: 233px; background-color: white; font-size: 9.25pt;">
+				I use www.GovTrack.us to research and track federal legislation.
+				GovTrack says "bulk data" access to federal legislative information
+				from the Library will help them provide more innovative tools.
+				GovTrack is very valuable to me so I support their request.
+				</div>
+			</div>
+			<img src="locfeedback.png" style="border: 1px solid black" title="Fill out THOMAS's feedback form"/>
+		</div>
+	</div>
+
+	<p>If you think <a href="http://www.govtrack.us">GovTrack</a>, <a href="http://www.opencongress.org">OpenCongress</a>, and <a href="http://www.maplight.org">MAPLight</a> provide an important
+	public service, please tell Congress! Why should Congress care? Well,
+	our sites depend on the <a href="http://thomas.loc.gov">Library of Congress</a>
+	to get much of the legislative information that we then present in
+	a more interesting and interactive way.</p>
+	
+	<p>We need you to go over to the Library of Congress's website <a href="http://thomas.loc.gov">"THOMAS"</a>
+	and send them some feedback. You can do that by clicking the
+	feedback button that floats at the bottom right of the page.</p>
+
+	<p>Then we want you to send them the following message or something
+	like it:</p>
+	
+	<p style="margin: 1em; font-family: Comic Sans MS, Verdana">
+		I use www.GovTrack.us to research and track federal legislation.
+		GovTrack says "bulk data" access to federal legislative information
+		from the Library will help them provide more innovative tools.
+		GovTrack is very valuable to me so I support their request.
+	</p>
+	
+	<p>Of course we'd be equally happy if you send a more personalized message instead.</p>
+	
+	<p>We've worked with Congress in the past on this issue of "bulk data",
+	which means the ability for our websites to get legislative information
+	in a more reliable and timely way than we can today. If we can get that,
+	we can build even better government transparency and civic engagement
+	tools. For more background, see <a href="http://www.theopenhouseproject.com/2009/03/11/bulk-data-downloads-approved-in-the-omnibus-spending-bill-success/">how we
+	got this request into an FY09 appropriations act</a> and
+	<a href="http://radar.oreilly.com/2009/03/bulk-data-downloads-government-transparency-breakthrough.html">what that means</a>.</p>
+	
+	<p>Thanks for your help.</p>
+
+ </Body>
+
+	<Templates xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-person = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Person"
+		exclude-result-prefixes="govtrack-util govtrack-reps"
+		>
+
+	</Templates>
+
+</Page>
+  

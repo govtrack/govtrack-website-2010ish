@@ -1,0 +1,124 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+<Page HideSidebar="1">
+	<Title PrependSiteTitle="1">GovChat: <TitleInfo/></Title>
+
+	<Body>
+		<div class="PageTitle">GovChat: You are in room "<RoomName/>" as user "<UserName/>"</div>
+
+		<table>
+		<tr>
+			<td>
+				<h3>Chat Room</h3>
+			</td>
+			<td>
+				<h3>Talking Points</h3>
+			</td>
+		</tr>
+		
+		<tr valign="top">
+		<td style="padding-right: 1em">
+			<Applet/>
+
+			<p>You can also get to this chat room with any IRC-enabled
+			chat program.  Connect to server <tt>govtrack.us</tt>
+			and go to the channel <ChannelName/>.</p>
+		</td>
+		<td>
+			<Events/>
+		</td>
+		</tr>
+		</table>
+
+	</Body>
+
+	<Templates
+	        xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	        xmlns:xspforms="xspforms"
+	        xmlns:http="HttpContext"
+	        xmlns:util="assembly://GovTrackWeb/GovTrack.Web.Util"
+	        xmlns:user="assembly://GovTrackWeb/GovTrack.Web.Pages.Users.Events"
+	        exclude-result-prefixes="http xspforms uril">
+	        
+	    <xsl:template match="TitleInfo">
+	    	room "<xsl:value-of select="http:param('room')"/>"
+	    	as user
+	    	"<xsl:value-of select="http:param('nick')"/>"
+	    </xsl:template>
+	    <xsl:template match="RoomName">
+	    	<xsl:value-of select="http:param('room')"/>
+	    </xsl:template>
+	    <xsl:template match="UserName">
+	    	<xsl:value-of select="http:param('nick')"/>
+	    </xsl:template>
+	        
+		<xsl:template match="Applet">
+		
+		<xsl:if test="http:param('nick') = ''">
+			<xsl:value-of select="http:redirect('.')"/>
+		</xsl:if>
+		
+<applet code="IRCApplet.class" archive="irc-unsigned.jar,pixx.jar" width="640" height="400">
+<param name="CABINETS" value="irc.cab,securedirc-unsigned.cab,pixx.cab"/>
+
+<param name="nick" value="{http:param('nick')}"/>
+<param name="fullname" value="Chat User {http:param('nick')}"/>
+<param name="host" value="www.govtrack.us"/>
+<param name="gui" value="pixx"/>
+
+<param name="command1" value="/join #{util:Normalize(http:param('room'))}"/>
+<param name="useinfo" value="true"/>
+<param name="useidentserver" value="false"/>
+
+<param name="pixx:showchanlist" value="false"/>
+<param name="pixx:showabout" value="false"/>
+<param name="pixx:showhelp" value="false"/>
+<param name="pixx:showclose" value="false"/>
+<param name="pixx:showstatus" value="false"/>
+<param name="pixx:showdock" value="false"/>
+<param name="pixx:displaychannelmode" value="false"/>
+<param name="pixx:displaychanneltopic" value="false"/>
+<param name="pixx:configurepopup" value="true"/>
+<param name="pixx:popupmenustring1" value="Private Message"/>
+<param name="pixx:popupmenucommand1_1" value="/query %1"/>
+<param name="pixx:showchannelnickmodeapply" value="false"/>
+<param name="pixx:showchannelmodeapply" value="false"/>
+</applet>
+		</xsl:template>
+
+		<xsl:template match="ChannelName">
+			<xsl:text>#</xsl:text>
+			<xsl:value-of select="util:Normalize(http:param('room'))"/>
+		</xsl:template>
+
+		<xsl:template match="Events">
+			<div style="font-size: 85%; height: 400px; overflow: auto;">
+			<xsl:variable name="events" select="user:GetVoteEvents()"/>
+			<xsl:for-each select="$events">
+				<xsl:sort select="date" data-type="number" order="descending"/>
+				<div class="date">
+                    <xsl:value-of select="util:DateToString(date)"/>
+                    -
+                    <xsl:value-of select="typename"/>
+                </div>
+
+                <div class="item">
+                    <a href="{link}" target="_blank"><xsl:value-of select="title"/></a>
+                </div>
+                <div style="margin-bottom: 1em">
+                <xsl:if test="not(summary = '')">
+                    <div>
+                        <xsl:value-of select="summary"/>
+                    </div>
+                </xsl:if>
+				</div>
+			</xsl:for-each>
+			</div>
+		</xsl:template>
+
+	        
+	</Templates>
+
+</Page>
+
+

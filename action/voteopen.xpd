@@ -1,0 +1,111 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+<Page>
+	<Title>Vote Open: Congressional Incumbents Supporting Transparency</Title>
+ <Body>
+
+<div class="PageTitle">Vote Open: Congressional Incumbents Supporting Transparency</div>
+
+<p>It's an election year, and that means more than voting for
+president. Before you head to the general election and flip
+the switch for your incumbent, think about whether he or she
+supports the very fundamental issue of congressional transparency.
+If not, you might consider voting for the challenger in the primary!</p>
+
+<p>We at GovTrack have compiled a list of incumbents who have
+taken serious steps in advancing transparency in Congress.</p>
+
+		<candidate id="400134">
+			<p title="Earmarks">Flake <a href="http://thehill.com/leading-the-news/flake-criticizes-gop-earmark-strategy-2008-01-26.html">criticized his own party</a>'s stance
+			on earmarks. He proposed a moratorium on earmarks for 2008, but GOP leaders put an end to the idea.</p>
+		</candidate>
+
+		<candidate id="400315">
+			<p title="Earmarks">Hensarling, along with Jeff Flake and Jeb Hensarling, proposed <a href="http://thehill.com/leading-the-news/flake-criticizes-gop-earmark-strategy-2008-01-26.html">a moratorium on earmarks for 2008</a>,
+			but GOP leaders put an end to the idea.</p>
+		</candidate>
+
+		<candidate id="400175">
+			<p title="Earmarks">Hensarling, along with Jeff Flake and Mike Pence, proposed <a href="http://thehill.com/leading-the-news/flake-criticizes-gop-earmark-strategy-2008-01-26.html">a moratorium on earmarks for 2008</a>,
+			but GOP leaders put an end to the idea.</p>
+		</candidate>
+
+	</Body>
+
+	<Templates xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-person = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Person"
+		exclude-result-prefixes="govtrack-util govtrack-reps"
+		>
+
+		<xsl:template match="candidate">
+			<xsl:variable name="id" select="@id"/>
+		
+			<xsl:variable name="info" select="govtrack-person:GetGeneralInfo($id)"/>
+			
+			<xsl:variable name="clr">
+				<xsl:if test="$info/party='Democrat'">#333399</xsl:if>
+				<xsl:if test="$info/party='Republican'">#993333</xsl:if>
+			</xsl:variable>
+			
+			<a name="{$id}"></a>
+
+			<xsl:variable name="roles">
+				<xsl:for-each select="govtrack-person:GetRoles($id, 1)">
+					<xsl:sort select="startdate" data-type="number" order="descending"/>
+					<xsl:copy-of select="."/>
+				</xsl:for-each>
+			</xsl:variable>
+
+			<div>
+				<div style="font-size: 120%; font-weight: bold; margin-bottom: 1em; background-color: {$clr}; padding: 2px">
+					<a href="/congress/person.xpd?id={$id}" style="color: white">
+						<xsl:value-of select="govtrack-reps:FormatPersonName($id, -1, 'nostate')"/>
+						-
+						<xsl:value-of select="govtrack-util:GetStateName($roles[1]/state)"/>
+						<xsl:if test="$roles[1]/type='rep'">'s <xsl:value-of select="govtrack-util:Ordinate($roles[1]/district)"/> District</xsl:if>
+					</a>
+				</div>
+				
+				<table>
+				<tr valign="top">
+				<td width="110" style="padding-bottom: 1em;">
+					<xsl:if test="govtrack-reps:HasImage($id)">
+						<a href="/congress/person.xpd?id={$id}">
+							<img src="/data/photos/{$id}-100px.jpeg" style="border: 2px solid black"/>
+						</a>
+					</xsl:if>
+					<xsl:if test="not(govtrack-reps:HasImage($id))">
+						<center>(No Image Available)</center>
+					</xsl:if>
+				</td>
+				
+				<td>
+					<div style="font-weight: bold; margin-bottom: 1em"><xsl:text xml:space="preserve">
+</xsl:text>
+						<xsl:value-of select="govtrack-reps:FormatPersonName($id, 0, '')"/>,
+						a <xsl:value-of select="$info/party"/>, has been a
+						<xsl:if test="$roles[1]/type='sen'">Senator</xsl:if>
+						<xsl:if test="$roles[1]/type='rep'">Representative</xsl:if>
+						from
+						<xsl:value-of select="govtrack-util:GetStateName($roles[1]/state)"/>
+						<xsl:if test="$roles[1]/type='rep'">'s <xsl:value-of select="govtrack-util:Ordinate($roles[1]/district)"/> district</xsl:if>
+						since
+						<xsl:value-of select="govtrack-util:YearFromDate($roles[1]/startdate)"/>.
+					</div>
+					
+					<xsl:for-each select="p">
+						<p><b><xsl:value-of select="@title"/>: </b> <xsl:apply-templates select="node()"/></p>
+					</xsl:for-each>
+				
+				</td>
+				</tr>
+				</table>
+			</div>
+		</xsl:template>
+
+	</Templates>
+
+</Page>
+  

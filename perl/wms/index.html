@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<title>WMS Server Documentation</title>
+		<style>
+			li { margin-top: 1em }
+			table { margin: 1em }
+		</style>
+	</head>
+	<body>
+	
+<h1>WMS Server Documentation</h1>
+
+<p>This is the starting page for Josh's experimental WMS
+server project.</p>
+
+<p>This WMS server project is a generic backend for serving
+geospacial image data, intended for the use case of generating
+cartographic visualizations like color-coded charts, rather than
+navigational maps.</p>
+
+<p>More information...</p>
+
+<ul>
+	<li>Maps served by this server can be viewed with any
+	WMS-compatible map viewer. Example uses you can see here are:
+	<ul>
+	<li><a href="example_openlayers.html">OpenLayers example</a></li>
+	<li><a href="example_googlemaps.html">Google Maps API example</a></li>
+	</ul>
+	</li>
+	
+	<li>Several layers exist on this server that you can try viewing
+	by modifying the examples above. These layers color the regions
+	arbitrarily, but attempting to prevent adjacent regions from
+	having the same color.
+	<table>
+	<tr><th>Layer Name</th> <th>Description</th></tr>
+	<tr><td>states</td> <td>U.S. states</td></tr>
+	<tr><td>cd-110</td> <td>U.S. congressional districts 2007-2008</td></tr>
+	<tr><td>counties</td> <td>U.S. counties</td></tr>
+	<tr><td>countysubs</td> <td>U.S. towns (generally incorporated)</td></tr>
+	<tr><td>cdps</td> <td>U.S. towns (generally unincorporated, "Census Data Places")</td></tr>
+	<tr><td>sldl</td> <td>U.S. state legislative districts, lower chamber (current in Jan 2008)</td></tr>
+	<tr><td>sldu</td> <td>U.S. state legislative districts, upper chamber (current in Jan 2008)</td></tr>
+	<tr><td>zipcodes</td> <td>U.S. census ZCTAs (approximations of zipcodes)</td></tr>
+	</table>
+	</li>
+	
+	<li>Remember that layers (style info) and geometry are kept separate in this
+	system. You can make your own layers based on the existing geometry
+	datasets that have already been uploaded. The geometry datasets that 
+	are already available are:
+	
+	<table>
+	<tr><th>Dataset Identifier</th> <th>Description</th></tr>
+	<tr><td>http://www.rdfabout.com/rdf/usgov/us/states</td> <td>U.S. states</td></tr>
+	<tr><td>http://www.rdfabout.com/rdf/usgov/congress/house/110</td> <td>U.S. congressional districts 2007-2008</td></tr> 
+	<tr><td>http://www.rdfabout.com/rdf/usgov/us/counties</td> <td>U.S. counties</td></tr> 
+	<tr><td>http://www.rdfabout.com/rdf/usgov/us/countysubs</td> <td>U.S. towns (generally incorporated)</td></tr> 
+	<tr><td>http://www.rdfabout.com/rdf/usgov/us/cdps</td> <td>U.S. towns (generally unincorporated, "Census Data Places")</td></tr> 
+	<tr><td>http://www.rdfabout.com/rdf/usgov/us/sld/lower</td> <td>U.S. state legislative districts, lower chamber (current in Jan 2008)</td></tr> 
+	<tr><td>http://www.rdfabout.com/rdf/usgov/us/sld/upper</td> <td>U.S. state legislative districts, upper chamber (current in Jan 2008)</td></tr>
+	<tr><td>http://www.rdfabout.com/rdf/usgov/us/zctas</td> <td>U.S. census ZCTAs (approximations of zipcodes)</td></tr> 
+	</table>
+	The fact that the dataset identifiers are URLs is entirely incidental (though not without reason).
+	</li>
+	
+	<li>You can color the datasets above according to your own needs using the
+	<tt>upload-styles.cgi</tt> API method.  See the section "Uploading a Layer"
+	in the <a href="apidocs.html">API documentation</a>. You can use your own
+	uploader or <a href="upload-styles.html">this form</a> to upload style data.
+	You'll need to provide the identifiers of regions that make up the dataset
+	you choose. See the "Listing Regions in a Dataset or Layer" section of the
+	API documentation for how to do that (<a href="http://www.govtrack.us/perl/wms/list-regions.cgi?dataset=http://www.rdfabout.com/rdf/usgov/congress/house/110">example
+	for U.S. congressional districts</a>).</li>
+
+	<li>It is also possible to upload your own geometry, in order for you
+	to create layers for different regions than already exist on the 
+	server. To do this, use the
+	<tt>upload-geometry.cgi</tt> API method.  See the section "Uploading a Dataset"
+	in the <a href="apidocs.html">API documentation</a>. You can use your own
+	uploader or <a href="upload-geometry.html">this form</a> to upload geometry data.</li>
+	
+	<li>In order to create a new layer or dataset, you will need an API
+	key, which is just used to make sure you don't modify other people's
+	data. Please contact <a href="http://razor.occams.info">me</a> to
+	get one. The "test" API key can be used to modify the layer named "test"
+	and the dataset named "test", and you can view the results on the
+	<a href="example_testlayer.html">test layer example page</a>. Feel free to play.<li>
+
+	<li>The source code for this project is maintained in
+	a Subversion repository at URL <tt>svn://occams.info/viz/wms</tt>
+	and can be <a href="http://razor.occams.info/code/repo/?/viz/wms/">browsed</a>.</li>
+</ul>
+
+	</body>
+</html>

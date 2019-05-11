@@ -1,0 +1,309 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1"
+	xmlns:xspforms="xspforms">
+
+	<Title>U.S. Congress <PageTitle/> - GovTrack.us</Title>
+
+	<ifcommittee>
+	<RDFA/>
+
+	<Head>
+		<!-- YUI -->
+		<link type="text/css" rel="stylesheet" href="http://yui.yahooapis.com/2.6.0/build/carousel/assets/skins/sam/carousel.css"/> 
+		<script src="http://yui.yahooapis.com/2.6.0/build/utilities/utilities.js"></script> 
+		<script src="http://yui.yahooapis.com/2.6.0/build/yahoo/yahoo-dom-event.js"></script> 
+		<script src="http://yui.yahooapis.com/2.6.0/build/animation/animation-min.js"></script> 
+		<script src="http://yui.yahooapis.com/2.6.0/build/element/element-beta-min.js"></script> 
+		<script src="http://yui.yahooapis.com/2.6.0/build/carousel/carousel-beta-min.js"></script> 
+		<script>
+YAHOO.util.Event.onDOMReady(function (ev) { 
+  var carousel = new YAHOO.widget.Carousel("membershipcontainer", { 
+    numVisible: 4,
+    animation: { speed: 0.5 },
+  }); 
+  carousel.render(); // get ready for rendering the widget 
+  carousel.show();   // display the widget
+} );
+		</script>		
+	</Head>
+	</ifcommittee>
+
+	<Sidebar>
+		<ifcommittee>
+			<MonitorBox/>
+		</ifcommittee>
+
+		<Section Name="Upcoming Committee Meetings" Icon="/media/feed-icon-20x20.gif">
+			<p>Use the <a href="/users/events.xpd?monitors=misc:allcommittee">Upcoming Meetings Feed</a> to keep an eye on upcoming committee
+			meetings as they are posted. (Unfortunately we cannot track House committees comprehensively.)</p>
+			<p>For a calendar of all tracked upcoming meetings, see <a href="http://www.google.com/calendar/embed?src=ajccavhao32tt7q8ttcgh66d9epscmmb%40import.calendar.google.com&amp;ctz=America/New_York">Upcoming Meetings Calendar on Google</a>
+			or use the <a href="http://www.govtrack.us/users/events-ical.xpd?monitors=misc:allcommittee">iCal Feed</a> for Google, iCal, or Outlook.</p>
+		</Section>
+
+		<Section Name="Committees" Icon="/media/help.gif">
+			<p>The Senate and House divide their work into committees.
+			Members of Congress sit on one or more committees,
+			where most bills start in the legislative process.</p>
+
+			<p>You can find more information about Senate committees
+			on <a href="http://www.senate.gov/pagelayout/committees/d_three_sections_with_teasers/committees_home.htm">the Senate website</a>
+			and more information about House committees on
+			<a href="http://www.house.gov/house/CommitteeWWW.shtml">the House website</a>.</p>
+		</Section>
+	</Sidebar>
+
+	<Breadcrumbs>
+		<ifnocommittee>
+			<a href="/congress/">Congress</a>
+		</ifnocommittee>
+		<ifcommittee>
+			<a href="/congress/">Congress</a> &gt; <a href="committee.xpd">Committees</a><ParentLink/>
+		</ifcommittee>
+	</Breadcrumbs>
+	
+	<Body-A>
+		<ifnocommittee>
+			<h1>Congressional Committees</h1>
+
+			<p>Click a committee name to view its members and to see legislation assigned to that committee.</p>
+		</ifnocommittee>
+		<ifcommittee>
+			<h1 class="norule"><PageTitle/></h1>
+		</ifcommittee>
+	</Body-A>
+	
+	<Body-B>
+		<ifnocommittee>
+			<CommitteeList type="Senate"/>
+			<CommitteeList type="House"/>
+			<CommitteeList type="Joint"/>
+		</ifnocommittee>
+
+		<ifcommittee>
+			<p><TrackerLink/></p>
+
+			<h3>Members</h3>
+			<!--<p>We're still showing last year's membership of House committees. We'll update the House committee positions when the Clerk of the House publishes the new information.</p>-->
+			<CommitteeMembers/>
+
+			<SubcommitteeList/>
+
+			<Legislation/>
+			
+		</ifcommittee>
+	</Body-B>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-login = "assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:xspforms="xspforms"
+		exclude-result-prefixes="http-context govtrack-util govtrack-reps govtrack-subjects govtrack-login xspforms">
+
+		<xsl:variable name="committee" select="http-context:param('id')"/>
+		<xsl:variable name="parentcommittee" select="govtrack-reps:GetCommitteeParent(http-context:param('id'))"/>
+
+		<xsl:variable name="monitorname" select="govtrack-reps:GetCommitteeCurrentThomasName($committee)"/>
+
+		<xsl:template match="PageTitle">
+			<xsl:if test="$committee = ''">
+				List of Committees
+			</xsl:if>
+			<xsl:if test="not($committee = '')">
+				<xsl:if test="not($parentcommittee='')">
+					<xsl:value-of select="govtrack-reps:GetCommitteeName($parentcommittee)"/>:
+				</xsl:if>
+				<xsl:value-of select="govtrack-reps:GetCommitteeName($committee)"/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="RDFA">
+			<RDFA>
+			<xsl:attribute name="about">
+			<xsl:text>http://www.rdfabout.com/rdf/usgov/congress/committees/</xsl:text>
+			<xsl:if test="not($parentcommittee='')">
+				<xsl:value-of select="govtrack-util:FilterNonLetter(govtrack-reps:GetCommitteeCurrentThomasName($parentcommittee))"/>
+				<xsl:text>/</xsl:text>
+				<xsl:value-of select="govtrack-util:FilterNonLetter(govtrack-reps:GetCommitteeName($committee))"/>
+			</xsl:if>
+			<xsl:if test="$parentcommittee=''">
+				<xsl:value-of select="govtrack-util:FilterNonLetter(govtrack-reps:GetCommitteeCurrentThomasName($committee))"/>
+			</xsl:if>
+			</xsl:attribute>
+			</RDFA>
+		</xsl:template>
+
+		<xsl:template match="ifnocommittee">
+			<xsl:if test="$committee = ''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="ifcommittee">
+			<xsl:if test="not($committee = '')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="CommitteeList">
+			<h3><xsl:value-of select="@type"/> Committees</h3>
+			<xsl:for-each select="govtrack-reps:GetCommitteeList(@type)">
+				<xsl:sort select="govtrack-reps:GetCommitteeSortString(displayname)"/>
+				<div style="margin: .25em"><a href="committee.xpd?id={id}"><xsl:value-of select="displayname"/></a></div>
+			</xsl:for-each>
+		</xsl:template>
+
+		<xsl:template match="MonitorBox">
+			<xsl:if test="not($monitorname='')">
+			<Section Name="Track This Committee">
+			<monitor-subscribe
+                title="{$monitorname}"
+                desc="committee"
+                type="committee"
+                term="{$monitorname}">
+				<events>major activity on legislation 
+assigned to this committee and upcoming committee meetings</events>
+			</monitor-subscribe>
+            </Section>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="ParentLink">
+			<xsl:if test="not($parentcommittee='')">
+				&gt; <a href="?id={$parentcommittee}"><xsl:value-of select="govtrack-reps:GetCommitteeName($parentcommittee)"/></a>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="SubcommitteeList">
+			<xsl:variable name="subs" select="govtrack-reps:GetSubcommitteeList($committee)"/>
+
+			<xsl:if test="count($subs) &gt; 0">
+				<h3>Subcommittees</h3>
+			</xsl:if>
+			<ul>
+			<xsl:for-each select="$subs">
+				<xsl:sort select="displayname"/>
+				<li><a href="?id={id}">Subcommittee on <xsl:value-of select="displayname"/></a></li>
+			</xsl:for-each>
+			</ul>
+		</xsl:template>
+
+		<xsl:template match="CommitteeMembers">
+			<xsl:variable name="com" select="$committee"/>
+			<xsl:variable name="members" select="govtrack-reps:GetCommitteeMembers($committee)"/>
+
+			<xsl:if test="count($members) &gt; 0">
+			<p>
+				<xsl:if test="$parentcommittee=''">This committee </xsl:if>
+				<xsl:if test="not($parentcommittee='')">The subcommittee on <xsl:value-of select="govtrack-reps:GetCommitteeName($committee)"/> </xsl:if>
+				has <xsl:value-of select="count($members)"/> members.
+				Use the buttons below to see all of the members.</p>
+			</xsl:if>
+			<xsl:if test="count($members) = 0">
+				<p>Membership information for this committee is not yet available on GovTrack.</p>
+			</xsl:if>
+
+			<xsl:if test="count($members) &gt; 0">
+			<div id="membershipcontainer" class="yui-skin-sam">
+			<ol>
+				<xsl:for-each select="$members">
+					<xsl:sort select="not(role='Chairman' or role='Chair')"/>
+					<xsl:sort select="not(role='Vice Chairman' or role='Vice Chair')"/>
+					<xsl:sort select="not(role='Ranking Member')"/>
+					<xsl:sort select="govtrack-reps:FormatPersonName(personid, 'now', 'lastfirst')"/>
+
+					<li><div style="width: 125px; padding: 0px .25em .15em .25em">
+						<div style="height: 1.5em; font-style: italic"><nobr><xsl:if test="not(role='')"><xsl:value-of select="role"/> <xsl:if test="role = 'Ranking'"> Member</xsl:if></xsl:if></nobr></div>
+						<div style="height: 125px;">
+							<xsl:if test="govtrack-reps:HasImage(personid)"><center><a href="person.xpd?id={personid}"><img src="/data/photos/{personid}-100px.jpeg" style="border: 1px outset black" width="100"/></a></center></xsl:if>
+							<xsl:if test="not(govtrack-reps:HasImage(personid))"><div style="padding-top: 30px; width: 100px">(no photo available)</div></xsl:if>
+						</div>
+						<div><a href="person.xpd?id={personid}">
+							<xsl:choose>
+							<xsl:when test="not(substring-after($com,'House Committee on ')='') or not(substring-after($com,'Senate Committee on ')='')">
+							<xsl:value-of select="govtrack-reps:FormatPersonName(personid, 'now', 'notitle')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="govtrack-reps:FormatPersonName(personid, 'now', '')"/>
+							</xsl:otherwise>
+							</xsl:choose>
+						</a></div>
+					</div></li>
+				</xsl:for-each>
+			</ol>
+			</div>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="Legislation">
+			<xsl:if test="not($monitorname='')">
+
+			<h3>Legislation in this Committee</h3>
+			
+			<p>Below are the bills that are assigned to this committee <i>in this legislative session</i>.  These bills and resolutions 
+			have been proposed by Members of Congress but may not have had any action taken on them on their
+			path to becoming law. In fact, the vast majority of proposed legislation never becomes law.</p>
+			
+			<xsl:variable name="session">
+				<xsl:if test="http-context:param('session')=''">
+					<xsl:value-of select="govtrack-util:GetCurrentSession()"/>
+				</xsl:if>
+				<xsl:if test="not(http-context:param('session')='')">
+					<xsl:value-of select="http-context:param('session')"/>
+				</xsl:if>
+			</xsl:variable>
+
+			<xsl:variable name="bills" select="govtrack-subjects:LoadIndex($session, 'committee', govtrack-reps:GetCommitteeArchiveThomasName($session, $committee))"/>
+			<xsl:if test="count($bills)=0">There is no legislation pending in this committee.</xsl:if>
+			<xsl:if test="count($bills[name(statusxml/*)='introduced']) &gt; 0">
+				<h4>Introduced Measures Pending Committee Consideration</h4>
+				<xsl:for-each select="$bills[name(statusxml/*)='introduced']">
+					<xsl:sort select="type"/>
+					<xsl:sort select="number" data-type="number"/>
+					<xsl:call-template name="billrow"/>
+				</xsl:for-each>
+			</xsl:if>
+			<xsl:if test="count($bills[name(statusxml/*)='calendar']) &gt; 0">
+				<h4>Bills and Resolutions Referred to this Committee on the Legislative Calendar</h4>
+				<xsl:for-each select="$bills[name(statusxml/*)='calendar']">
+					<xsl:sort select="type"/>
+					<xsl:sort select="number" data-type="number"/>
+					<xsl:call-template name="billrow"/>
+				</xsl:for-each>
+			</xsl:if>
+			<xsl:if test="count($bills[not(name(statusxml/*)='introduced' or name(statusxml/*)='calendar' or name(statusxml/*)='enacted')]) &gt; 0">
+				<h4>Bills and Resolutions Voted on in One Chamber, or Failed Passage</h4>
+				<xsl:for-each select="$bills[not(name(statusxml/*)='introduced' or name(statusxml/*)='calendar' or name(statusxml/*)='enacted')]">
+					<xsl:sort select="not(substring-after(title, 'Waiving ') = '')"/>
+					<xsl:sort select="not(substring-after(title, 'Providing for') = '')"/>
+					<xsl:sort select="type"/>
+					<xsl:sort select="number" data-type="number"/>
+					<xsl:call-template name="billrow"/>
+				</xsl:for-each>
+			</xsl:if>
+			<xsl:if test="count($bills[name(statusxml/*)='enacted']) &gt; 0">
+				<h4>Bills Considered by this Committee that have been Enacted</h4>
+				<xsl:for-each select="$bills[name(statusxml/*)='enacted']">
+					<xsl:sort select="type"/>
+					<xsl:sort select="number" data-type="number"/>
+					<xsl:call-template name="billrow"/>
+				</xsl:for-each>
+			</xsl:if>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template name="billrow">
+			<table style="margin-bottom: .5em">
+			<tr valign="top">
+				<td style="padding: 5px .5em 0px 0px"><MonitorButton monitor="bill:{concat(type,session,'-',number)}" name="This Bill"/></td>
+				<td><a href="bill.xpd?bill={type}{session}-{number}"><xsl:value-of select="title"/></a></td>
+			</tr>
+			</table>
+		</xsl:template>
+	</Templates>
+   
+ </Page>

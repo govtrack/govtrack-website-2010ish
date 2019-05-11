@@ -1,0 +1,49 @@
+<?xml-stylesheet href="layout.xsl" type="text/xsl" ?>
+
+<Article>
+	<Pub>BusinessWeek Online</Pub>
+	<Title>All Your Info in One Place</Title>
+
+	<Author>Olga Kharif</Author>	
+	<Date>2/8/2005</Date>
+	
+	<Abstract>
+		This article appears at
+		<a href="http://www.businessweek.com/technology/content/feb2005/tc2005028_3828_tc203.htm">http://www.businessweek.com/technology/content/feb2005/tc2005028_3828_tc203.htm</a>.
+	</Abstract>
+	
+	<Body>
+<p>-- Web services are poised to revolutionize the way content sites get their goods to the folks who want them --</p>
+
+<p>Joshua Tauberer is trying to render obsolete Web surfing to track congressional bills. People usually have to check out dozens of Web addresses, like the U.S. Congress site, OpenSecrets.org, and political blogs, to find out if special interests are putting money into the campaign coffers of a bill's sponsor, read what bloggers are saying about the bill, and find out if there's any related legislation.</p>
+
+<p>But last year Tauberer, a graduate linguistics student at the University of Pennsylvania, built GovTrack.us to automatically retrieve the latest news and blog entries related to federal legislation from hundreds of sites. Copyright law is one topic he's particularly interested in, and he wants to help others take advantage of all the information about it floating in cyberspace. He's doing so via a series of related software and Internet technologies people commonly call Web services.</p>
+
+<p>"DATA ROACH MOTELS."  Think of the site Tauberer has created as a virtual news fetcher, bringing all the relevant info right to your PC. No more need to surf around the Internet or plow through wordy government sites. It all comes to one spot, his Web site.</p>
+
+<p>Such Web-service sites are just starting to catch on, thanks to technologies such as the Extensible Markup Language (XML), which is sort of a lingua franca for Net programmers, and Rich Site Summary (RSS) feeds, which make it possible for sites to easily share data. It's not a stretch to say they could revolutionize the way content is delivered.</p>
+
+<p>"In the past, Web sites were data roach motels," says David Sifry, CEO of the search engine Technorati, which sends information to GovTrack.us via a Web service. "Your data comes in, but doesn't come out. Now it does. And Web sites are able to create services that are better than the sum of their parts."</p>
+
+<p>BEYOND BUSINESS USES.  So much better, in fact, that these new sites, built with the combined resources of lots of their pint-size brethren, are expected to gain on traditional ones in the coming year. Will ad and subscription revenues follow? Likely so. Attracted by this prospect, hundreds of companies and developers are taking a hard look at this new Net phenomenon.</p>
+
+<p>This is a major change. Until now, investors and techies alike thought of Web services as something that could only make business transactions easier. Indeed, last year just 4% of Web-services-related spending went to information dissemination and retrieval, says Susan Eustis, president of the tech consulting firm WinterGreen Research. By 2009, that share should jump to 25% of what could be a $2.7 billion market.</p>
+
+<p>Now the biggest forces behind informational Web services are information sites themselves. Hundreds such as Technorati have begun publishing their application program interfaces (API). That's a fancy way of saying they're letting the programmers from other sites know the easiest way to link up their news feeds.</p>
+
+<p>SHARING CUSTOMERS.  The result is a community of interrelated programmers and Web sites. Since Flickr.com, a Web site through which people can share photos, made its APIs available last summer, more than 600 developers from other sites have made use of them, says co-founder Stewart Butterfield.</p>
+
+<p>Mappr.com uses Web-services technologies to sift through photos posted by more than 300,000 Flickr.com customers and transposes them against a map of the U.S. All those photos essentially become a digital photo guide to America.</p>
+
+<p>The hope is that sharing customers like that benefits everyone. Flickr.com gets more Web surfers, some of whom may eventually pay for a premium-site membership. Mappr.com does the same. In the end, it allows a lot of little sites to have the same rich content as a big one.</p>
+
+<p>LOADS OF POTENTIAL.  Other sites hope to use Web services to grab a chunk of the classifieds market. In March, LinkedIn.com, a social-networking site for 1.8 million professionals, will begin using a Web service to collect job ads from all over the Internet on its site.</p>
+
+<p>Through the site's social network, a LinkedIn.com customer interested in a listing will be able to find out if the recruiter is a friend of a friend, and if so, get a referral, says Konstantin Guericke, LinkedIn.com's vice-president for marketing. LinkedIn.com is working out an agreement with sites like Feedster.com to post their jobs data.</p>
+
+<p>It's only the early days of information Web services, of course. But the potential is huge. Consider this: Just 10 years ago, businesses were tiptoeing to the Web, trying to figure out if they could make money on it.</p>
+
+<p>Today, the question isn't "if?" It's "how much?" Ten years from now, savvy business folks will be asking the same of informational Web services. </p>
+	</Body>
+</Article>
+

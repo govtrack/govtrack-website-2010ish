@@ -1,0 +1,33 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title>How does Congress work? Ask GovTrack a Question</Title>
+	
+	<Body-A>
+		<h1 class="PageTitle">How does Congress work? Ask GovTrack a Question</h1>
+		
+		<p>Have a question about how Congress works? Parliamentary
+		procedure got you confused? Ask us a question by emailing
+		us at <contactemailaddress/>, and we'll
+		try to answer it on the blog on the front page.</p>
+		
+		<p>If we need to, we'll tap our friends that work in
+		the Capitol to get you an answer.</p>
+		
+		<p>But please only ask questions about how
+		Congress works generally.
+		See the examples below for what I mean.</p>
+		
+		<p><a href="http://www.govtrack.us/blog/category/questions/">Past questions</a>
+		have included:</p>
+		
+		<ul>
+			<li>Can representatitves change their vote?</li>
+			<li>What Does “Ordered to be reported with an amendment in the nature of a substitute favorably” mean?</li>
+			<li>If the House version is defeated, does the Senate bill die too?</li>
+		</ul>
+	</Body-A>
+ </Page>
+

@@ -1,0 +1,73 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<Title>Printable Congressional District Maps - GovTrack.us</Title>
+	
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a> &gt;
+		<a href="findyourreps.xpd">Members of Congress</a>
+	</Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="PageTitle">Congressional District Maps to Print</h1>
+
+		<p>You've seen our <a href="findyourreps.xpd">interactive
+		congressional district map</a> but now you want to print it
+		for reference. You've come to the right place. Below you'll
+		find a map for each congressional district at three print
+		qualities depending on how large you want the map to print
+		and how fine you want the detail to be.</p>
+		
+		<p>Updated 5/17/2010: The maps have been updated for readability and are now
+		in PDF format which will give you better printing options.</p>
+		
+		<p>Be sure to turn on the <b>Shrink to Printable Area</b> and
+		<b>Auto-Rotate and Center</b> options.</p>
+	</Body-A>
+	
+	<Body-B>
+		<list/>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		exclude-result-prefixes="govtrack-util">
+		
+		<xsl:template match="list">
+			<xsl:for-each select="govtrack-util:StateNames()">
+				<xsl:sort select="."/>
+				<h3><xsl:value-of select="."/></h3>
+				<xsl:variable name="abbr" select="govtrack-util:GetStateAbbr(.)"/>
+				<xsl:choose>
+				<xsl:when test="govtrack-util:GetStateApportionment($abbr) = 1">
+					<p>Maps are not available for states with a representative-at-large.</p>
+				</xsl:when>
+				<xsl:when test="govtrack-util:GetStateApportionment($abbr) = 'delegate'">
+					<p>Maps are not available for territories with an at-large delegate.</p>
+				</xsl:when>
+				<xsl:otherwise>
+					<table>
+					<tr>
+						<th>District</th>
+						<th style="text-align: center; padding: 1em">Lowest Detail<div>(8" at 150dpi)</div></th>
+						<th style="text-align: center; padding: 1em">Medium Detail<div>(8" at 300dpi)</div></th>
+						<th style="text-align: center; padding: 1em">Highest Detail<div>(Poster Sizes)</div></th>
+					</tr>
+					<xsl:for-each select="govtrack-util:range(1, govtrack-util:GetStateApportionment($abbr))">
+						<tr>
+							<td><xsl:value-of select="govtrack-util:Ordinate(.)"/></td>
+							<td style="text-align: center;"><a href="http://s3.amazonaws.com/govtrackus/printabledistrictmaps/{$abbr}{govtrack-util:Pad(., 2)}_1200.pdf" rel="nofollow">Download (PDF)</a></td>
+							<td style="text-align: center;"><a href="http://s3.amazonaws.com/govtrackus/printabledistrictmaps/{$abbr}{govtrack-util:Pad(., 2)}_2400.pdf" rel="nofollow">Download (PDF)</a></td>
+							<td style="text-align: center;"><a href="http://s3.amazonaws.com/govtrackus/printabledistrictmaps/{$abbr}{govtrack-util:Pad(., 2)}_3600.pdf" rel="nofollow">Download (PDF)</a></td>
+						</tr>
+					</xsl:for-each>
+					</table>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		</xsl:template>
+		
+	</Templates>
+</Page>

@@ -1,0 +1,157 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1">
+	<Title>U.S. Congress Legislation - GovTrack.us</Title>
+	
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a>
+	</Breadcrumbs>
+		
+	<Body-A>
+		<h1>Federal Legislation</h1>
+
+		<p style="margin: 1em 0 2em 0">Members of Congress introduce some ten thousand bills and resolutions in each two-year session of Congress, only a small fraction of which are seriously considered and fewer still enacted as law.</p>
+	</Body-A>
+	
+	<Body-B>
+
+		<table style="text-align: justify" border="0" cellspacing="0" cellpadding="0">
+		<tr valign="top">
+		<!--
+		<td style="padding-right: 2em" width="50%">
+			<Box Color="blue">
+		
+			<h2 style="margin-top: 0; text-align: center; margin-top: 10px">Key Bills in Congress Now</h2>
+			
+			<h4 style="margin-top: 1.5em">Expected in the Lame Duck Session</h4>
+			<ul style="margin-left: 1em">
+			 <li><a href="http://www.govtrack.us/congress/bill.xpd?bill=h111-3458">H.R. 3458</a>, the net neutrality bill, would update the Communications Act of 1934 to set interoperability requirements for Internet Service Providers.</li>
+			 <li><a href="http://www.govtrack.us/congress/bill.xpd?bill=h111-5175">H.R. 5175</a>, the DISCLOSE Act, would require additional forms of disclosure of for corporate spending on electioneering.</li>
+			 <li><a href="http://www.govtrack.us/congress/bill.xpd?bill=s111-3815">S. 3815</a>, which would promote natural gas and electric vehicles.</li>
+			 <li><a href="http://www.govtrack.us/congress/bill.xpd?bill=s111-2827">S. 2827</a>, the Military Families Affordable Homes Act, which would expand the eligibility of military personnel for low-income residential rental housing.</li>
+			 <li><a href="http://www.govtrack.us/congress/bill.xpd?bill=s111-510">S. 510</a>, the food safety bill, which would grant the FDA additional regulatory power to improve food safety.</li>
+			 <li><a href="http://www.govtrack.us/congress/bill.xpd?bill=h111-1751">H.R. 1751</a>, the DREAM Act, which would allow aliens to become permanent residents through attending university.</li>
+			</ul>
+			
+			
+			<h4 style="margin-top: 1.5em">Financial Reform</h4>
+			<ul style="margin-left: 1em"> 
+			 <li>Congress passed <a href="http://www.govtrack.us/congress/bill.xpd?bill=h111-4173">HR. 4173</a>: Restoring American Financial Stability Act of 2010.</li>
+		    </ul>
+
+		    <h4>Health Care</h4>
+			<ul style="margin-left: 1em"> 
+			 <li> 
+			   <a href="http://www.govtrack.us/congress/bill.xpd?bill=h111-3590"  >H.R. 3590</a>: The health care reform bill and text enacted March 23, 2010.
+			   Votes on H.R. 3590 bill in the <a href="http://www.govtrack.us/congress/vote.xpd?vote=s2009-396">Senate</a> (Dec. 24, 2009) and <a href="http://www.govtrack.us/congress/vote.xpd?vote=h2010-165">House</a> (March 21, 2010).
+			 </li> 
+			 <li> 
+			   <a href="http://www.govtrack.us/congress/bill.xpd?bill=h111-4872"  >H.R. 4872</a>: The reconciliation bill that made additional changes to the health care bill enacted March 30, 2010.
+			 </li> 
+			 <li> 
+			   <a href="http://www.govtrack.us/congress/amendment.xpd?session=111&amp;amdt=h509">Stupak Amendment</a> limiting funding for abortions and <a href="http://www.govtrack.us/congress/vote.xpd?vote=h2009-884">vote</a> (Nov. 7, 2009)<a href="http://www.govtrack.us/congress/vote.xpd?vote=h2009-884">.<br /></a> 
+			 </li>
+			 <p style="margin: 0"><a href="http://www.govtrackinsider.com/articles/2010-04-09/health-care-review">Health Care: How did we get here?</a></p>
+		    </ul>
+		    
+		    </Box>
+		</td>
+		-->
+		
+		<td width="50%">
+		
+		<h3 style="margin-top: 0">Search Legislation</h3>
+		
+		<p>Find a current (2009-2010) bill or resolution by number or keywords:</p>
+
+		<xspforms:form xmlns:xspforms="xspforms" id="billsearch" action="/congress/billsearch.xpd">
+			&#x2056; Search: 
+			<xspforms:text name="q" insidecaption="bill number/keywords" size="30"/>
+			<xspforms:submit text="Go"/>
+		</xspforms:form>
+
+		<p>Try the <a href="/congress/billsearch.xpd" style="font-weight: bold">advanced search</a> page for more options, such as searching older legislation or searching by sponsor, cosponsor, status, and public law number.
+		If you're looking for historical documents, see the <a href="/formoreinfo.xpd">links page</a>.</p>
+
+		<h3>Browse Legislation</h3>
+		
+		<p>What interests you?  Thousands of keywords are used to index all of the bills and resolutions in Congress.
+		Browse bills and resolutions by <a href="subjects.xpd" style="font-weight: bold">subject area</a> and find the subjects
+		that interest you to monitor legislative events in those categories.</p>
+
+		<p>Browse bills and resolutions by the <a href="committee.xpd" style="font-weight: bold">committee</a> (or subcomittee) they have been assigned to.</p>
+
+		<!--<p>Bills that amend the United States Code, one aspect of federal law,
+		are indexed by the <a href="billusc.xpd" style="font-weight: bold">sections of the United States Code</a> they refer to.</p>-->
+
+		<p>If you're looking for historical documents, see the <a href="/formoreinfo.xpd">links page</a> for additional resources.</p>
+		
+		<h3>Feeds</h3>
+		
+			<p>The following general tracked events feeds are available for legislation:</p>
+			
+			<p><a href="/users/events.xpd?monitors=misc:activebills">Recently Active Legislation</a>:
+			View all recent legislative activity, including the
+			introduction and passage of legislation.</p>
+			<p><a href="/users/events.xpd?monitors=misc:activebills2">Recently Active Legislation-Excluding Newly Introduced Bills</a>:
+			View all recent legislative activity, excluding the
+			introduction of new bills and resolutions.</p>
+			<p><a href="/users/events.xpd?monitors=misc:introducedbills">Newly Introduced Bills</a>:
+			A feed just for newly introduced bills and resolutions.</p>
+			<p><a href="/users/events.xpd?monitors=misc:enactedbills">Enacted Laws</a>:
+			A feed just for bills that are enacted as law.</p>
+			
+		</td>
+		</tr>
+		</table>
+
+		<h3>Popular Legislation</h3>
+
+		<table>
+		<tr valign="top">
+		<td width="50%">
+			<h4 style="margin-top: 0px">Users Are Searching For:</h4>
+			<table>
+			<searchlist/>
+			</table>
+		</td>
+		<td>
+			<h4 style="margin-top: 0px">Bills Being Tracked:</h4>
+			<table>
+			<monitorslist/>
+			</table>
+		</td>
+		</tr>
+		</table>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-subjects2 = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-index = "assembly://GovTrackWeb/GovTrack.Web.Pages.Index"
+		exclude-result-prefixes="govtrack-subjects2 govtrack-index">
+		
+		<xsl:template match="searchlist">
+			<xsl:variable name="popularmonitors_b" select="govtrack-index:GetPopularBills()"/>
+			<xsl:for-each select="$popularmonitors_b[position()&lt;=15]">
+				<tr valign="top">
+				<td style="padding-top: 4px"><MonitorButton monitor="{monitor}" name="This Bill"/></td>
+				<td style="font-size: 90%; padding-bottom: 5px">
+					<div><a href="{link}"><xsl:value-of select="title"/></a></div>
+					<div><xsl:value-of select="terms"/></div>
+				</td></tr>
+			</xsl:for-each>
+		</xsl:template>
+		
+		<xsl:template match="monitorslist">
+			<xsl:variable name="bills" select="govtrack-index:GetPopularMonitors('BillMonitor')"/>
+			<xsl:for-each select="$bills[position()&lt;=20]">
+				<tr valign="top">
+				<td style="padding-top: 3px"><MonitorButton monitor="{monitor}" name="This Bill"/></td>
+				<td style="font-size: 90%"><a href="{link}"><xsl:value-of select="title"/></a> (<xsl:value-of select="users"/> users)</td></tr>
+			</xsl:for-each>
+		</xsl:template>
+
+	</Templates>
+</Page>

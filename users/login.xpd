@@ -1,0 +1,35 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<NoCache/>
+
+	<Title>Log In to GovTrack.us</Title>
+	<Meta Name="ROBOTS">NOINDEX</Meta>
+	
+	<Body-A>
+		<h1 class="PageTitle">Log In</h1>
+		
+		<p>If you already have registered an account on GovTrack, access
+		your saved settings by logging in below. Registering on the site
+		lets you save your tracker settings and gives you the option
+		for receiving email updates for congressional activity that
+		matches the trackers you choose.</p>
+		
+		<p>Want to learn more? See <a href="trackers.xpd">how trackers work</a>.</p>
+		
+		<p>If you're not reigstered yet, you just need to sign in with
+		a Google, OpenID or other supported account. Choose the "third-party"
+		sign-in option below. Or, you can register a new GovTrack username and password.</p>
+		
+		<h3>Log in...</h3>
+		
+		<LoginForm redirect="/users/account.xpd"/>
+	</Body-A>
+
+	<Templates
+		pre-process-checkloggedin="GovTrack.Web.Pages.Users.RedirectIfLoggedIn, GovTrackWeb"
+		>
+	</Templates>
+
+</Page>

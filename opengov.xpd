@@ -1,0 +1,72 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title>GovTrack.us: Government in Real Time</Title>
+	
+	<Body-B>
+		<center>
+			<a href="http://publicequalsonline.com/">
+				<img src="http://media.sunlightprojects.org/publicequalsonline/brand/PEO_logo_transparent_700x150.png" border="0"/>
+			</a>
+		</center>
+		
+		<div style="float: right; margin-left: 3em; text-align: center">
+			<div><img src="/media/opensource.jpeg"/></div>
+			
+			<div style="margin: 1em"><a href="http://www.opendefinition.org"><img src="http://m.okfn.org/images/ok_buttons/od_80x23_blue.png" border="0"/></a></div>
+		</div>
+	
+		<div style="text-align: justify; font-size: 105%">
+		
+		<p>Since our launch in 2004, GovTrack has been a leader in the 
+		growing and changing open government movement. What was once a 
+		fringe movement seeking better access to government records, our 
+		movement today involves citizens, web developers, researchers 
+		government managers, and elected officials in a concerted effort 
+		to make data a <a href="http://razor.occams.info/pubdocs/opendataciviccapital.html">national asset</a>.</p>
+		
+		<p>The <a href="http://publicequalsonline.com/">Public=Online: Government In Real Time campaign</a>,
+		started by <a href="http://www.sunlightfoundation.com">Sunlight Foundation</a>,
+		gives our movement a name and a face.</p>
+		
+		<p style="text-align: center; font-weight: bold; margin: 1.5em">Please
+			<a href="http://publicequalsonline.com/">Sign The Pledge</a>
+		supporting the campaign to let our government know how important
+		we think it is.</p>
+		
+		<p>Our movement opens up access to information about the 
+		government to make participation easier and oversight more 
+		powerful. We encourage government agencies to work with the 
+		public on making information they have practically useful, not 
+		just for government oversight but for whatever other 
+		applications the public can think of.</p>
+		
+		<p>At GovTrack we also carry out our own work in the spirit of the
+		open source and open data movements. The source code and data
+		behind GovTrack can be found in our <a href="/developers">developers</a>
+		section. For more, you might see some of <a href="http://razor.occams.info/civictech.xpd">our accomplishments</a>.</p>
+		
+		<p>Thanks to Sunlight for creating the (G) logo and banner.</p>
+		
+		<h2 class="PageTitle">Open Government: Collaboration, Transparency, and Participation in Practice</h2>
+		
+		<div style="float: left; margin: 0 2em 2em 2em">
+			<iframe src="http://rcm.amazon.com/e/cm?t=govt-20&amp;o=1&amp;p=8&amp;l=as1&amp;asins=0596804350&amp;fc1=000000&amp;IS2=1&amp;lt1=_blank&amp;m=amazon&amp;lc1=0000FF&amp;bc1=000000&amp;bg1=FFFFFF&amp;f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+		</div>
+
+		<p>February 24, 2010. Published by O'Reilly Media.</p>
+
+		<p style="margin: 1em; font-family: sans-serif">"In a world where web services can make real-time data accessible to anyone, how can the government leverage this openness to improve its operations and increase citizen participation and awareness? Through a collection of essays and case studies, leading visionaries and practitioners both inside and outside of government share their ideas on how to achieve and direct this emerging world of online collaboration, transparency, and participation."</p>
+
+		<p>This book is going to be the de facto guide to what "open government"
+		means. Plus, GovTrack's proprietor Josh Tauberer wrote a chapter, so
+		buy a copy! (He doesn't get any royalties but if you buy through
+		Amazon by clicking the link on the left, at least he'll get a
+		few cents from Amazon. :-)</p>
+		
+		</div>
+	</Body-B>
+</Page>

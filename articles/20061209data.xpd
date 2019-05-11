@@ -1,0 +1,296 @@
+<?xml-stylesheet href="layout.xsl" type="text/xsl" ?>
+
+<Article>
+	<Title>Prose Is Poetry to a Computer: What is Structured Data?</Title>
+
+	<Author>Joshua Tauberer</Author>	
+	<Date>12/09/2006</Date>
+	
+	<Abstract>
+		This is a brief introduction to the notion of publishing
+		structured, or machine-readable, data on the Web using XML
+		or RDF, geared toward open data in an open government.
+	</Abstract>
+	
+	<Body>
+
+<section>Why we need structured information</section>
+
+<p>When you publish information on, say, a web page, people can learn from the information in 
+ways other than actually reading the web page itself.  For instance, a 
+newspaper can summaries the page and people can learn about the 
+information you published through an intermediary.  The newspaper might 
+collect what you've written into tables and charts to make the 
+information easier to understand, or they may search for patterns among 
+many documents and educate their readers on the big picture.</p>
+
+<p>Now what happens when you start producing tens of thousands of 
+documents that you want people to learn from, like bills, reports, and 
+voting records?  It becomes quite costly for any human to collect, 
+chart, search, and summarize all of the documents by hand.  At some 
+point, we want to employ computers to do some of these things for us.  
+Unfortunately, computers aren't so smart.</p>
+
+<p>Let's take an example to see what happens when we sic a computer
+on such a task without any planning.  Say you have published the
+following:</p>
+
+<code>
+On Tuesday, the Armed Services Committee will meet to discuss
+pending legislation including H.R. 1234.
+</code>
+
+<p>Now it wasn't just you who has published a notice of an upcoming
+meeting, but some hundred other committees and subcommittees:</p>
+
+<code>
+...
+In two Thursdays, the Reform committee will pick up where we left off.
+
+The Commerce, Science, and Transportation committee will meet on
+the eighth to resume unfinished business from the November 3rd meeting.
+...
+</code>
+
+<p>The computer's task is to collect all of the meeting notices and list 
+them in chronological order.  Well, let me say, as a graduate student 
+studying linguistics, computers don't deal with human languages very 
+well at all.  In fact, <i>no one</i> knows how to program a computer to 
+understand those meeting notices as good as you or I can.  A computer 
+will inevitably foul up "the eighth": did you mean December or January? 
+Was November 3rd the date of that upcoming meeting (perhaps in 2007) or 
+a reference to one that's already past?</p>
+
+<p>And that's what I mean in the title about prose being like poetry to 
+a computer.  Computers understand English with about as much accuracy as 
+I understand poetry.  It wouldn't make sense to publish public 
+information like voting records as a haiku, and likewise if we want 
+computers to help us out, we have to give them a little bit of help by 
+publishing information in a language they can do better with.</p>
+
+<p>Here are some other ways computers can (and already) help us:</p>
+
+<ul>
+	<li>Your newspaper publishes an article mentioning a new bill
+	introduced by Representative XYZ but doesn't give its number.
+	How do you find it without reading every bill?  You ask a
+	computer to search all legislation for bills sponsored by
+	XYZ.</li>
+
+	<li>Citizen Q wants an email every time a bill about
+	fishing in Alaska is introduced.  Since the Congressional
+	Research Service is <i>already</i> tagging bills with
+	subject terms, a computer can use that information to
+	automate the process of sending an email to Citizen Q.</li>
+
+	<li>You are looking for who will support a new bill in the
+	upcoming legislative session and have a list of other
+	similar past bills that never got off the ground.  A computer
+	can pick out the most likely supporters by analyzing the
+	sponsorship and cosponsorship patterns of legislators on
+	past legislation.</li>
+</ul>
+
+<p>It should be clear now that computers can do lots of useful
+things for people.  We'll see what we need to do to
+publish information in a way that computers can do those things,
+by giving structure to the information we publish.</p>
+
+<section>Basic structured information</section>
+
+<p>Giving structure to information means putting the information
+in a precise format that one can instruct a computer follow, compared
+to prose, which is just nonsense to a computer.
+(Actually, English <i>is</i> structured, but it's so complicated and
+requires so much general knowledge that it's not a practical format
+for the use cases here.)
+Here's an example of structured information:</p>
+
+<code>
+1-7-2007	The Armed Services Committee will meet to discuss H.R. 1234.
+2-8-2007	The Commerce, Science, and Transportation committee will meet...
+2-11-2007	The Reform committee will pick up where we left off.
+</code>
+
+<p>A table with a column of dates in a consistent format
+is structured information.  A computer could quite easily be told
+now to maintain this list in chronological order because it is possible
+to tell the computer exactly where to look for the date of each meeting
+(at the start of the line) and how to interpret the date (in month-day-year
+order).  No such consistency was found in the notices above in English prose.</p>
+
+<p>There are lots of ways to make a table, though.  You can separate
+the columns with spaces or commas.  You might or might not include
+a header row giving the columns names (e.g. "Date" and "Description").
+Thus the organization in charge of Web standards has created a few
+general ways to format structured data so that the structure of the
+structure (i.e. how the table itself is layed out) is fixed.</p>
+
+<p>The two standards I'll show here are XML and RDF.  XML is first up...</p>
+
+<section>Structured information in XML</section>
+
+<p>XML ("Extensible Markup Language") is one structure for structured
+data.  If you're familiar with HTML, it looks similar:</p>
+
+<code>
+&lt;calendar&gt;
+    &lt;event date="1-7-2007"&gt;
+        The Armed Services Committee will meet to discuss H.R. 1234.
+    &lt;/event&gt;
+    &lt;event date="2-8-2007"&gt;
+        The Commerce, Science, and Transportation committee will meet...
+    &lt;/event&gt;
+    ....
+&lt;/calendar&gt;
+</code>
+
+<p>What XML adds to the plain tabular format is some rules about how
+you can construct your table.  You can put anything in your table,
+but you have to be explicit with the &lt; and &gt; symbols so that
+a computer program reading the file knows how to work its way though it.</p>
+
+<p>How does this differ from HTML?  HTML is (or can be) one particular
+use of XML to add a <i>certain type</i> of structure to a document,
+in particular structure about how the document should be formatted or presented.
+What are paragraphs, which text is in bold, etcetera.  While this
+type of structure is important to display the page nicely for
+people to read, it does not add the right kind of structure
+to aid in computer processing of the <i>information content</i>
+of the document.</p>
+
+<p>Publishing information in well-thought-out XML is a very
+good way of publishing information.  XML makes it readily
+possible for others to construct new applications that process
+the information in new ways.</p>
+
+<p>XML is designed for hierarchical, self-contained data.
+RDF is an alternative model for publishing structured information...</p>
+
+<section>RDF for networked information</section>
+
+<p>RDF ("Resource Description Framework") is an alternative to XML.
+(RDF is often associated with RSS feeds; however, they are two
+quite separate things.)  RDF breaks from XML in the sense that
+while XML is meant for hierarchical information (a calendar contains
+events, and event contains a date and a description...), and
+self-contained information (your document doesn't care about my document),
+RDF is more flexible and allows documents to mesh together easier.</p>
+
+<p>It's difficult to show an example of RDF because RDF isn't a
+particular table format as XML is with brackets.  It's a little
+bit more abstract and can be written in several ways (one of which
+is as XML).  But, the different ways all boil down to a tabular
+format of simple sentences:</p>
+
+<code>
+Subject     Predicate      Object
+----------------------------------------------------------------------
+myCalendar  contains       event1
+myCalendar  contains       event2
+event1      isOnDate       "1-7-2007"
+event1      hasDescription "The Armed Services Committee will meet..."
+event2      isOnDate       "2-8-2007"
+event2      hasDescription "The Commerce, Science, and Trans..."
+</code>
+
+<p>Publishing with RDF requires a bigger investment than XML (it is
+a bit more difficult), but in some cases it can have a big payoff,
+mainly when there are documents that have related information.
+We'll take an example in the next section.</p>
+
+<section>Another example: Indexing meetings by topic</section>
+
+<p>Let's look at the use case where we want a computer
+not only to organize the meetings by date, but also to index them
+by the bills that will be considered.  Recall that the first
+prose committee meeting notice mentioned "H.R. 1234."  If we want
+computers to find that, we ought to give it structure.  We might
+augment our XML as follows:</p>
+
+<code>
+&lt;calendar&gt;
+    &lt;event date="1-7-2007"&gt;
+        The Armed Services Committee will meet
+        to discuss <b>&lt;bill&gt;H.R. 1234&lt;/bill&gt;</b>.
+    &lt;/event&gt;
+    ....
+&lt;/calendar&gt;
+</code>
+
+<p>Notice that this structure makes it easy for a computer program
+to realize that <i>H.R. 1234</i> was a reference to a bill, among
+other things it might have been an abbreviation for.  The trouble
+is that how do we know that it's H.R. 1234 in the 109th Congress and
+not one from one of the previous Congresses, or the upcoming one?
+We can be more precise in XML, for instance by going with this:</p>
+
+<code>
+&lt;bill identifier="109-hr-1234"&gt;H.R. 1234&lt;/bill&gt;
+</code>
+
+<p>That gives structure to the bill number <i>itself</i> (something very 
+worthwhile, indeed).  However, how do we even know that that refers to a 
+a bill in the U.S. Congress? Maybe someone else half way across the 
+world uses "109-hr-1234" to refer to a particular model of car.  Okay,
+now you don't <i>have</i> to worry about this at all because the people
+using your XML file ought to know what they're getting, but the RDF standard
+takes things a step further and lets you use <i>globally unique identifiers</i>
+for absolutely everything, meaning that those using your information
+need to know <i>less</i> about your implicit intentions about what
+things in the XML were supposed to mean.</p>
+
+<p>The RDF version of this information would be augmented as follows:</p>
+
+<code>
+Subject     Predicate      Object
+----------------------------------------------------------------------
+event1      isOnDate       "1-7-2007"
+event1      hasDescription "The Armed Services Committee will meet..."
+<b>event1      relatedTo      [tag:govshare.info,2005:data/us/congress/109/bills/h867]</b>
+</code>
+
+<p>The bracketed thing [tag:govshare.info,2005:data/us/congress/109/bills/h867]
+is just a <i>really long</i> identifier for H.R. 867.  It's so long that
+you can be sure no one else is using this identifier to refer to anything else.
+This is a benefit when other people are publishing documents with the
+same identifier, such as a representative who wants to list the bills
+he or she has sponsored:</p>
+
+<code>
+Subject     Predicate      Object
+----------------------------------------------------------------------
+RepXYZ      sponsored      [tag:govshare.info,2005:data/us/congress/109/bills/h867]
+</code>
+
+<p>Because the identifier was reused by the representative, a computer 
+application can now easily put together these two separate data files 
+and re-create a new calendar automatically that, for instance, adds 
+information about who sponsored the bills that will be brought up in the 
+meetings.  That is, we can use a computer to automate the task of 
+gathering some information that will be useful for us as we prepare for 
+meetings.</p>
+
+<p>Indeed both XML and RDF can be used for this task, and each makes
+certain trade-offs --- which are beyond the scope of this document.</p>
+
+<section>And in conclusion</section>
+
+<p>I hope that these few examples have showed how adding structure
+to the information we publish can help us by making it more readily
+possible to build computer applications that make our lives easier.
+There are several choices for publishing structured information, such
+as XML and RDF, and although you may wish to do further research
+when choosing which to use, either choice will greatly expand the reach
+of what you publish compared to publishing it in English verse.</p>
+
+<p>For more on XML, you can <a href="http://www.javaworld.com/javaworld/jw-04-1999/jw-04-xml.html?page=4">start
+in the middle of this tutorial</a> or see the articles on <a href="http://www.xml.com">xml.com</a>.</p>
+
+<p>For more on RDF, you can <a href="http://xml.com/pub/a/2001/01/24/rdf.html">read
+this introduction</a> or see the resources
+on <a href="http://www.rdfabout.com/">rdfabout.com</a> (both of which
+happen to be mine...).</p>
+
+	</Body>
+</Article>

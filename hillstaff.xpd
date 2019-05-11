@@ -1,0 +1,75 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title>GovTrack.us for Capitol Hill Staff</Title>
+	
+	<Body-A>
+		<h1 class="PageTitle">GovTrack.us for Capitol Hill Staff</h1>
+
+		<p>We're here for you too! Although GovTrack considers itself
+		a part of the open-government community, our goals of making
+		comprehensive legislative tracking easy and of educating
+		the public mean even staff for Members of Congress are
+		a part of GovTrack's community. We hope we can work together.</p>
+		
+		<h3>Just some background...</h3>
+		
+		<p>GovTrack is a lot like THOMAS or LIS. Except, it's better.</p>
+		
+		<p>Lately the site is visited by some
+		20,000 people each day. It was launched in 2004, is totally
+		non-partisan, and is independently run with no source of ongoing
+		external funding. GovTrack is ad-supported but is otherwise non-commercial.
+		(<a href="about.xpd">More about the site</a>.)</p>
+		
+		<h3>Why you might find it useful</h3>
+		
+		<p>There are a few things on GovTrack you might find useful
+		as a Hill staffer.</p>
+		
+		<p>We have interactive <b><a href="/congress/findyourreps.xpd">congressional
+		district maps</a></b>. You can zoom in to individual streets to see precise district boundaries.</p>
+		
+		<p>Our <b>bill text view</b> is pretty good. For this you'll have to search
+		for a bill, such as <a href="/congress/billtext.xpd?bill=h111-1">H.R. 1</a>.
+		The coolest thing is you can compare versions of bill text as it goes
+		through the legislative process. Comparisons can be made between any
+		two versions of the bill posted by GPO: changes between the versions are highlighted.
+		The bill text page also turns references to the U.S. Code into
+		links to the text of the U.S.C., and you can make direct permanent links to
+		particular paragraphs in the text.</p>
+		
+		<p>One of the reasons the site was created was to make <b>RSS feeds
+		for everything going on in Congress</b>. There are feeds for each
+		Member of Congress (<a href="/congress/findyourreps.xpd">find the Member</a>
+		to get to the feed), for each bill (<a href="/congress/legislation.xpd">find a bill</a>),
+		and for various <a href="/users/feeds.xpd">other activities in Congress</a>.
+		You use a feed by subscribing to it with a feed reader, such
+		as <a href="http://www.google.com/reader">Google Reader</a>.
+		You can also have the events that come up in the feeds sent
+		to you each night or weekly.</p>
+		
+		<h3>For web developers</h3>
+		
+		<p>If you run the website of a Member of Congress, you might be
+		interested in the bill status or events <a href="/embed">widgets</a>.
+		You can also embed congressional district maps on your website:
+		see the bottom of the <a href="/embed">widgets</a> page for more.</p>
+		
+		<h3>In the future</h3>
+		
+		<p>We'd like to help you get your message out. You might want
+		to check out the Q&amp;A feature on the pages for the bills
+		your Member has sponsored to see what kinds of questions
+		the GovTrack community has about the legislation. (Maybe you
+		can answer some of the questions too!) We're also considering
+		how we might be able to help you get your message out by
+		tieing bills to your position statements on them.</p>
+		
+		<p>If you have any thoughts or suggestions, don't hesitate
+		to contact GovTrack by email.</p>
+	</Body-A>
+
+</Page>

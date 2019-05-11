@@ -1,0 +1,42 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+
+<!--  Returns a version of the bill without any changes. -->
+
+<Page>
+
+<Templates
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+    exclude-result-prefixes="govtrack-bill">
+
+<xsl:include href="cleanup.xsl"/>
+
+<xsl:template match="/">
+    <xsl:variable name="cleaned">
+        <xsl:apply-templates select="govtrack-bill:LoadBillText()" mode="cleanup"/>
+    </xsl:variable> 
+    
+    <!-- Portable usage is 'exsl:node-set($cleaned)' -->
+    <xsl:processing-instruction name="cache">server</xsl:processing-instruction>
+    <xsl:apply-templates select="$cleaned"/>
+</xsl:template>
+
+<!-- Cleanup code specific to plaintext -->
+<xsl:template match="changed|inserted|changed-to" mode="cleanup">
+    <xsl:apply-templates mode="cleanup"/>
+</xsl:template>
+
+<xsl:template match="changed-from|removed" mode="cleanup">
+</xsl:template>
+
+<!-- Real processing -->
+
+<xsl:include href="common.xsl"/>
+
+<!-- Don't include any change information -->
+<xsl:template name="haschange">
+</xsl:template>
+
+</Templates>
+
+</Page>

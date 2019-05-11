@@ -1,0 +1,19 @@
+<?xml-stylesheet xpath="/div/Templates" type="text/xsl" ?>
+
+<div>
+	<Body/>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-email="assembly://GovTrackWeb/GovTrack.Web.Email"
+		>
+		
+		<xsl:template match="Body">
+			<xsl:value-of select="govtrack-email:SendToWebmaster(http-context:param('subject'), http-context:param('body'))"/>
+			<xsl:value-of select="http-context:param('response-text')"/>
+			<script><xsl:value-of select="http-context:param('run-after')"/></script>
+		</xsl:template>
+		
+	</Templates>
+</div>

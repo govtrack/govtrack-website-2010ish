@@ -1,0 +1,74 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../../style/master.xsl" type="text/xsl" ?>
+
+<Page Width="Max">
+	<Title>Economic Stimulus Bill Text Tracker - GovTrack.us</Title>
+	
+	<Head>
+		<style>
+			.doc { font-family: Georgia, Times New Roman; font-size: 9pt }
+			.billtextline { width: 400px; }
+			.leftdoc { padding-right: 1em; border-right: 1px solid black }
+			.rightdoc { padding-left: 1em; }
+			.inserted { background-color: #CCFFCC; }
+			.removed { background-color: #FFCCCC; }
+		</style>
+	</Head>
+
+	<Body>
+		<div class="PreTitle">Special Feature</div>
+		<h1 class="PageTitle">Economic Stimulus Bill Text Tracker</h1>
+
+		<p>This is a special GovTrack feature! We've gathered a few drafts of what's currently the <b>Emergency Economic Stabilization Act of 2008, H.R. 3997</b>, the $700 billion "bail-out" bill, and are highlighting below the changes made from one draft to the next. We hope this makes it easier to understand what's happening right now in Congress.</p>
+		
+		<show/>
+		
+		<hr/>
+		
+		<p>A hat tip to John Wonderlich of the <a href="http://www.sunlightfoundation.com">Sunlight Foundation</a> for suggesting a tool like this on the mail list of <a href="http://www.theopenhouseproject.com">The Open House Project</a>.</p>
+		
+		<p>If you have a PDF for another draft, send it to me at <contactemailaddress/> and I will add a new comparison.</p>
+	</Body>
+	
+	<Templates             
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		exclude-result-prefixes="http-context">
+		
+		<xsl:template match="show[http-context:param('id')='']">
+			<p>(You can also find on GovTrack the <a href="http://www.govtrack.us/congress/vote.xpd?vote=h2008-674">failed roll call</a> for the Sept 28 bill. More data here will come as it is published. Bear with us while the site copes from unusually high traffic with all of the interest in reading H.R. 3997.)</p>
+			
+			<p>Here are the comparisons we have available:</p>
+		
+			<ul>
+			<xsl:for-each select="document('comparison/index.xml')/index/entry">
+				<li><a href="?id={@id}">Comparison <xsl:value-of select="@id"/></a> between:
+					<p><xsl:value-of select="@left-description"/>
+						(<xsl:value-of select="@left-id"/>, <a href="pdf/{@left-id}.pdf">PDF</a>), and
+						</p>
+					<p><xsl:value-of select="@right-description"/>
+						(<xsl:value-of select="@right-id"/>, <a href="pdf/{@right-id}.pdf">PDF</a>)
+						</p>
+				</li>
+			</xsl:for-each>
+			</ul>
+		</xsl:template>
+		
+		<xsl:template match="show[not(http-context:param('id')='')]">
+			<center><p>(<a href="changes.xpd">Go Back To Main Page</a>)</p></center>
+		
+			<xsl:variable name="doc" select="document(concat('comparison/', http-context:param('id'), '.html'))/doc"/>
+		
+			<p>This is a comparison of two bailout bill drafts:</p>
+			
+			<p><b>On the left</b> is the draft numbered <b><xsl:value-of select="$doc/@left-id"/></b>. It is <xsl:value-of select="$doc/@left-description"/>. [<a href="pdf/{$doc/@left-id}.pdf">PDF</a>]</p>
+			<p><b>On the right</b> is the draft numbered <b><xsl:value-of select="$doc/@right-id"/></b>. It is <xsl:value-of select="$doc/@right-description"/>. [<a href="pdf/{$doc/@right-id}.pdf">PDF</a>]</p>
+			
+			<p>Why is this so ugly? This is based on converting the PDF drafts into text, which doesn't always work right. If you think the public should be able to do this better, tell your representative to support <a href="http://www.theopenhouseproject.com">The Open House Project</a> report recommendations.</p>
+		
+			<p>Lines <span class="removed">highlighted on the left</span> were removed in the creation of <xsl:value-of select="$doc/@right-id"/>. Lines <span class="inserted">highlighted on the right</span> were inserted after the publication of <xsl:value-of select="$doc/@left-id"/>.</p>
+
+			<xsl:copy-of select="$doc"/>
+		</xsl:template>
+	</Templates>
+</Page>

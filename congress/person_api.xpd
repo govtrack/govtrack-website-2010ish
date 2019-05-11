@@ -1,0 +1,185 @@
+<?xml-stylesheet xpath="*/Templates" type="text/xsl" ?>
+<?cache server?>
+<person>
+	<FullName><PersonName/></FullName>
+	<ShortName><PersonNameShort/></ShortName>
+	<Gender><PersonGender/></Gender>
+	<CurrentRole/>
+	<BioguideId/>
+	<OpenSecretsId/>
+	<VoteSmartId/>
+	<Committees/>
+	<Roles/>
+
+	<SponsoredBills/>
+	<CosponsoredBills/>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-person = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Person"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-login = "assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-vote = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Vote"
+		exclude-result-prefixes="http-context govtrack-util govtrack-bill govtrack-bills govtrack-reps govtrack-person govtrack-subjects govtrack-login govtrack-vote"
+		>
+		
+		<!-- load these guys first so it does the ID check -->
+		<xsl:variable name="id" select="govtrack-person:GetPersonId()" />
+		<xsl:variable name="info" select="govtrack-person:GetGeneralInfo($id)"/>
+
+		<xsl:variable name="role" select="govtrack-person:GetCurrentRole($id)"/>
+		<xsl:variable name="roles" select="govtrack-person:GetRoles($id, 0, 0)"/>
+		<xsl:variable name="hascurrentrole" select="not($role='none')" />
+		<xsl:variable name="person-name-short" select="govtrack-reps:FormatPersonName($id, '', '')"/>
+		<xsl:variable name="person-name-last" select="govtrack-reps:FormatPersonName($id, '', 'lastname')"/>
+		
+		<xsl:variable name="stats" select="govtrack-reps:GetPersonalStats($id, 0)"/>
+		
+		<xsl:variable name="session">
+			<xsl:choose>
+			<xsl:when test="not(http-context:param('session') = '')">
+				<xsl:value-of select="http-context:param('session')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				-1 <!--<xsl:value-of select="govtrack-util:GetCurrentSession()"/>-->
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="sponsoredbills" select="govtrack-reps:GetBillsSponsored(string($id), $session)"/>
+		<xsl:variable name="cosponsoredbills" select="govtrack-reps:GetBillsCosponsored(string($id), $session)"/>
+
+		<xsl:template match="PersonName">
+			<xsl:value-of select="govtrack-reps:FormatPersonName($id, '', 'nickmod')"/>
+		</xsl:template>
+		<xsl:template match="PersonNameShort">
+			<xsl:value-of select="$person-name-short"/>
+		</xsl:template>
+
+		<xsl:template match="PersonGender">
+			<xsl:value-of select="$info/gender"/>
+		</xsl:template>
+		
+		<xsl:template match="CurrentPosition">
+			<xsl:if test="$hascurrentrole">
+				<xsl:text>, </xsl:text>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="CurrentRole">
+			<xsl:if test="$hascurrentrole">
+	<CurrentRole>
+		<xsl:comment>Type is 'Senator' or 'Representative' or 'President'</xsl:comment>
+		<xsl:if test="$role/type='sen'">
+		<Type>Senator</Type>
+		<Title><xsl:value-of select="govtrack-reps:RoleTypeName($role/type, $role/title)"/></Title>
+		<Honorific><xsl:value-of select="govtrack-reps:RoleTypeTitle($role/type, $role/title)"/></Honorific>
+		<State Abbr="{$role/state}"><xsl:value-of select="govtrack-util:GetStateName($role/state)"/></State>
+		</xsl:if>
+		<xsl:if test="$role/type='rep'">
+		<Type>Representative</Type>
+		<Title Type="{$role/title}"><xsl:value-of select="govtrack-reps:RoleTypeName($role/type, $role/title)"/></Title> <xsl:comment>For 'Representative', @Type='REP', 'DEL' (Delegate), or 'RC' (Resident Commissioner)</xsl:comment>
+		<State Abbr="{$role/state}"><xsl:value-of select="govtrack-util:GetStateName($role/state)"/></State>
+		<District> <xsl:comment> -1 means unknown, 0 means at large</xsl:comment>
+			<xsl:if test="not($role/district=0)">
+				<xsl:value-of select="$role/district"/>
+			</xsl:if>
+			<xsl:if test="$role/district=0">
+				<xsl:text>At Large</xsl:text>
+			</xsl:if>
+		</District>
+		</xsl:if>
+		<xsl:if test="$role/type='prez'">
+		<Type>President</Type>
+		<Title><xsl:value-of select="govtrack-reps:RoleTypeName($role/type, $role/title)"/></Title>
+		</xsl:if>
+	</CurrentRole>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="Committees">
+			<xsl:variable name="comms" select="govtrack-reps:GetPersonCommittees($id)"/>
+	<CommitteeMembership>
+		<xsl:for-each select="$comms[parent='']">
+			<xsl:sort select="not(role='Chairman' or role='Chair')"/>
+			<xsl:sort select="not(role='Vice Chairman' or role='Vice Chair' or role='Cochairman')"/>
+			<xsl:sort select="not(role='Ranking Member')"/>
+			<xsl:variable name="t" select="thomasname"/>
+			<xsl:variable name="n" select="id"/>
+		<Committee Role="{role}" id="{id}" name="{displayname}">
+			<xsl:for-each select="$comms[parent=$n]">
+				<xsl:sort select="not(role='Chairman')"/>
+				<xsl:sort select="not(role='Vice Chairman')"/>
+				<xsl:sort select="not(role='Ranking Member')"/>
+				<Subcommittee Role="{role}" id="{id}" name="{displayname}"/>
+			</xsl:for-each>
+		</Committee>
+		</xsl:for-each>
+	</CommitteeMembership>
+		</xsl:template>
+			
+		<xsl:template match="Roles">
+	<CongressionalTerms>
+			<xsl:for-each select="$roles">
+				<xsl:sort select="startdate" data-type="number" order="descending"/>
+		<Term type="{type}"> <xsl:comment>@type='sen' or 'rep' or 'prez'</xsl:comment>
+			<Title><xsl:value-of select="govtrack-reps:RoleTypeName(type, title)"/></Title>
+			<Start><xsl:value-of select="govtrack-util:DTToYearString(startdate)"/></Start>
+			<End><xsl:value-of select="govtrack-util:DTToYearString(enddate)"/></End>
+			<xsl:if test="not(type='prez')"><State Abbr="{state}"><xsl:value-of select="govtrack-util:GetStateName(state)"/></State></xsl:if>
+			<xsl:if test="type='rep'">
+			<District><xsl:value-of select="district"/></District>
+			</xsl:if>
+		</Term>
+			</xsl:for-each>
+	</CongressionalTerms>
+			</xsl:template>
+
+			<xsl:template match="SponsoredBills">
+	<SponsoredBills>
+				<xsl:for-each select="$sponsoredbills">
+					<xsl:sort select="statusdate" order="descending"/>
+		<Bill Session="{session}" Type="{type}" Number="{number}" Link="http://www.govtrack.us/congress/bill.xpd?bill={type}{session}-{number}">
+			<Number><xsl:value-of select="govtrack-bills:GetDisplayNumber(type, number)"/></Number>
+			<Title><xsl:value-of select="title"/></Title>
+			<OfficialTitle><xsl:value-of select="fulltitle"/></OfficialTitle>
+			<Status Date="{statusdate}"><xsl:value-of select="govtrack-bills:GetStatusIndexed(statusxml/*)"/></Status>
+		</Bill>
+				</xsl:for-each>
+	</SponsoredBills>
+			</xsl:template>
+			<xsl:template match="CosponsoredBills">
+	<CosponsoredBills>
+				<xsl:for-each select="$cosponsoredbills">
+					<xsl:sort select="statusdate" order="descending"/>
+		<Bill Session="{session}" Type="{type}" Number="{number}" Link="http://www.govtrack.us/congress/bill.xpd?bill={type}{session}-{number}">
+			<Number><xsl:value-of select="govtrack-bills:GetDisplayNumber(type, number)"/></Number>
+			<Title><xsl:value-of select="title"/></Title>
+			<OfficialTitle><xsl:value-of select="fulltitle"/></OfficialTitle>
+			<Status Date="{statusdate}"><xsl:value-of select="govtrack-bills:GetStatusIndexed(statusxml/*)"/></Status>
+		</Bill>
+				</xsl:for-each>
+	</CosponsoredBills>
+			</xsl:template>
+			
+			<xsl:template match="BioguideId">
+	<BioguideID><xsl:value-of select="$info/bioguideid"/></BioguideID>
+			</xsl:template>
+
+			<xsl:template match="OpenSecretsId">
+				<xsl:variable name="osid" select="$info/osid"/>
+				<xsl:if test="not($osid='')">
+	<OpenSecretsID><xsl:value-of select="$info/osid"/></OpenSecretsID>
+				</xsl:if>
+			</xsl:template>
+
+			<xsl:template match="VoteSmartId">
+	<ProjectVoteSmartID><xsl:value-of select="$info/pvsid"/></ProjectVoteSmartID>
+			</xsl:template>
+	</Templates>
+   
+</person>

@@ -1,0 +1,36 @@
+<?xml-stylesheet xpath="/*/Templates" type="text/xsl" ?>
+<?mime-type text/calendar ?>
+<?attachment-filename calendar.ics?>
+<?cache public?>
+<?expires-in 6:00?>
+<?text-output CRLF?>
+<text>BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Civic Impulse LLC//NONSGML GovTrack.us//EN
+<items/>END:VCALENDAR
+<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context = "HttpContext"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-events="assembly://GovTrackWeb/GovTrack.Web.Pages.Users.Events"
+		exclude-result-prefixes="http-context govtrack-util govtrack-login govtrack-events"
+		>
+		
+		<xsl:variable name="events" select="govtrack-events:GetEvents(14, 1, 1)"/>
+		
+		<xsl:template match="items">
+			<xsl:for-each select="$events"><xsl:sort select="date" data-type="number" order="descending"/>BEGIN:VEVENT
+UID:http://www.govtrack.us/users/events-ical.xpd/<xsl:value-of select="govtrack-util:MD5(concat(govtrack-util:DTToICalString(date), typename, title, summary))"/>
+DTSTAMP:<xsl:value-of select="govtrack-util:DTToICalString(date)"/>Z
+DTSTART;TZID=America/New_York:<xsl:value-of select="govtrack-util:DTToICalString(date)"/>
+DURATION:PT3H
+SUMMARY:<xsl:value-of select="govtrack-util:ICalFold('SUMMARY:', concat(title, ' (', typename, ')'))"/>
+DESCRIPTION:<xsl:value-of select="govtrack-util:ICalFold('DESCRIPTION:', summary)"/>
+<!--URL:<xsl:value-of select="link"/>-->
+END:VEVENT
+</xsl:for-each>
+		</xsl:template>
+	</Templates>
+
+</text>

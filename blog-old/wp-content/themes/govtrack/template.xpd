@@ -1,0 +1,43 @@
+<?xml-stylesheet href="../../../../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<NoNews/>
+	
+	<Title>(?php wp_title(' '); ?> (?php if(wp_title(' ', false)) { echo ' : '; } ?>(?php bloginfo('name'); ?></Title>
+	
+	<Head>
+		<meta name="generator" content="WordPress (?php bloginfo('version'); ?>" /> <!-- leave this for stats -->
+		<link rel="alternate" type="application/rss+xml" title="(?php bloginfo('name'); ?> RSS Feed" href="(?php bloginfo('rss2_url'); ?>" />
+		<link rel="stylesheet" href="(?php bloginfo('stylesheet_url'); ?>" type="text/css" media="screen" />
+		<link rel="pingback" href="(?php bloginfo('pingback_url'); ?>" />
+		(?php wp_head(); ?>
+	</Head>
+	
+<!--
+	<Sidebar>
+		<Box Color="yellow">
+
+<div class="searchbox">
+<form method="get" id="searchform" action="(?php bloginfo('url'); ?>/">
+<img src="(?php bloginfo('template_directory'); ?>/images/stl.jpg" align="left" /><img src="(?php bloginfo('template_directory'); ?>/images/str.jpg" align="right" />
+<div>Search blog posts:</div>
+<input type="text" class="text" value="(?php the_search_query(); ?>" name="s" id="s"></input><input type="image" src="(?php bloginfo('template_directory'); ?>/images/search.jpg" class="button" id="searchsubmit" value="Search"></input>
+<img src="(?php bloginfo('template_directory'); ?>/images/sbl.jpg" align="left" /><img src="(?php bloginfo('template_directory'); ?>/images/sbr.jpg" align="right" />
+</form>
+</div>
+
+		</Box>
+	</Sidebar>
+-->
+
+	<Body>
+
+<div class="PreTitle" style="text-align: right; margin-top: -2em; margin-bottom: 0px"><a href="/blog">Latest Posts</a> | <a href="(?php bloginfo('rss_url'); ?>" class="RSS">RSS</a></div>
+<div class="PageTitle" style="text-align: center; margin-top: 0px">The GovTrack Blog</div>
+
+(SPLIT)
+
+(?php wp_footer(); ?>
+
+	</Body>
+</Page>

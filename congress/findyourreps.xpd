@@ -1,0 +1,938 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideSidebar="1" HideAds="1" script_onunload="GUnload()" Width='Max'>
+
+	<Title>
+   		<PageTitle2/>
+	</Title>
+	
+	<AllowEmail/>
+	
+	<Head>
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAsrOexgmxnPO4u3qqssNz6BTSWu0oDPXlD672f64CK_i4O7ZO8RTJr2ghyYddfWwwA2du8CiKUg3szQ&amp;sensor=false" type="text/javascript"/>
+		<script src="/scripts/gmap-wms.js"/>
+		<script src="/scripts/jsr_class.js"></script>
+		<script src="/scripts/markermanager.js"/>
+	</Head>
+
+	<MetaDescription/>
+	
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a>
+		<NotNothing>
+			&gt; <a href="findyourreps.xpd">Members of Congress</a>
+			<District>
+				&gt; <StateBreadcrumb/>
+			</District>
+		</NotNothing>
+	</Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="norule">
+			<PageTitle/>
+		</h1>
+		
+		<p>Use this page to find current or past Members of Congress. You can also 
+		<a href="replookup.xpd">browse by state</a> | <a href="committee.xpd">browse by committees</a> | <a href="repstats.xpd">congressional statistics</a>.</p>
+	</Body-A>
+	
+	<Body-B>
+
+<Nothing>
+</Nothing>
+
+<District>
+<DistrictDescription/>
+</District>
+
+<table>
+<tr valign="top">
+
+<td>
+<div id="leftpanel" style="padding-right: 1.5em; width: 300px">
+
+<Nothing>
+	<h3 style="margin-top: 0px">Find A Representative or Senator</h3>
+	
+	<p>Enter the last name of a senator or representative, choose a state, or enter
+	a ZIP or ZIP+4 postal code or street address:</p>
+	<table style="margin-left: 1em">
+		<tr><td>Last Name:</td> <td>
+			<form method="post" action="replookup.xpd" name="byname">
+			<input type="text" value="" name="name" style="margin-left: 1em" size="12" maxlength="30"/>
+			</form>
+		</td> <td><input type="button" value="Go" onclick="document.byname.submit()"/></td></tr>
+		<tr><td>State:</td> <td colspan="2"><StateList/></td></tr>
+		<tr><td>ZIP/ZIP+4:</td> <td>
+			<form method="post" action="findyourreps.xpd" name="byzip">
+			<input type="text" value="#####-####" name="zipcode" style="margin-left: 1em; font-size: 85%" size="12" maxlength="10" onfocus="if (this.value=='#####-####') this.value=''"/>
+			</form>
+		</td> <td><input type="submit" value="Go" onclick="document.byzip.submit()"/></td></tr>
+		<tr><td colspan="3" style="color: red"><ZipCodeLookup/></td></tr>
+		<tr><td>Address:</td> <td>
+			<input id="geocodeaddr" type="text" value="" style="margin-left: 1em; font-size: 85%" size="12" maxlength="60"/>
+		</td> <td><input type="button" value="Go" onclick="geocode()"/></td></tr>
+	</table>
+		
+	<div style="display: none">
+		<!-- Help Google find all of the pages? -->
+		<LinksToStates/>
+	</div>
+</Nothing>
+
+<State>
+	<div class="box" style="margin-top: 1em">Go to another state: <StateList/></div>
+	<YourReps/>
+</State>
+
+<District>
+	<div class="box" style="margin-top: 1em">Go to another state: <StateList/></div>
+	<YourReps/>
+	<h3>Map Tools</h3>
+	<p>To print this map, see our <a href="printablemaps.xpd">printable PDF maps</a> instead.</p>
+	<p>You can also <a href="../embed/googlemaps.xpd">embed the map on your web page or get a KML file for Google Earth/Maps</a>.</p>
+</District>
+
+<Nothing>
+	<h3>Map Tools</h3>
+	
+	<!--
+	<div style="float: right; margin-top: .5em; margin-left: 1em"><a href="http://maps.google.com/ig/add?synd=mpl&amp;pid=mpl&amp;moduleurl=http%3A//www.govtrack.us/perl/wms/gmapplet.cgi%3Flayer%3Dcd-110"><img src="http://buttons.googlesyndication.com/fusion/add.gif" border="0" alt="Add to Google"/></a></div>
+	<p>Add these color overlays to your Google Maps! (Beta!) Click the Google button to the right to try it out.</p>
+	-->
+
+	<p>Want to print these maps? Try our <a href="printablemaps.xpd">printable PDF maps</a> instead.</p>
+
+	<p>You can also use the <a href="/embed/googlemaps.xpd">map layer on your maps mash-up or get a KML file</a> for Google Maps/Earth.
+	We also have some <a href="/local/maps.xpd">maps of 2006 state legislative districts</a>.</p>
+</Nothing>
+
+
+</div>
+</td>
+
+<td style="font-size: 90%">
+	<div id="googleextra">
+		<div style="float: right">
+			<img src="/media/stock_fullscreen.png" title="Toggle Full Screen" onclick="doFullScreen();" style="cursor: pointer; margin-right: 4px"/>
+			<a href="printablemaps.xpd"><img src="/media/printer.gif" title="Print" style="cursor: pointer" border="0"/></a>
+		</div>
+		<div style="font-size: 90%">
+			<b>Looking for redistricting?</b> Since we show you your current Members of Congress, which is based on the district lines at the time you last voted,
+			our maps won't be updated to reflect redistricting until the new Members of Congress
+			elected from the new districts take office in January 2013.
+		</div>
+		<div style="clear: both"> </div>
+	</div>
+	<div id="googlemap" style="width: 100%; height: 355px; border: 1px solid blue; margin-top: 1em"></div>
+	<!--<div id="staticmap" style="display: none">
+		<p>(Your browser does not support zoomable maps.  More advanced maps are shown in newer web browsers.
+		These maps are provided by <a href="http://www.nationalatlas.gov">NationalAtlas.gov</a> from the
+		U.S. Department of Interior.)</p>
+		<staticmap/>
+	</div>-->
+
+	<NotNothing>
+		<h3>Map Tools</h3>
+		<p id="embedinfo2">Want to <a href="javascript:DHTML_ShowHide('embedinfo', true); DHTML_ShowHide('embedinfo2', false);">embed this map</a> on your website?</p>
+		<div id="embedinfo" style="display: none">
+		<p>Embed this map on your website with the following code:</p>
+		<pre id="embedpre" wrap="hard" style="width: 100%; overflow: auto; font-size: 80%"><EmbedCode/></pre>
+		<District>
+		<p>Or upload <KmlDownload>this KML file</KmlDownload> to Google Maps.</p>
+		</District>
+		<p>Web developers, you can also use the <a href="/embed/googlemaps.xpd">map layer on your maps mash-up</a>.</p>
+		</div>
+	</NotNothing>
+	<!--<District>
+		<form action="http://www.govtrack.us/perl/cd-map.cgi" method="get">
+			<DownloadImageFields/>
+			<p>Download
+			<select name="size" size="1">
+				<option value="512">Small</option>
+				<option value="1024">Medium</option>
+				<option value="1400">Large</option>
+				<option value="2048">Extra Large</option>
+			</select>
+			image of this district. Free to be reused with credit
+			to GovTrack.us and <a href="http://www.openstreetmap.org/">Open Street Map</a>.
+			<input type="submit" value="Download"/>
+			</p>
+		</form>
+	</District>-->
+</td>
+</tr>
+</table>
+
+	</Body-B>
+
+	<Scripts>
+	<script type="text/javascript">
+var lasthovertime = new Date();
+var lastmouselocation;
+	
+if (!GBrowserIsCompatible()) {
+	//alert("This page uses Google Maps, which is unfortunately not supported by your browser.");
+	DHTML_ShowHide('googlemap', 0);
+	DHTML_ShowHide('googleextra', 0);
+	DHTML_ShowHide('staticmap', 1);
+	doneLoading();
+} else {
+	var WMS_URL = 'http://www.govtrack.us/perl/wms/wms.cgi?';
+	var G_MAP_LAYER_DISTRICTS_FILLED = createWMSTileLayer(WMS_URL, "cd-110<LayerDistrict/>", null, "image/gif", null, null, null, .2);
+	var G_MAP_LAYER_DISTRICTS_OUTLINES = createWMSTileLayer(WMS_URL, "cd-110-outlines<LayerDistrict/>", null, "image/gif", null, null, null, .4);
+	var G_MAP_OVERLAY = createWMSOverlayMapType([G_NORMAL_MAP.getTileLayers()[0], G_MAP_LAYER_DISTRICTS_FILLED, G_MAP_LAYER_DISTRICTS_OUTLINES], "Districts");
+
+    setMapHeight();
+    addEvent(window, 'scroll', setMapHeight);
+    addEvent(window, 'resize', setMapHeight);
+	
+	var map = new GMap2(document.getElementById("googlemap"));
+	map.enableContinuousZoom()
+	//map.removeMapType(G_NORMAL_MAP);
+	map.removeMapType(G_SATELLITE_MAP);
+	map.removeMapType(G_HYBRID_MAP);
+	map.addMapType(G_MAP_OVERLAY);
+	map.addControl(new GLargeMapControl());
+	map.addControl(new GMapTypeControl());
+	//map.addControl(new GOverviewMapControl());
+	map.addControl(new GScaleControl());
+	<CenterMap/>
+	map.setMapType(G_MAP_OVERLAY);
+	
+	function WhatDistrictControl() {
+	}
+	WhatDistrictControl.prototype = new GControl();
+	WhatDistrictControl.prototype.initialize = function(map) {
+		var container = document.createElement("div");
+		container.setAttribute('id', 'hoverdistrict');
+		this.setButtonStyle_(container);
+		map.getContainer().appendChild(container);
+		return container;
+	};
+	WhatDistrictControl.prototype.getDefaultPosition = function() {
+		return new GControlPosition(G_ANCHOR_TOP_LEFT, new GSize(75, 10));
+	}
+	WhatDistrictControl.prototype.setButtonStyle_ = function(button) {
+		button.style.color = "black";
+		button.style.backgroundColor = "white";
+		button.style.font = "small Arial";
+		button.style.border = "1px solid black";
+		button.style.padding = "2px";
+		button.style.marginBottom = "3px";
+		button.style.textAlign = "center";
+		button.style.width = "6em";
+		button.style.height = "1.25em";
+	}
+	map.addControl(new WhatDistrictControl());
+
+	mmgrs = new Object();
+
+	<NotNothing>
+	GEvent.addListener(map, "move", function() {
+		var b = map.getBounds();
+		DHTML_SetText("embedbounds", b.getSouthWest().lng() + "," + b.getNorthEast().lat() + "," + b.getNorthEast().lng() + "," + b.getSouthWest().lat());
+	});
+	</NotNothing>
+	
+	GEvent.addListener(map, "mouseout", function(latlng) {
+		lastmouselocation = null;
+		//DHTML_SetText("hoverdistrict", "Drag the mouse over the map to identify the district.")
+	});
+	GEvent.addListener(map, "mousemove", function(latlng) {
+		lastmouselocation = latlng;
+		lasthovertime = new Date();
+		setTimeout("doMouseHover()", 500);
+	});
+	/*GEvent.addListener(map, "click", function(overlay, latlng, overlaylatlng) {
+		if (latlng == null) return;
+		var req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/get-region.cgi?layer=cd-110' + unescape("%26") + 'lat=' + latlng.lat() + unescape("%26") + 'long=' + latlng.lng() + unescape("%26") + 'format=json' + unescape("%26") + 'json_callback=wms_click_callback');
+		req.buildScriptTag();
+		req.addScriptTag();
+	});*/
+	
+	var address = "<param name='address' escape='1'/>";
+	if (address != "") {
+		var geocoder = new GClientGeocoder();
+		geocoder.getLatLng(
+			address,
+			function (point) {
+				if (!point) return;
+				var marker = new GMarker(point);
+				//marker.setImage("http://maps.google.com/mapfiles/ms/micons/green-dot.png");
+				map.addOverlay(marker);
+				marker.openInfoWindowHtml(address);
+			}
+		);
+	}
+}
+
+function doFullScreen() {
+	if (map)
+		map.savePosition();
+	DHTML_ShowHide("leftpanel");
+	if (!isVisible("leftpanel")) {
+		var mapdiv = document.getElementById("googlemap");
+		window.scrollTo(getWindowScroll()[0], clientTop(mapdiv)-50);
+	} else {
+		window.scrollTo(getWindowScroll()[0], 100);
+	}
+	setMapHeight(1);
+}
+
+function setMapHeight(mapPositionSaved) {
+	var mapdiv = document.getElementById("googlemap");
+	var leftpaneldiv = document.getElementById("leftpanel");
+	
+	var w = clientArea()[0] - 100;
+	w -= leftpaneldiv.offsetWidth;
+	mapdiv.style.width = w + "px";
+	
+	var h = clientArea()[1] - 20;
+	var offset = clientTop(mapdiv) - getWindowScroll()[1];
+	if (lt(0, offset)) h -= offset;
+	if (mapdiv.offsetWidth)
+		if (lt(mapdiv.offsetWidth, h))
+			h = mapdiv.offsetWidth;
+	var sp;
+	if (map) if (mapPositionSaved == null) {
+		map.savePosition();
+		sp = 1;
+	}
+	mapdiv.style.height = h + "px";
+	if (map)
+		map.checkResize();
+	/*if (sp || mapPositionSaved != null)
+		map.returnToSavedPosition();*/
+}
+
+function wms_center_callback(wms_listing) {
+	// uri, long, lat, area
+	if (wms_listing.length == 0) return;
+	
+	// Take weighted average of icon points for center of map.
+	var a = 0;
+	var cx = 0;
+	var cy = 0;
+	for (var i = 0; i != wms_listing.length; i++) {
+		cx = cx + wms_listing[i].long * wms_listing[i].area;
+		cy = cy + wms_listing[i].lat * wms_listing[i].area;
+		a = a + wms_listing[i].area;
+	}
+	cx = cx / a;
+	cy = cy / a;
+	
+	// And use the sum of the polygon areas to determine
+	// the zoom level, on a weird assumption that they
+	// were squished into a square box.
+	map.setCenter(new GLatLng(cy, cx), 14-Math.round(Math.log(Math.sqrt(a))/Math.log(2)));
+}
+
+function wms_state_markers_callback(wms_listing) {
+	// long, lat
+	
+	var cd_re = /\/(..)\/cd\/110\/(.*)/;
+	var st_re = /us\/(..)/;
+	
+	var last_uri;
+	var last_uri_count;
+	
+	for (var i = 0; i != wms_listing.length; i++) {
+		uri = wms_listing[i].URI;
+		long = wms_listing[i].long;
+		lat = wms_listing[i].lat;
+		
+		// The regions come back sorted largest area first.
+		// If we get so many for a single district, just
+		// stop showing markers since it clutters the map
+		// and the visitor will get the idea from the color.
+		if (and(last_uri, last_uri == uri)) {
+			last_uri_count++;
+			if (lt(5, last_uri_count)) continue;
+		} else {
+			last_uri_count = 1;
+			last_uri = uri;
+		}
+		
+		var m;
+		if (m = cd_re.exec(uri)) {
+			createMarker2(long, lat, m[1].toUpperCase(), m[2]);
+		} else if (m = st_re.exec(uri)) {
+			createMarker2(long, lat, m[1].toUpperCase(), 0);
+		}
+	}
+}
+
+function wms_district_callback(wms_listing) {
+	// long, lat, area
+	if (wms_listing.length == 0) return;
+	
+	// center on largest polygon in the district
+	wms_center_callback(wms_listing);
+	
+	// create a marker, but we have to parse the URI a bit... not really...
+	var cd_re = /\/(..)\/cd\/110\/(.*)/;
+	for (var i = 0; i != wms_listing.length; i++) {
+		var m;
+		if (m = cd_re.exec(wms_listing[i].URI)) {
+			createMarker(wms_listing[i].long, wms_listing[i].lat, m[1].toUpperCase(), m[2]);
+		}
+	}
+}
+
+function doMouseHover() {
+	if (!lastmouselocation) return;
+	
+	var now = new Date();
+	if (lt(now.getTime() - lasthovertime.getTime(), 500)) return;
+	
+	var req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/get-region.cgi?layer=cd-110' + unescape("%26") + 'lat=' + lastmouselocation.lat() + unescape("%26") + 'long=' + lastmouselocation.lng() + unescape("%26") + 'format=json' + unescape("%26") + 'json_callback=wms_info_callback');
+	req.buildScriptTag();
+	req.addScriptTag();
+}
+
+function wms_info_callback(wms_listing) {
+	if (wms_listing.length == 0) {
+		DHTML_SetText("hoverdistrict", ""); //Move the mouse to see the district number here.")
+		return;
+	}
+	
+	uri = wms_listing[wms_listing.length-1].URI; // uri of last (smallest) matching region
+
+	var cd_re = /\/(..)\/cd\/110\/(.*)/;
+	var st_re = /us\/(..)/;
+	
+	var m;
+	if (m = cd_re.exec(uri)) {
+		DHTML_SetText("hoverdistrict", tag("a href='?state=" + m[1].toUpperCase() + "&amp;district=" + m[2] + "'") + m[1].toUpperCase() + "-" + m[2] + tag("/a"))
+	} else if (m = st_re.exec(uri)) {
+		DHTML_SetText("hoverdistrict", tag("a href='?state=" + m[1].toUpperCase() + "'") + m[1].toUpperCase() + " At-Large" + tag("/a"))
+	}
+}
+
+function wms_click_callback(wms_listing) {
+	if (wms_listing.length == 0) {
+		return;
+	}
+	
+	uri = wms_listing[wms_listing.length-1][0]; // uri of last (smallest) matching region
+
+	var cd_re = /\/(..)\/cd\/110\/(.*)/;
+	var st_re = /us\/(..)/;
+	
+	var m;
+	if (m = cd_re.exec(uri)) {
+		window.location = "?state=" + m[1].toUpperCase() + unescape("%26") + "district=" + m[2];
+	} else if (m = st_re.exec(uri)) {
+		window.location = "?state=" + m[1].toUpperCase();
+	}
+}
+
+function tag(s) {
+	return unescape("%3C") + s +  unescape("%3E");
+}
+
+function createMarker(x, y, s, d) {
+	var marker = new GMarker(new GPoint(x, y));
+	GEvent.addListener(marker, "click", function() {
+		if (d == 0) d = "At Large";
+		marker.openInfoWindowHtml("This is congressional district " + s + "-" + d + ".");
+	});
+	map.addOverlay(marker);
+}
+
+function createMarker2(x, y, s, d) {
+	<State>
+		if (d == 0) {
+			createMarker(x,y,s,d);
+			return;
+		}
+	</State>
+	
+	var html = tag("div style='width: 250px; font-size: 90%'")
+		+ "This is "
+		+ tag("b")
+		+ "Congressional District " + d
+		+ tag("/b")
+		+ ". Click "
+		+ tag("a href=\"?state=" + s + unescape("%26") + "district=" + d + "\"")
+		+ "here"
+		+ tag("/a")
+		+ " to view the representatives for this district"
+		+ " and to show the district in high detail."
+		+ tag("/div");
+
+	//createMarker(x, y, html);
+
+	var icon = new GIcon();
+	icon.image = "http://www.govtrack.us/media/gmapicons/marker" + d + ".png";
+	icon.shadow = "http://www.govtrack.us/media/gmapicons/shadow50.png";
+	icon.iconSize = new GSize(20, 34);
+	icon.shadowSize = new GSize(37, 34);
+	icon.iconAnchor = new GPoint(9, 34);
+	icon.infoWindowAnchor = new GPoint(9, 2);
+	icon.infoShadowAnchor = new GPoint(18, 25);
+
+	var marker = new GMarker(new GPoint(x, y), icon);
+	GEvent.addListener(marker, "click", function() {
+		//marker.openInfoWindowHtml(html);
+		window.location = "?state=" + s + unescape("%26") + "district=" + d
+	});
+	//map.addOverlay(marker);
+
+	var mmgr = mmgrs[s];
+	if (mmgr == null) {
+		mmgr = new MarkerManager(map, { borderPadding: 25, trackMarkers: false });
+		mmgrs[s] = mmgr;
+	}
+	mmgr.addMarker(marker, 6)
+}
+
+function geocode() {
+	var address = getObj("geocodeaddr").value;
+	var geocoder = new GClientGeocoder();
+	geocoder.getLatLng(
+		address,
+		function (point) {
+			if (!point) {
+				alert("Address could not be located.");
+			} else {
+				var req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/get-region.cgi?layer=cd-110' + unescape("%26") + 'lat=' + point.lat() + unescape("%26") + 'long=' + point.lng() + unescape("%26") + 'format=json' + unescape("%26") + 'json_callback=wms_address_callback');
+				req.buildScriptTag();
+				req.addScriptTag();
+			}
+		}
+	);
+}
+
+function wms_address_callback(wms_listing) {
+	if (wms_listing.length == 0) {
+		alert("The address does not seem to be within a congressional district.");
+		return;
+	}
+	
+	var address = getObj("geocodeaddr").value;
+
+	var uri = wms_listing[wms_listing.length-1].URI; // uri of last (smallest) matching region
+
+	var cd_re = /\/(..)\/cd\/110\/(.*)/;
+	var st_re = /us\/(..)/;
+	
+	var m;
+	if (m = cd_re.exec(uri)) {
+		window.location = "?state=" + m[1].toUpperCase() + unescape("%26") + "district=" + m[2] + unescape("%26") + "address=" + escape(address);
+	} else if (m = st_re.exec(uri)) {
+		window.location = "?state=" + m[1].toUpperCase() + unescape("%26") + "address=" + escape(address);
+	}
+}
+
+	</script>
+
+	</Scripts>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext = "HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-vote = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Vote"
+		exclude-result-prefixes="HttpContext govtrack-util govtrack-bills govtrack-reps govtrack-vote"
+		pre-process-zipcode="GovTrack.Web.Pages.Congress.FindYourReps, GovTrackWeb"
+		>
+		
+		<xsl:template match="PageTitle2">
+			<xsl:choose>
+			<xsl:when test="HttpContext:param('state')='' and HttpContext:param('district')=''">
+				Members of Congress &amp; U.S. Congressional District Maps
+			</xsl:when>
+			<xsl:when test="not(HttpContext:param('state')='') and HttpContext:param('district')=''">
+				<xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>
+				<xsl:text>’s Representatives - Congressional District Maps</xsl:text>
+				(<xsl:value-of select="HttpContext:param('state')"/>)
+			</xsl:when>
+			<xsl:when test="not(HttpContext:param('state')='') and not(HttpContext:param('district')='')">
+				<xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>
+				<xsl:text>’s </xsl:text>
+				<xsl:value-of select="govtrack-util:Ordinate(HttpContext:param('district'))"/>
+				<xsl:text> Congressional District &amp; Map</xsl:text>
+				(<xsl:value-of select="HttpContext:param('state')"/>-<xsl:value-of select="HttpContext:param('district')"/>)
+			</xsl:when>
+			</xsl:choose>
+			- GovTrack.us
+		</xsl:template>
+
+		<xsl:template match="PageTitle">
+			<xsl:choose>
+			<xsl:when test="HttpContext:param('state')='' and HttpContext:param('district')=''">
+				Members of Congress
+			</xsl:when>
+			<xsl:when test="not(HttpContext:param('state')='') and HttpContext:param('district')=''">
+				<xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>
+				<xsl:text>’s Representatives - Congressional District Maps</xsl:text>
+			</xsl:when>
+			<xsl:when test="not(HttpContext:param('state')='') and not(HttpContext:param('district')='')">
+				<xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>
+				<xsl:text>’s </xsl:text>
+				<xsl:value-of select="HttpContext:param('district')"/>
+				<sup><xsl:value-of select="govtrack-util:OrdinateSuffix(HttpContext:param('district'))"/></sup>
+				<xsl:text> Congressional District &amp; Map</xsl:text>
+			</xsl:when>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="MetaDescription">
+			<xsl:if test="not(HttpContext:param('state')='') and HttpContext:param('district')=''">
+				<RDFA about="http://www.rdfabout.com/rdf/usgov/geo/us/{govtrack-util:ToLower(HttpContext:param('state'))}"/>
+				<xsl:variable name="reps" select="govtrack-reps:FindByState(HttpContext:param('state'))"/>
+				<xsl:if test="count($reps[type='sen']) &gt; 0">
+					<Meta Name="description">
+						<xsl:text>The two senators from </xsl:text>
+						<xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>
+						<xsl:text> are </xsl:text>
+						<xsl:value-of select="$reps[type='sen'][position()=1]/name"/>
+						<xsl:text> and </xsl:text>
+						<xsl:value-of select="$reps[type='sen'][position()=2]/name"/>
+						<xsl:if test="count($reps[type='rep' and district=0]) = 1">
+							<xsl:text>and its representative-at-large is </xsl:text><xsl:value-of select="$reps[type='rep' and district=0]/name"/>
+						</xsl:if>
+						<xsl:text>. </xsl:text>
+						<xsl:if test="count($reps[type='rep' and district=0]) = 0">
+							<xsl:text> Also find congressional district maps for </xsl:text>
+							<xsl:value-of select="HttpContext:param('state')"/>
+							<xsl:text>’s U.S. Representatives.</xsl:text>
+						</xsl:if>
+					</Meta>
+				</xsl:if>
+			</xsl:if>
+			<xsl:if test="not(HttpContext:param('state')='') and not(HttpContext:param('district')='')">
+				<RDFA about="http://www.rdfabout.com/rdf/usgov/geo/us/{govtrack-util:ToLower(HttpContext:param('state'))}/cd/{govtrack-util:GetCurrentSession()}/{HttpContext:param('district')}"/>
+				<xsl:variable name="reps" select="govtrack-reps:FindByState(HttpContext:param('state'))"/>
+				<xsl:if test="count($reps[type='rep' and district=HttpContext:param('district')]) &gt; 0">
+					<Meta Name="description">
+						<xsl:text>The representative for </xsl:text>
+						<xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>
+						<xsl:text>’s </xsl:text>
+						<xsl:value-of select="govtrack-util:Ordinate(HttpContext:param('district'))"/>
+						<xsl:text> congressional district is </xsl:text>
+						<xsl:value-of select="$reps[type='rep' and district=HttpContext:param('district')]/name"/>
+						<xsl:text>.  View a zoomable map.</xsl:text>
+					</Meta>
+				</xsl:if>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="Nothing">
+			<xsl:if test="HttpContext:param('state')='' and HttpContext:param('district')=''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="NotNothing">
+			<xsl:if test="not(HttpContext:param('state')='' and HttpContext:param('district')='')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="State">
+			<xsl:if test="not(HttpContext:param('state')='') and HttpContext:param('district')=''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="District">
+			<xsl:if test="not(HttpContext:param('district')='')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="LayerDistrict">
+			<xsl:if test="not(HttpContext:param('state')='')">
+				<xsl:text>:http://www.rdfabout.com/rdf/usgov/geo/us/</xsl:text>
+				<xsl:value-of select="govtrack-util:ToLower(HttpContext:param('state'))"/>
+				<xsl:if test="HttpContext:param('district')=''">
+					<xsl:text>%25</xsl:text> <!-- SQL pattern match -->
+				</xsl:if>
+				<xsl:if test="not(HttpContext:param('district')='')">
+					<xsl:text>/cd/110/</xsl:text>
+					<xsl:value-of select="HttpContext:param('district')"/>
+				</xsl:if>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="StateList">
+			<select style="margin-left: 1em"
+				onchange="if (this.value != '') window.location='?state=' + this.value">
+			<xsl:if test="HttpContext:param('state')=''">
+				<option value="">(Select State)</option>
+			</xsl:if>
+			<xsl:for-each select="govtrack-util:StateNames()">
+				<xsl:sort select="."/>
+				<option value="{govtrack-util:GetStateAbbr(.)}">
+					<xsl:if test="HttpContext:param('state')=govtrack-util:GetStateAbbr(.)">
+						<xsl:attribute name="selected">1</xsl:attribute>
+					</xsl:if>
+					<xsl:value-of select="govtrack-util:Trunc(.,20)"/>
+				</option>
+			</xsl:for-each>
+			</select>
+		</xsl:template>
+		
+
+		<xsl:template match="LinksToStates">
+			<xsl:for-each select="govtrack-util:StateNames()">
+				<xsl:sort select="."/>
+				<a href="findyourreps.xpd?state={govtrack-util:GetStateAbbr(.)}"><xsl:value-of select="govtrack-util:GetStateAbbr(.)"/>: <xsl:value-of select="."/>'s Congressional Districts Map</a>
+			</xsl:for-each>
+		</xsl:template>
+		
+		<xsl:template match="YourReps">
+			<xsl:variable name="app" select="govtrack-util:GetStateApportionment(HttpContext:param('state'))"/>
+			<xsl:variable name="reps" select="govtrack-reps:FindByState(HttpContext:param('state'))"/>
+
+			<xsl:if test="not($app='delegate')">
+				<xsl:choose>
+				<xsl:when test="count($reps[type='sen'])=2">
+					<p>The two senators from <xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/> are:</p>
+				</xsl:when>
+				<xsl:when test="count($reps[type='sen'])=0">
+					<p>Each state has two senators in the U.S. Senate. However, the senate seats are currently vacant in <xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>.</p>
+				</xsl:when>
+				<xsl:otherwise>
+					<p>Each state has two senators in the U.S. Senate. However, a senate seat is currently vacant in <xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>. Its serving senator is:</p>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			
+			<table>
+			<xsl:for-each select="$reps[type='sen']">
+				<xsl:sort select="name"/>
+				<xsl:call-template name="ShowRep">
+					<xsl:with-param name="id" select="id"/>
+				</xsl:call-template>
+			</xsl:for-each>
+			</table>
+			
+			<xsl:if test="$app = '1' and count($reps[type='rep']) &gt; 0">
+				<p>This state is not divided into congressional districts because it has a small population.
+				The "Representative at Large" is:</p>
+			</xsl:if>
+			<xsl:if test="$app = '1' and count($reps[type='rep']) = 0">
+				<p>This state is not divided into congressional districts because it has a small population.
+				However, its "Representative at Large" seat is currently vacant.</p>
+			</xsl:if>
+			
+			<xsl:if test="$app='delegate' and count($reps[type='rep']) &gt; 0">
+				<p><xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>
+				is a U.S. territory that has a delegate in the House of Representatives with limited
+				voting privileges, and it does not have any senators.</p>
+			</xsl:if>
+			<xsl:if test="$app='delegate' and count($reps[type='rep']) = 0">
+				<p><xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>
+				is a U.S. territory that is given a delegate in the House of Representatives with limited
+				voting privileges, but the office is currently vacant. The territory does not have any senators
+				in the U.S. Senate.</p>
+			</xsl:if>
+
+			<xsl:if test="$app='1' or $app='delegate'">
+				<table>
+				<xsl:for-each select="$reps[type='rep' and district=0]">
+					<xsl:call-template name="ShowRep">
+						<xsl:with-param name="id" select="id"/>
+					</xsl:call-template>
+				</xsl:for-each>
+				</table>
+			
+				<xsl:call-template name="Monitor"/>
+			</xsl:if>
+
+			<xsl:if test="HttpContext:param('district')='' and $app &gt; 1">
+				<p>This state is divided into <xsl:value-of select="$app"/> congressional districts.</p>
+
+				<img src="/media/balloon.gif" style="float: left; margin-right: 4px;"/>
+				<p>The map to the right shows the congressional districts in this state.  <b>Zoom in to find
+				where you live</b>.</p>
+
+				<table>
+				<xsl:for-each select="$reps[type='rep']">
+				<xsl:sort select="district" data-type="number"/>
+					<xsl:call-template name="ShowRep">
+						<xsl:with-param name="id" select="id"/>
+					</xsl:call-template>
+				</xsl:for-each>
+				</table>
+			</xsl:if>
+			
+			<xsl:if test="not(HttpContext:param('district')='') and not(HttpContext:param('district')='0')">
+				<xsl:choose>
+				<xsl:when test="count($reps[type='rep' and district=HttpContext:param('district')]) = 0">
+					<p>The representative for <xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>’s
+					<xsl:value-of select="govtrack-util:Ordinate(HttpContext:param('district'))"/> congressional district is currently vacant.</p>
+				</xsl:when>
+				<xsl:otherwise>
+					<p>The representative for <xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/>’s
+					<xsl:value-of select="govtrack-util:Ordinate(HttpContext:param('district'))"/> congressional district is:</p>
+				
+					<table>
+					<xsl:for-each select="$reps[type='rep' and district=HttpContext:param('district')]">
+						<xsl:call-template name="ShowRep">
+							<xsl:with-param name="id" select="id"/>
+						</xsl:call-template>
+					</xsl:for-each>
+					</table>
+				</xsl:otherwise>
+				</xsl:choose>
+				
+				<p>View <a href="?state={HttpContext:param('state')}">all of the districts</a>
+				in this state.</p>
+
+				<xsl:call-template name="Monitor"/>
+			</xsl:if>
+
+			<xsl:if test="HttpContext:param('zipstatus')='multiple'">
+				<p style="font-style: italic; color: red">The ZIP code you entered is within multiple congressional districts.</p>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="DistrictDescription">
+			<xsl:if test="not(HttpContext:param('district')='0') and 0">
+				<p style="font-size: 85%; line-height: 110%">This district includes <xsl:value-of select="govtrack-reps:GetDistrictLocalities(110, HttpContext:param('state'), HttpContext:param('district'))"/>.</p>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="StateBreadcrumb">
+			<a href="?state={HttpContext:param('state')}"><xsl:value-of select="govtrack-util:GetStateName(HttpContext:param('state'))"/></a>
+		</xsl:template>
+		
+		<xsl:template match="ZipCodeLookup">
+			<xsl:if test="not(HttpContext:param('zipcode') = '')">
+				<xsl:variable name="zips" select="govtrack-reps:AddressToDistricts('zipcode', HttpContext:param('zipcode'))"/>
+				<xsl:if test="count($zips)=0">That's not a ZIP code or it is a military or other ZIP code not represented in Congress.</xsl:if>
+				<xsl:if test="count($zips) &gt; 1">Multiple congressional districts fall within that ZIP code. Click on any of these
+				to see if your address is in that distrct, or enter your ZIP+4 code above instead.
+					<xsl:for-each select="$zips">
+						<xsl:if test="position()=last()"> and </xsl:if>
+						<a href="findyourreps.xpd?state={state}&amp;district={district}"><xsl:value-of select="state"/>-<xsl:value-of select="district"/></a>
+						<xsl:if test="not(position() &gt;= last()-1)">, </xsl:if>
+					</xsl:for-each>.
+				</xsl:if>
+				<xsl:if test="count($zips) = 1">
+					<xsl:value-of select="HttpContext:redirect(concat('findyourreps.xpd?state=', $zips[1]/state, '&amp;district=', $zips[1]/district))"/>
+				</xsl:if>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template name="ShowRep">
+			<xsl:param name="id"/>
+			<tr height="61">
+			<td>
+				<MonitorButton name="This Member of Congress" monitor="p:{id}"/>
+			</td>
+			<td>
+				<xsl:choose>
+				<xsl:when test="govtrack-reps:HasImage($id)">
+					<a href="person.xpd?id={$id}">
+						<img src="/data/photos/{$id}-50px.jpeg" align="middle"
+							style="margin-right: 1em; border: 1px solid black"/>
+					</a>
+				</xsl:when>
+				<xsl:otherwise>
+					<div style="font-size: 75%">(no image)</div>
+				</xsl:otherwise>
+				</xsl:choose>
+			</td>
+			<td>
+				<xsl:if test="type='rep' and not(district=0) and HttpContext:param('district')=''">
+				<div>
+					<b>District <xsl:value-of select="district"/></b>
+					[<a href="?state={state}&amp;district={district}">View Map</a>]
+				</div>
+				</xsl:if>
+				<div>
+					<a href="person.xpd?id={$id}"><xsl:value-of select="name"/></a>
+				</div>
+				<xsl:if test="type='rep' and not(district=0) and not(HttpContext:param('district')='')">
+				<div>
+					<a href="?state={state}&amp;district={district}">District <xsl:value-of select="district"/> Map</a>
+				</div>
+				</xsl:if>
+			</td>
+			</tr>
+		</xsl:template>
+		
+		<xsl:template name="Monitor">
+			<h3>Track These Members of Congress</h3>
+				
+				<xsl:choose>
+				<xsl:when test="govtrack-reps:IsMonitoringAll(HttpContext:param('state'), HttpContext:param('district'))">
+					Wonderful, you’re tracking all of your senators and representatives!
+					Check out your customized <a href="/users/events.xpd">tracked events</a>
+					page to see what they are up to.
+				</xsl:when>
+				<xsl:otherwise>
+					<div>Now that you’ve found your senators and representatives, tell GovTrack you want to
+					<i>Track</i> them so that they show up in your customized tracked events page.</div>
+					<center>
+					<form method="post">
+						<input type="hidden" value="monitor" name="action"/>
+						<input type="submit" value="Add Trackers For My Reps!"/>
+					</form>
+					</center>
+				</xsl:otherwise>
+				</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="staticmap">
+			<xsl:if test="HttpContext:param('state')=''">
+				<img src="http://nationalatlas.gov/printable/images/preview/congdist/pagecgd109_us3.gif" onclick="alert('This map is not clickable.  Use one of the options on the left to find your district.')"/>
+			</xsl:if>
+			<xsl:if test="not(HttpContext:param('state')='') and HttpContext:param('district')=''">
+				<img src="http://nationalatlas.gov/printable/images/preview/congdist/pagecgd109_{HttpContext:param('state')}2.gif" onclick="alert('This map is not clickable.  Choose a district from the list on the left.')"/>
+			</xsl:if>
+			<xsl:if test="not(HttpContext:param('state')='') and not(HttpContext:param('district')='')">
+				<img src="http://nationalatlas.gov/printable/images/preview/congdist/{HttpContext:param('state')}{govtrack-util:TwoDigits(HttpContext:param('district'))}_109.gif"/>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="DownloadImageFields">
+			<input type="hidden" name="state" value="{HttpContext:param('state')}"/>
+			<input type="hidden" name="district" value="{HttpContext:param('district')}"/>
+		</xsl:template>
+		
+		<xsl:template match="CenterMap">
+			<xsl:if test="HttpContext:param('state')=''">
+				map.setCenter(new GLatLng(39, -96), 4);
+			</xsl:if>
+			<xsl:if test="not(HttpContext:param('state')='') and HttpContext:param('district')=''">
+				map.setCenter(new GLatLng(39, -96), 4);
+				
+				// get state center
+				req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/list-regions.cgi?dataset=http://www.rdfabout.com/rdf/usgov/us/states&amp;uri=http://www.rdfabout.com/rdf/usgov/geo/us/<xsl:value-of select="HttpContext:param('state')"/>&amp;fields=coord,area&amp;format=json&amp;json_callback=wms_center_callback');
+				req.buildScriptTag();
+				req.addScriptTag();
+				
+				// get list of districts
+				req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/list-regions.cgi?dataset=http://www.rdfabout.com/rdf/usgov/congress/house/110&amp;uri=http://www.rdfabout.com/rdf/usgov/geo/us/<xsl:value-of select="HttpContext:param('state')"/>&amp;match=prefix&amp;fields=coord&amp;format=json&amp;json_callback=wms_state_markers_callback');
+				req.buildScriptTag();
+				req.addScriptTag();
+			</xsl:if>
+			<xsl:if test="not(HttpContext:param('state')='') and not(HttpContext:param('district')='')">
+				// get this district
+				req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/list-regions.cgi?dataset=http://www.rdfabout.com/rdf/usgov/congress/house/110&amp;uri=http://www.rdfabout.com/rdf/usgov/geo/us/<xsl:value-of select="HttpContext:param('state')"/>/cd/110/<xsl:value-of select="HttpContext:param('district')"/>&amp;fields=coord,area&amp;format=json&amp;json_callback=wms_district_callback');
+				req.buildScriptTag();
+				req.addScriptTag();
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="EmbedCode">
+&lt;iframe width="425" height="300" frameborder="0"
+ scrolling="no" marginheight="0" marginwidth="0"
+ src="http://www.govtrack.us/embed/mapframe.xpd?state=<xsl:value-of select="HttpContext:param('state')"/><xsl:if test="not(HttpContext:param('district')='')">&amp;district=<xsl:value-of select="HttpContext:param('district')"/></xsl:if>&amp;bounds=<span id="embedbounds"
+ />"&gt;&lt;/iframe&gt;
+		</xsl:template>
+		
+		<xsl:template match="KmlDownload">
+			<a href="http://www.govtrack.us/perl/wms/export.cgi?dataset=http://www.rdfabout.com/rdf/usgov/congress/house/110&amp;region=http://www.rdfabout.com/rdf/usgov/geo/us/{HttpContext:param('state')}/cd/110/{HttpContext:param('district')}&amp;format=kml&amp;maxpoints=1000">
+				<xsl:apply-templates/>
+			</a>
+		</xsl:template>
+	</Templates>
+</Page>

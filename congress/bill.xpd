@@ -1,0 +1,1897 @@
+<?xml-stylesheet xpath="Page/Templates1" type="text/xsl" ?>
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<Title><BillTitle type="title"/> (GovTrack.us)</Title>
+
+	<IfBillExists>
+
+	<AllowEmail/>
+	<Param>bill</Param>
+	<Param>tab</Param>
+	
+	<GoogleSearch><BillTitle/></GoogleSearch>
+	
+	<Meta/>
+	<Share><twitterverse/></Share>
+
+	</IfBillExists>
+
+	<IsNotOverviewTab>
+		<HideAds/>
+	</IsNotOverviewTab>
+	
+	<IfBillExists>
+	<Sidebar>
+		<IsNotOverviewTab>
+		<Section Name="Navigation">
+			<table width="175" class="navbullets">
+			<tr><td><tab-a tab="">Overview</tab-a></td></tr>
+			<HasBillSummary><tr><td><tab-a tab="summary">Summary <WhichSummaries/></tab-a></td></tr></HasBillSummary>
+			<HasVoteDetails><tr><td><tab-a tab="votes">Votes</tab-a></td></tr></HasVoteDetails>
+			<BillTextBullet/>
+			<IfHasCommittees><tr><td><tab-a tab="committees">Committee Assignments</tab-a></td></tr></IfHasCommittees>
+			<IfHasAmendments><tr><td><tab-a tab="amendments">Amendments</tab-a></td></tr></IfHasAmendments>
+			<!--<IfHasSpeeches><tr><td><tab-a tab="speeches">Floor Speeches</tab-a></td></tr></IfHasSpeeches>-->
+			<IfHasReports><tr><td><tab-a tab="reports">Reports</tab-a></td></tr></IfHasReports>
+			<IfHasRelatedBills><tr><td><tab-a tab="related">Related Legislation</tab-a></td></tr></IfHasRelatedBills>
+			<!--<IfHasOutsideLinks><tr><td><tab-a tab="analysis">Analysis</tab-a></td></tr></IfHasOutsideLinks>-->
+			</table>
+		</Section>
+		</IsNotOverviewTab>
+		
+		<Monitor/>
+		
+		<Section Name="Primary Source" Icon="/media/info.gif">
+			<p>See <b><ThomasLink/></b> for the official source of information on this bill or resolution.</p>
+			<!--<RelatedSites/>-->
+		</Section>
+	</Sidebar>
+	</IfBillExists>
+
+	<IfBillExists>
+	<RDFA/>
+	</IfBillExists>
+	
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a> &gt; <a href="legislation.xpd" class="last">Legislation</a>
+	</Breadcrumbs>
+
+	<Body-A>
+		<!-- google_ad_section_start -->
+
+		<div
+			xmlns:dc="http://purl.org/dc/elements/1.1/">
+			
+		<!--<div style="float: right"><img src="/media/icon-bill-w.jpeg" width="90" height="91"/></div>-->
+
+		<h1>
+			<span style="letter-spacing: -1px"><BillNumber/></span>:
+			<BillTitle2/>
+		</h1>
+		
+		<p class="subhead_detail">
+			<BillSession/> Congress: <BillSessionYears/>
+			<!--
+			<PopupHelp>
+				<backgroundinfo/>
+				<p>Bill numbers restart from 1 every two years. Each two-year cycle is called a session of Congress. This bill was created in the <BillSession/> Congress, in <BillSessionYears/>.</p>
+				<p>The titles of bills are written by the bill's sponsor and are a part of the legislation itself. GovTrack does not editorialize bill summaries.</p>
+			</PopupHelp>
+			-->
+		</p>
+		
+		<IsOverviewTab>
+		<div style="float: right; margin-left: 20px; width: 160px;">
+			<Popvox/>
+		</div>
+		</IsOverviewTab>
+
+		<IfBillExists>
+			<OfficialTitle/>
+		</IfBillExists>
+		
+		<IsOverviewTab>
+		<Note/>
+
+		<IfBillExists>
+			<BillTopStatus/>
+		</IfBillExists>
+		</IsOverviewTab>
+
+		</div>
+
+		<!-- google_ad_section_end -->
+	</Body-A>
+		
+	<Body-B>
+		<IfBillExists>
+			<BillStatus/>
+			<Money/>
+			<BillSummary/>
+			<OutsideLinks/>
+			<CommitteeAssignments/>
+			<Amendments/>
+			<!--<FloorSpeeches/>-->
+			<Reports/>
+			<RelatedBills/>
+			<VoteDetails/>
+			<Footer/>
+		</IfBillExists>
+		
+		<IfBillNotExists>
+			<div style="max-width: 45em">
+			<p style="color: red; font-weight: bold">
+				Information for this bill or resolution, if it exists, has not yet been added to GovTrack.
+			</p>
+			<p>
+				The Government Printing Office posts new bills and resolutions usually within
+				a day of their introduction, and GovTrack generally picks
+				up that information automatically the following day. However, there are
+				sometimes delays.  Check back in the future to see if
+				the bill or resolution has become available.
+			</p>
+			<p>
+				You may also want to check <ThomasLink/>, the official
+				source of Congressional information, which may be more
+				recently updated.
+			</p>
+			<p>
+				Keep in mind that bill and resolution numbers reset from 1 every two
+				years. If you are looking for older legislation,
+				try the <a href="billsearch.xpd">advanced search</a> page.
+			</p>
+			</div>
+		</IfBillNotExists>
+
+	</Body-B>
+
+	<Templates1
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		exclude-result-prefixes="govtrack-util govtrack-bill govtrack-bills"
+		>
+
+		<xsl:variable name="billexists" select="govtrack-bill:BillExists()" />
+		<xsl:variable name="billnum" select="govtrack-bill:GetBillNumber()" />
+		<xsl:variable name="bill">
+			<bill session="{$billnum/session}" type="{$billnum/type}" number="{$billnum/number}"/>
+		</xsl:variable>
+		
+		<xsl:template match="IfBillExists">
+			<xsl:if test="$billexists">
+				<xsl:apply-templates select="node()"/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="IfBillNotExists">
+			<xsl:if test="not($billexists)">
+				<xsl:apply-templates select="node()"/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="BillTitle[not($billexists)]">
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+		</xsl:template>
+
+		<xsl:template match="BillSession">
+			<xsl:value-of select="$bill/@session"/> <sup><xsl:value-of select="govtrack-util:OrdinateSuffix($bill/@session)"/></sup>
+		</xsl:template>
+
+		<xsl:template match="BillSessionYears">
+			<xsl:value-of select="$bill/@session * 2 + 1787"/>
+			<xsl:text>-</xsl:text>
+			<xsl:value-of select="$bill/@session * 2 + 1787 + 1"/>
+		</xsl:template>
+
+		<xsl:template match="ThomasLink">
+			<a href="{govtrack-bill:GetThomasLink($bill/@session, $bill/@type, $bill/@number)}"><nobr><xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/></nobr> on THOMAS</a>
+		</xsl:template>
+		
+	</Templates1>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-login = "assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-comments = "assembly://GovTrackWeb/GovTrack.Web.Comments"
+		xmlns:govtrack-vote = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Vote"
+		exclude-result-prefixes="govtrack-util govtrack-bill govtrack-bills govtrack-reps govtrack-subjects govtrack-login govtrack-comments govtrack-vote http-context"
+		>
+		
+		<xsl:variable name="billexists" select="govtrack-bill:BillExists()" />
+		<xsl:variable name="billnum" select="govtrack-bill:GetBillNumber()" />
+
+		<xsl:variable name="bill">
+			<xsl:if test="$billexists">
+				<xsl:copy-of select="govtrack-bill:LoadBill()" />
+			</xsl:if>
+			<xsl:if test="not($billexists)">
+				<bill session="{$billnum/session}" type="{$billnum/type}" number="{$billnum/number}"/>
+			</xsl:if>
+		</xsl:variable>
+		
+		<xsl:variable name="billresolution">
+			<xsl:if test="($billnum/type='s' or $billnum/type='h')">bill</xsl:if>
+			<xsl:if test="not($billnum/type='s' or $billnum/type='h')">resolution</xsl:if>
+		</xsl:variable>
+
+		<xsl:variable name="links" select="govtrack-bills:LoadLinks($bill/@session,$bill/@type,$bill/@number)"/>
+		<xsl:variable name="links2" select="govtrack-bills:LoadLinks2($bill/@session,$bill/@type,$bill/@number)"/>
+		<xsl:variable name="cplink" select="$links[source='OpenCongress Wiki']"/>
+		<xsl:variable name="pvslink" select="$links[source='Project Vote Smart']"/>
+		<xsl:variable name="allvotes" select="govtrack-bill:GetBillVotes()"/>
+
+		<xsl:variable name="primaryrelatedbills" select="relatedbills/*[not(@relation='unknown' or @relation='rule')]"/>
+		<xsl:variable name="relatedunknown" select="$bill/relatedbills/*[(@relation='unknown' or @relation='rule')]"/>
+		<xsl:variable name="sametitlebills" select="govtrack-bill:GetSameTitledBills()"/>
+		<xsl:variable name="hassubjects" select="not(count($bill/subjects/term)=0)"/>
+		<xsl:variable name="relatedmonitors" select="govtrack-bill:GetRelatedMonitors()"/>
+		<xsl:variable name="hasrelatedbills" select="count($relatedunknown | $sametitlebills | $relatedmonitors) &gt; 0 or $hassubjects"/>
+
+		<xsl:variable name="dummy" select="not($billexists) or govtrack-reps:CacheRolesAt($bill/sponsor/@id[not(.='')] | $bill/cosponsors/cosponsor[not(@id='')]/@id, $bill/introduced/@datetime)"/>
+
+		<xsl:variable name="PageBillTitle">
+			<xsl:if test="$billexists">
+			<xsl:variable name="t" select="govtrack-bills:DisplayTitle($bill)"/>
+			<xsl:if test="string-length($t) &lt; 105"><xsl:value-of select="$t"/></xsl:if>
+			<xsl:if test="string-length($t) &gt;= 105"><xsl:value-of select="govtrack-util:Trunc($t,100)"/></xsl:if>
+			</xsl:if>
+		</xsl:variable>
+
+		<xsl:variable name="PageBillTitle2">
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+			<xsl:text xml:space="preserve">: </xsl:text>
+			<xsl:value-of select="$PageBillTitle"/>
+		</xsl:variable>
+
+		<xsl:template match="BillNumber">
+			<xsl:value-of select="govtrack-bills:GetDisplayNumber($bill/@type, $bill/@number)"/>
+		</xsl:template>
+
+		<xsl:template match="BillTitle">
+			<xsl:variable name="alt" select="govtrack-comments:GetPageAltTitle(concat('bill:', $bill/@type, $bill/@session, '-', $bill/@number))"/>
+			<xsl:if test="not($alt='')">
+				<xsl:value-of select="$alt"/> --
+			</xsl:if>
+			
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+			<xsl:if test="@type='title'">
+				<xsl:if test="http-context:param('tab')='speeches'"> - Related Speeches</xsl:if>
+				<xsl:if test="http-context:param('tab')='summary'"> - Summary</xsl:if>
+				<xsl:if test="http-context:param('tab')='analysis'"> - Analysis</xsl:if>
+				<xsl:if test="http-context:param('tab')='amendments'"> - Amendments</xsl:if>
+				<xsl:if test="http-context:param('tab')='committees'"> - Committee Assignments</xsl:if>
+			</xsl:if>
+			<xsl:text xml:space="preserve">: </xsl:text>
+			<xsl:value-of select="$PageBillTitle"/>
+		</xsl:template>
+
+		<xsl:template match="BillTitle2">
+			<xsl:value-of select="$PageBillTitle"/>
+		</xsl:template>
+
+		<xsl:template match="RDFA">
+			<RDFA about="http://www.rdfabout.com/rdf/usgov/congress/{$bill/@session}/bills/{$bill/@type}{$bill/@number}"/>
+		</xsl:template>
+		
+		<xsl:template match="BillTopStatus">
+			<div>
+				<strong>Sponsor: </strong>
+				<xsl:if test="count($bill/sponsor/@id) &gt; 0">
+					<xsl:variable name="introduceddate" select="string($bill/introduced/@datetime)"/>
+					<span rel="usbill:sponsor" resource="http://www.rdfabout.com/rdf/usgov/congress/people/{govtrack-reps:GetPersonInfo($bill/sponsor/@id)/bioguideid}">
+					<a href="person.xpd?id={$bill/sponsor/@id}" property="foaf:name" datatype="xsd:string" about="http://www.rdfabout.com/rdf/usgov/congress/people/{govtrack-reps:GetPersonInfo($bill/sponsor/@id)/bioguideid}">
+					<xsl:value-of select="govtrack-reps:FormatPersonName($bill/sponsor/@id, $introduceddate,'')"/>
+					</a>
+					</span>
+				</xsl:if>
+				<xsl:if test="count($bill/sponsor/@id) = 0">
+					No Sponsor
+				</xsl:if>
+			</div>
+			
+			<xsl:for-each select="$bill">
+				<p><xsl:call-template name="BillStatusDescription"/></p>
+			</xsl:for-each>
+		</xsl:template>
+
+		<xsl:template match="BillStatus">
+			<xsl:if test="http-context:param('tab')=''">
+				<xsl:apply-templates select="$bill" mode="bill"/>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="Meta">
+			<xsl:variable name="officialtitle" select="$bill/titles/title[@type='official'][position()=last()]"/>
+			<Meta Name="description">A <xsl:value-of select="$billresolution"/> in the U.S. Congress: <xsl:value-of select="$officialtitle"/></Meta>
+			
+			<Head>
+				<meta property="og:title" content="{$PageBillTitle2}"/>
+				<meta property="og:image" content="http://www.govtrack.us/media/logo.png"/>
+				<meta property="og:sitename" content="GovTrack.us"/>
+				<meta property="fb:app_id" content="119329904748946"/>
+			</Head>
+		</xsl:template>
+		
+		<xsl:template match="tab-a">
+			<linkbullet href="?bill={http-context:param('bill')}" tab="{@tab}"><xsl:apply-templates/></linkbullet>
+		</xsl:template>
+		
+		<xsl:template match="Monitor">
+			<!-- MONITOR THIS BILL -->
+			<Section Name="Track {govtrack-bills:DisplayNumber($bill)}">
+			
+			<xsl:if test="$bill/@session = govtrack-util:GetCurrentSession()">
+			<monitor-subscribe
+				title="{govtrack-bills:DisplayNumber($bill)}"
+				desc="{$billresolution}"
+				type="bill"
+				term="{http-context:param('bill')}"
+				>
+				<events>all major activity on this <xsl:value-of select="$billresolution"/> and its amendments, references in the Congressional Record, and relevant upcoming committee meetings</events>
+				<when-not-monitoring>
+						<xsl:variable name="sw" select="govtrack-login:MonitorMatch('crs', subjects/term/@name | committees/committee/@fullname)"/>
+						<xsl:if test="count($sw)">
+						<p>You will get updated on major actions on this <xsl:value-of select="$billresolution"/> because it matches:
+						<xsl:for-each select="$sw">
+							<xsl:variable name="swm" select="govtrack-login:MonitorLink(.)"/>
+							<xsl:if test="not(position()=1)">, </xsl:if>
+							<a href="{$swm/href}"><xsl:value-of select="$swm/title"/></a>
+						</xsl:for-each>
+						</p>
+						</xsl:if>
+				</when-not-monitoring>
+			</monitor-subscribe>
+
+			<p>Make a <a href="/embed/sample-bill.xpd?bill={http-context:param('bill')}">widget that shows the status of this <xsl:value-of select="$billresolution"/></a>
+			for your webpage.</p>
+			</xsl:if>
+
+			<xsl:if test="not($bill/@session = govtrack-util:GetCurrentSession())">
+				<p>Because this <xsl:value-of select="$billresolution"/> was introduced in a previous session of Congress,
+				no more action can occur on it.</p>
+
+				<monitor-subscribe-archival
+					title="{govtrack-bills:DisplayNumber($bill)}"
+					desc="{$billresolution}"
+					type="bill"
+					term="{http-context:param('bill')}"
+					/>
+			</xsl:if>
+
+			</Section>
+		</xsl:template>
+
+		<xsl:template match="OfficialTitle">
+			<xsl:variable name="officialtitle" select="$bill/titles/title[@type='official'][position()=last()]"/>
+
+			<xsl:if test="not($officialtitle = $PageBillTitle) and not($officialtitle = concat($PageBillTitle,'.'))">
+			<p style="margin-top: .5em; margin-bottom: 1.75em">
+				<xsl:value-of select="$officialtitle"/>
+			</p>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="Note">
+			<xsl:variable name="note" select="govtrack-comments:GetPageNote(concat('bill:', $bill/@type, $bill/@session, '-', $bill/@number))"/>
+			<xsl:if test="not($note='')">
+				<p style="color: blue; margin-bottom: 1em"><xsl:copy-of select="$note"/></p>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template name="status-line">
+			<xsl:param name="date"/>
+			<xsl:param name="good" select="1"/>
+			<xsl:param name="show" select="1"/>
+			<xsl:param name="dateless" select="0"/>
+			<xsl:param name="text-none"/>
+			<xsl:param name="text-bad" select="$text-none"/>
+			<xsl:param name="text-good" select="$text-bad"/>
+			<xsl:param name="details-link" select="''"/>
+			<xsl:param name="details-text" select="'View Details'"/>
+			
+			<xsl:if test="count($date) &gt; 0 or $show">
+			<tr valign="top">
+				<xsl:if test="count($date) = 0 and not($dateless)"><xsl:attribute name="style">color: #777777;</xsl:attribute></xsl:if>
+				<xsl:if test="count($date) &gt; 0 and not($good)"><xsl:attribute name="style">color: #AA3333</xsl:attribute></xsl:if>
+				<xsl:if test="(count($date) &gt; 0 or $dateless) and $good"><xsl:attribute name="style">color: #008800;</xsl:attribute></xsl:if>
+
+				<td>
+					<xsl:if test="count($date) = 0 and not($dateless)"><img src="/media/box.gif" alt="Not Yet Occurred: "/></xsl:if>
+					<xsl:if test="(count($date) &gt; 0 or $dateless) and $good"><img src="/media/checkmark.gif" alt="Occurred: "/></xsl:if>
+					<xsl:if test="count($date) &gt; 0 and not($good)"><img src="/media/ex.gif" alt="Failed: "/></xsl:if>
+				</td>
+				<td>
+					<xsl:if test="count($date) = 0"><xsl:value-of select="$text-none"/></xsl:if>
+					<xsl:if test="count($date) &gt; 0 and not($good)"><xsl:value-of select="$text-bad"/></xsl:if>
+					<xsl:if test="count($date) &gt; 0 and $good"><xsl:value-of select="$text-good"/></xsl:if>
+				</td>
+				<td style="padding-left: 1em; font-size: 80%; color: #224422">
+					<xsl:if test="count($date) = 0 and not($dateless)"><span style="padding-right: 1em; color: #666666">
+						<xsl:if test="not(@session = govtrack-util:GetCurrentSession())">(did not occur)</xsl:if>
+						<xsl:if test="(@session = govtrack-util:GetCurrentSession())">...</xsl:if>
+					</span></xsl:if>
+					<xsl:if test="count($date) &gt; 0"><xsl:value-of select="govtrack-util:DTToDateString($date)"/></xsl:if>
+					<xsl:if test="$good and not($details-link='')">
+						<span><a href="{$details-link}"><xsl:value-of select="$details-text"/></a></span>
+					</xsl:if>
+				</td>
+			</tr>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="IsOverviewTab">
+			<xsl:if test="http-context:param('tab')=''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="IsNotOverviewTab">
+			<xsl:if test="not(http-context:param('tab')='')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="bill" mode="bill">
+			<!-- BILL STATUS SUMMARY -->
+			
+			<xsl:variable name="introduceddate" select="string(introduced/@datetime)"/>
+
+			<xsl:variable name="chamberletter" select="substring(@type, 1, 1)"/>
+			<xsl:variable name="otherchamberletter">
+				<xsl:if test="$chamberletter='s'">h</xsl:if>
+				<xsl:if test="$chamberletter='h'">s</xsl:if>
+			</xsl:variable>
+			
+			<xsl:variable name="chambername">
+				<xsl:choose>
+					<xsl:when test="@type='h'">House</xsl:when>
+					<xsl:when test="@type='hr'">House</xsl:when>
+					<xsl:when test="@type='hj'">House</xsl:when>
+					<xsl:when test="@type='hc'">House</xsl:when>
+					<xsl:when test="@type='s'">Senate</xsl:when>
+					<xsl:when test="@type='sr'">Senate</xsl:when>
+					<xsl:when test="@type='sj'">Senate</xsl:when>
+					<xsl:when test="@type='sc'">Senate</xsl:when>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:variable name="otherchambername">
+				<xsl:choose>
+					<xsl:when test="@type='s'">House</xsl:when>
+					<xsl:when test="@type='sr'">House</xsl:when>
+					<xsl:when test="@type='sj'">House</xsl:when>
+					<xsl:when test="@type='sc'">House</xsl:when>
+					<xsl:when test="@type='h'">Senate</xsl:when>
+					<xsl:when test="@type='hr'">Senate</xsl:when>
+					<xsl:when test="@type='hj'">Senate</xsl:when>
+					<xsl:when test="@type='hc'">Senate</xsl:when>
+				</xsl:choose>
+			</xsl:variable>
+			
+			<table><tr><td> <!-- don't intersect sidebar -->
+			<h3 style="margin-top: 0px"><xsl:value-of select="$billresolution"/> Overview</h3>
+
+			<xsl:comment> google_ad_section_start(weight=ignore) </xsl:comment>
+			
+			<table cellpadding="8" cellspacing="0" border="0" style="margin-bottom: 1em">
+				<tr valign="top"><td class="lh"><div>Co-sponsors:</div></td> <td>
+					<div>
+					<span style="margin-left: 2em">
+					<xsl:if test="count(cosponsors/*)&gt;0">
+						<togglebutton target="cosponsors" hide="Hide Cosponsors" show="Show Cosponsors ({count(cosponsors/*[count(@withdrawn)=0])})"/>
+					</xsl:if>
+					<xsl:if test="count(cosponsors/*)=0">No Co-sponsors</xsl:if>
+					</span>
+					</div>
+
+					<div id="cosponsors" style="display: none">
+					<div style="margin-top: .5em">Cosponsors:</div>
+					<multicol width="400px" rows="6">
+					<xsl:for-each select="cosponsors/cosponsor[not(@id='')]">
+						<xsl:sort select="count(@withdrawn)=1"/>
+						<xsl:sort select="govtrack-reps:FormatPersonName(@id, $introduceddate, 'lastfirst')"/>
+						<div><nobr>
+						<a href="person.xpd?id={@id}"><xsl:if test="govtrack-login:HasMonitor(concat('p:', @id))"><xsl:attribute name="style">font-weight: bold</xsl:attribute><xsl:attribute name="title">You are tracking this Member of Congress.</xsl:attribute></xsl:if>
+							<xsl:value-of select="govtrack-reps:FormatPersonName(@id, $introduceddate, 'notitle')"/>
+						</a>
+						<xsl:if test="count(@withdrawn) &gt; 0"> (withdrawn)</xsl:if>
+						</nobr></div>
+					</xsl:for-each>
+					</multicol>
+					</div>
+				</td></tr>
+
+				<tr valign="top"><td class="lh"><div>Text:</div></td> <td>
+					<xsl:if test="not($bill/summary='') or count($pvslink) &gt; 0">
+						<a href="bill.xpd?bill={http-context:param('bill')}&amp;tab=summary">Summary</a>
+						|
+					</xsl:if>
+					<xsl:choose>
+					<xsl:when test="govtrack-bill:BillTextExists()">
+						<a href="billtext.xpd?bill={http-context:param('bill')}">Full Text</a>
+					</xsl:when>
+					<xsl:otherwise>
+						The text of this legislation is not yet available on GovTrack.  It may not have been made available by the Government Printing Office yet.
+					</xsl:otherwise>
+					</xsl:choose>
+					</td> </tr>
+
+				<xsl:variable name="cboreportsummary" select="govtrack-bill:LoadBillReport('cbo_summary')"/>
+				<xsl:if test="count($cboreportsummary/cost) &gt; 0">
+					<tr valign="top">
+					<td class="lh"><div>Cost:</div></td>
+					<td>
+						<xsl:choose>
+						<xsl:when test="$cboreportsummary/cost/@amount &lt; 0"><i>Savings of</i> $<xsl:value-of select="format-number((-$cboreportsummary/cost/@amount) div 295734134 + 1, '###,###,##0')"/></xsl:when>
+						<xsl:when test="$cboreportsummary/cost/@amount &gt; 0 and ($cboreportsummary/cost/@amount div 295734134) &lt; 1">less than $1</xsl:when>
+						<xsl:otherwise>$<xsl:value-of select="format-number(($cboreportsummary/cost/@amount) div 295734134 + 1, '###,###,##0')"/></xsl:otherwise>
+						</xsl:choose>
+						per American <xsl:value-of select="$cboreportsummary/cost/@period"/>. 
+						<div><small>
+							Computed from a <a href="?bill={http-context:param('bill')}&amp;tab=reports">Congressional Budget Office report</a> by dividing the
+							estimated cost of $<xsl:value-of select="format-number(($cboreportsummary/cost/@amount), '###,###,##0')"/> by the U.S. population. 
+							The figure is extracted from the report automatically and may be incorrect. See <a href="?bill={http-context:param('bill')}&amp;tab=reports">the report</a> for details.
+						</small></div>
+					</td>
+					</tr>
+				</xsl:if>
+
+				<tr valign="top"><td class="lh"><div>Status:</div></td> <td>
+			<table>
+			
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="introduced/@datetime"/>
+				<xsl:with-param name="text-none" select="'Introduced'"/>
+			</xsl:call-template>
+			
+			<xsl:if test="count(committees/*) &gt; 0">
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="unmatched-xpath"/>
+				<xsl:with-param name="dateless" select="true()"/>
+				<xsl:with-param name="good" select="count(committees/*) &gt; 0"/>
+				<xsl:with-param name="text-none" select="'Referred to Committee'"/>
+				<xsl:with-param name="details-link" select="concat('?bill=',http-context:param('bill'),'&amp;tab=committees')"/>
+				<xsl:with-param name="details-text" select="'View Committee Assignments'"/>
+			</xsl:call-template>
+			</xsl:if>
+
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="actions/calendar/@datetime"/>
+				<xsl:with-param name="show" select="name(status/*) = 'introduced'"/>
+				<xsl:with-param name="text-none" select="'Reported by Committee'"/>
+			</xsl:call-template>
+			<xsl:if test="not(actions/calendar/@datetime)">
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="status/calendar/@datetime"/>
+				<xsl:with-param name="show" select="false()"/>
+				<xsl:with-param name="text-none" select="'Ordered Reported'"/>
+			</xsl:call-template>
+			</xsl:if>
+
+			<xsl:if test="count(amendments/*) &gt; 0">
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="unmatched-xpath"/>
+				<xsl:with-param name="dateless" select="true()"/>
+				<xsl:with-param name="good" select="count(amendments/*) &gt; 0"/>
+				<xsl:with-param name="text-none" select="concat('Amendments (', count(amendments/*), ' proposed)')"/>
+				<xsl:with-param name="details-link" select="concat('?bill=',http-context:param('bill'),'&amp;tab=amendments')"/>
+				<xsl:with-param name="details-text" select="'View Amendments'"/>
+			</xsl:call-template>
+			</xsl:if>
+
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="actions/vote[@type='vote']/@datetime"/>
+				<xsl:with-param name="good" select="actions/vote[@type='vote']/@result = 'pass'"/>
+				<xsl:with-param name="text-none" select="concat($chambername, ' Vote')"/>
+				<xsl:with-param name="text-bad" select="concat('Failed Passage in ', $chambername)"/>
+				<xsl:with-param name="text-good" select="concat('Passed ', $chambername)"/>
+			</xsl:call-template>
+
+			<xsl:if test="not(@type='hr' or @type='sr')">
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="actions/vote[@type='vote2']/@datetime"/>
+				<xsl:with-param name="good" select="actions/vote[@type='vote2']/@result = 'pass'"/>
+				<xsl:with-param name="text-none" select="concat($otherchambername, ' Vote')"/>
+				<xsl:with-param name="text-bad" select="concat('Failed Passage in ', $otherchambername)"/>
+				<xsl:with-param name="text-good" select="concat('Passed ', $otherchambername)"/>
+			</xsl:call-template>
+			
+			<xsl:if test="@type='h' or @type='s' or ((@type='hj' or @type='sj') and (actions/signed or actions/vetoed))">
+
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="actions/vote[@type='conference' and @result='pass']/@datetime | actions/vote[@type='concur' and @result='pass']/@datetime"/>
+				<xsl:with-param name="show" select="name(status/*) = 'vote2'"/>
+				<xsl:with-param name="text-none" select="'Differences Resolved'"/>
+			</xsl:call-template>
+
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="actions/signed/@datetime"/>
+				<xsl:with-param name="show" select="not(actions/vetoed/@datetime)"/>
+				<xsl:with-param name="text-none" select="'Signed by President'"/>
+			</xsl:call-template>
+
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="actions/vetoed/@datetime"/>
+				<xsl:with-param name="show" select="false()"/>
+				<xsl:with-param name="good" select="false()"/>
+				<xsl:with-param name="text-bad" select="'Vetoed by President'"/>
+			</xsl:call-template>
+
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="actions/vote[@type='override' and @where=$chamberletter]/@datetimee"/>
+				<xsl:with-param name="show" select="actions/vetoed[not(@pocket='1')]/@datetime"/>
+				<xsl:with-param name="good" select="actions/vote[@type='override' and @where=$chamberletter]/@result = 'pass'"/>
+				<xsl:with-param name="text-none" select="concat('Veto Override in ', $chambername)"/>
+				<xsl:with-param name="text-bad" select="concat('Failed Veto Override in ', $chambername)"/>
+				<xsl:with-param name="text-good" select="concat('Veto Override Succeeded in ', $chambername)"/>
+			</xsl:call-template>
+			<xsl:call-template name="status-line">
+				<xsl:with-param name="date" select="actions/vote[@type='override' and @where=$otherchamberletter]/@datetime"/>
+				<xsl:with-param name="show" select="actions/vetoed[not(@pocket='1')]/@datetime"/>
+				<xsl:with-param name="good" select="actions/vote[@type='override' and @where=$otherchamberletter]/@result = 'pass'"/>
+				<xsl:with-param name="text-none" select="concat('Veto Override in ', $otherchambername)"/>
+				<xsl:with-param name="text-bad" select="concat('Failed Veto Override in ', $otherchambername)"/>
+				<xsl:with-param name="text-good" select="concat('Veto Override Succeeded in ', $otherchambername)"/>
+			</xsl:call-template>
+			
+			</xsl:if> <!-- h or s -->
+
+			</xsl:if> <!-- not hr or sr -->
+
+			</table>
+			
+				<!--<div style="font-weight: bold;">
+					<xsl:if test="not(@session = govtrack-util:GetCurrentSession())">Final </xsl:if>
+					Status: <xsl:value-of select="govtrack-bills:GetStatusSource($bill)"/>
+				</div>-->
+			</td>
+			</tr>
+
+				<xsl:if test="count(actions/*) &gt; 0">
+				<tr valign="top"><td class="lh"><div><nobr>Last Action:</nobr></div></td>
+					<td>
+					<xsl:variable name="lastaxn" select="actions/*[substring-after(.,'Motion to reconsider')=''][position()=last()]" />
+
+						<xsl:value-of select="govtrack-util:DTToDateString(actions/*[position()=last()]/@datetime)"/>:
+						<xsl:if test="not(count($lastaxn/committee/@name)=0)"><xsl:value-of select="$lastaxn/committee/@name"/>: </xsl:if>
+						<xsl:value-of select="string($lastaxn)"/>
+						<xsl:if test="string($lastaxn)='Held at the desk.'">
+							<span style="color: #666666"> (This generally refers to a Senate bill passed by the Senate but not yet referred to a committee in the House.)</span>
+						</xsl:if>
+				</td></tr>
+				</xsl:if>
+
+			<!-- OTHER TITLES -->
+			<xsl:variable name="short_as" select="titles/title[@type='short'][position()=last()]/@as" />
+			<xsl:variable name="shorttitles" select="titles/title[@type='popular'] | titles/title[@type='short'][@as=$short_as]" />
+
+			<xsl:if test="count($shorttitles[not(.=$PageBillTitle)])">
+				<tr valign="top">
+				<td class="lh"><div>Other Titles:</div></td>
+				<td>
+					<xsl:for-each select="$shorttitles[not(.=$PageBillTitle)]">
+						<div>-- <xsl:value-of select="."/></div>
+					</xsl:for-each>
+				</td>
+				</tr>
+			</xsl:if>
+
+				<xsl:if test="$hasrelatedbills or count($primaryrelatedbills) &gt; 0">
+					<tr valign="top">
+						<td class="lh"><div>Related:</div></td>
+						<td>
+							<xsl:call-template name="PrimaryRelatedBills"/>
+							<div>See the <a href="?bill={http-context:param('bill')}&amp;tab=related">Related Legislation</a> page for other bills related to this one and a list of subject terms
+							that have been applied to this <xsl:value-of select="$billresolution"/>.
+							Sometimes the text of one bill or resolution is incorporated into another, and in those cases the original bill or resolution, as it would appear here, would seem to be abandoned.</div>
+						</td>
+					</tr>
+				</xsl:if>
+
+				<xsl:call-template name="Votes"/>
+			</table>
+			<xsl:comment> google_ad_section_end </xsl:comment>
+			
+			</td></tr></table>
+			
+			<!--<xsl:call-template name="CommunityQuestions"/>-->
+			<!--<SocialAction search="{govtrack-bills:GetDisplayNumber($bill/@type, $bill/@number)}"/>-->
+			
+			<xsl:if test="count($links2) = 0 and false()">
+			<table><tr><td>
+			<div style="border: 1px solid grey; background-color: #EEEEFF; padding: .5em; font-size: 85%;">
+				<b>Articles About This Bill/Resolution</b>
+				<div>No articles are associated with this <xsl:value-of select="$billresolution"/>.
+				<span id="addarticle2">You can <a href="javascript:DHTML_ShowHide('addarticle2', 0);DHTML_ShowHide('addarticle', 1)">suggest
+				an article</a> for inclusion here.</span>
+				</div>
+				<div style="display: none" id="addarticle">
+					<p>Paste the web address (URL) of an article from a well-established publication below.</p>
+					<div>
+						<input id="addarticleurl" size="20"/>
+						<input type="button" value="Submit"
+						  onclick="AjaxElement('addarticle3', 'Submitting URL...', '/users/ajax_suggest_bill_url.xpd?bill={http-context:param('bill')}&amp;article_url=' + escape(getObj('addarticleurl').value))"/>
+					</div>
+					<div id="addarticle3"/>
+					<p>Only thoughtful news articles from established publications will be accepted. All submissions are approved by a moderator before appearing on this page.</p>
+				</div>
+			</div>
+			</td></tr></table>
+			</xsl:if>
+
+		</xsl:template>
+
+		<xsl:template match="Reports">
+			<xsl:if test="http-context:param('tab')='reports'">
+				<xsl:call-template name="Reports"/>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="RelatedBills">
+			<xsl:if test="http-context:param('tab')='related'">
+				<xsl:call-template name="RelatedBills"/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template name="PVSHighlights">
+			<xsl:if test="count($pvslink) &gt; 0">
+			<h4>Highlights from Project Vote Smart</h4>
+			<div class="subsection">
+				<p>The following is <a href="{$pvslink/url}">Project Vote Smart's highlights for this <xsl:value-of select="$billresolution"/></a>, generously made available by PVS:</p>
+				<xsl:for-each select="govtrack-util:Split($pvslink/excerpt, '&#10;')">
+					<li><xsl:value-of select="."/></li>
+				</xsl:for-each>
+			</div>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template name="Technorati">
+			<xsl:variable name="comments" select="govtrack-bill:GetBillComments(@session, @type, @number)"/>
+			<xsl:if test="count($comments) &gt; 0 and 0">
+				<floatrightbox title="In the Blogosphere">
+				<img src="/media/technorati_talkbubble.png" style="margin: 3px"/>
+				<xsl:value-of select="count($comments)"/> comments via <a href="http://www.technorati.com">Technorati</a>:
+				<div style="text-align: center"><togglebutton target="technoraticomments" hide="hide commentary" show="show user commentary"/></div>
+				<div style="font-size: 80%; display: none" id="technoraticomments">
+				<div style="overflow: auto; height: 35em; margin-top: 1em">
+					<xsl:for-each select="$comments">
+						<div style="margin-bottom: .75em">
+							<span style="font-family: Verdana, Tahoma"><a href="{source}"><xsl:value-of select="sourcename"/></a>:</span>
+							...<xsl:value-of select="comment"/>...
+							[<xsl:value-of select="date"/>]
+						</div>
+					</xsl:for-each>
+				</div>
+				<div style="margin-top: 1em">(Link to this page in your blog for your comments to show up here!)</div>
+				</div>
+				</floatrightbox>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template name="PrimaryRelatedBills">
+			<xsl:for-each select="$primaryrelatedbills">
+				<div>
+					<xsl:choose>
+					<xsl:when test="@relation='supersedes'">
+						This <xsl:value-of select="$billresolution"/> supersedes
+					</xsl:when>
+					<xsl:when test="@relation='superseded'">
+						This <xsl:value-of select="$billresolution"/> is superceded by
+					</xsl:when>
+					<xsl:when test="@relation='identical'">
+						This <xsl:value-of select="$billresolution"/> is identical to
+					</xsl:when>
+					<xsl:otherwise>
+						This <xsl:value-of select="$billresolution"/> is related to
+					</xsl:otherwise>
+					</xsl:choose>
+					<a href="bill.xpd?bill={@type}{@session}-{@number}">
+					<xsl:value-of select="govtrack-bills:BillTypeToDisplayString(@type)"/>
+					<xsl:value-of select="' '"/>
+					<xsl:value-of select="@number"/>
+					</a>
+					<xsl:if test="govtrack-bills:BillExists(@session, @type, @number)">
+						(Status: <xsl:value-of select="govtrack-bills:GetStatusSource(govtrack-bills:LoadBill2(@session, @type, @number))"/>).
+					</xsl:if>
+				</div>
+			</xsl:for-each>
+		</xsl:template>
+		
+		<xsl:template match="BillTextBullet">
+			<xsl:if test="govtrack-bill:BillTextExists()">
+				<tr><td><linkbullet href="billtext.xpd?bill={http-context:param('bill')}">Full Text</linkbullet></td></tr>
+			</xsl:if>
+		</xsl:template>		
+		
+		<xsl:template match="IfHasRelatedBills">
+			<xsl:if test="$hasrelatedbills">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template name="RelatedBills">
+			<!-- RELATED BILLS -->
+
+			<table><tr><td>
+			<h3 style="margin-top: 0px">Related Legislation</h3>
+
+			<xsl:if test="$relatedunknown">
+				<h4>See Also</h4>
+				<div class="subsection">
+					<p>Below are related bills and resolutions identified by Library of Congress staff:</p>
+					<xsl:for-each select="$relatedunknown">
+						<!-- because a bill can be related in more than one
+							way, but we don't show the way, uniquify the bills -->
+						<xsl:variable name="dup" select="count(preceding-sibling::*[@relation='unknown' and @type=current()/@type and @session=current()/@session and @number=current()/@number])"/>
+						<xsl:if test="$dup = 0 and govtrack-bills:BillExists(@session, @type, @number)">
+							<div>
+							<a href="bill.xpd?bill={@type}{@session}-{@number}">
+							<!--<xsl:if test="@type = 'h' or @type = 's'">-->
+								<xsl:value-of select="govtrack-bills:DisplayString(govtrack-bills:LoadBill2(@session, @type, @number), 60)"/>
+							<!--</xsl:if>
+							<xsl:if test="not(@type = 'h' or @type = 's')">
+								<xsl:value-of select="govtrack-bills:BillTypeToDisplayString(@type)"/>
+								<xsl:value-of select="' '"/>
+								<xsl:value-of select="@number"/>
+							</xsl:if>-->
+							</a>
+							<i style="margin-left: 1em; color: #555555"><xsl:value-of select="govtrack-bills:GetStatusSource(govtrack-bills:LoadBill2(@session, @type, @number))"/></i>
+							</div>
+						</xsl:if>
+					</xsl:for-each>
+				</div>
+			</xsl:if>
+			<xsl:if test="count($sametitlebills) &gt; 0">
+				<h4>Other Legislation with the Same Title</h4>
+				<div class="subsection">
+					<p>The list below shows legislation in this and previous sessions of Congress
+					that had the same title as this <xsl:value-of select="$billresolution"/>.
+					Often bills are incorporated into other omnibus bills, and you may be able to track the status of provisions of this bill by looking for an omnibus bill below.
+					Note that bills may have multiple titles.</p>
+					<xsl:for-each select="$sametitlebills">
+						<xsl:sort select="session" data-type="number" order="descending"/>
+						<xsl:sort select="type" order="descending"/>
+						<xsl:sort select="number" data-type="number"/>
+						<div>
+							<a href="{govtrack-bills:BillLink3(session, type, number)}"><xsl:value-of select="session"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix(session)"/></sup>
+							Congress:
+							<xsl:value-of select="govtrack-bills:GetDisplayNumber(type, number)"/>
+							<xsl:if test="title">: <xsl:value-of select="title"/></xsl:if>
+								</a>
+							<xsl:if test="govtrack-bills:BillExists(session, type, number)">
+								<i style="margin-left: 1em; color: #555555"><xsl:value-of select="govtrack-bills:GetStatusSource(govtrack-bills:LoadBill2(session, type, number))"/></i>
+							</xsl:if>
+						</div>
+					</xsl:for-each>
+				</div>
+			</xsl:if>
+
+			<xsl:if test="count($relatedmonitors) &gt; 0">
+				<h4>Crowd-Sourcing</h4>
+				<div class="subsection">
+				<p>Users tracking this <xsl:value-of select="$billresolution"/> are also tracking...</p>
+				<xsl:for-each select="$relatedmonitors">
+					<div style="margin-bottom: 3px">
+						<a href="{link}"><xsl:value-of select="name"/></a>
+						<nobr> (<i><xsl:value-of select="count"/> users</i>)</nobr>
+					</div>
+				</xsl:for-each>
+				</div>
+			</xsl:if>
+			
+			<xsl:call-template name="SubjectTerms"/>
+			
+			</td></tr></table>
+		</xsl:template>
+
+
+		<xsl:template match="IfHasCommittees">
+			<xsl:if test="count($bill/committees/committee) &gt; 0">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="CommitteeAssignments[http-context:param('tab')='committees']">
+			<!-- COMMITTEES -->
+				<table><tr><td> <!-- don't wrap around sidebar -->
+				<h3 style="margin-top: 0px">Committee Assignments</h3>
+				<p>Committees are like "mini Congresses". Most bills begin by being considered by one or several congressional committees which may
+				"report" the bill favorably or unfavorably to the Senate or House as a whole allowing it to receive consideration
+				by the full body and move forward, or may fail to consider a bill at all preventing the bill from moving forward.
+				Most bills never receive any committee consideration and are never reported out. House bills start in House committees and enter Senate committees only after being passed by the House and received by the Senate,
+				and similarly for Senate bills.</p>
+				<p>Information on committee proceedings is notoriously opaque: committees vary in what information they make public and often do not provide basic public information such as the results
+				of votes electronically or in an understandable format. Furthermore, if your Member of Congress does not sit on any committee
+				relevant to this bill, you generally have no opportunity to voice your opinion on the bill while the bill is receiving its
+				most important consideration.</p>
+				<p>The <xsl:value-of select="$billresolution"/> has been referred to the following committees:</p>
+				<div class="subsection">
+				<xsl:for-each select="$bill/committees/committee">
+					<div>
+						<xsl:if test="count(@subcommittee)=0">
+							<a href="committee.xpd?id={govtrack-reps:GetCommitteeId($bill/@session, @name, '')}"><xsl:value-of select="@name"/></a>
+						</xsl:if>
+						<xsl:if test="count(@subcommittee)=1">
+							<a href="committee.xpd?id={govtrack-reps:GetCommitteeId($bill/@session, @name, @subcommittee)}"><xsl:value-of select="@name"/>,
+							Subcommittee on <xsl:value-of select="@subcommittee"/></a>
+						</xsl:if>
+						<xsl:for-each select="govtrack-util:Split(@activity, ',')">
+							<xsl:if test=".='Hearings'"> -- Hearings Held</xsl:if>
+							<xsl:if test=".='Markup'"> -- Bill Text Revised</xsl:if>
+							<xsl:if test=".='Reporting'"> -- Bill Reported Out</xsl:if>
+						</xsl:for-each>
+					</div>
+				</xsl:for-each>
+				</div>
+				</td></tr></table>
+		</xsl:template>
+
+		<xsl:template name="Votes">
+			<!-- VOTING RECORD -->
+
+			<xsl:if test="count(actions/vetoed|actions/vote|actions/vote-aux)">
+				<tr valign="top">
+				<td class="lh"><div>Votes:</div></td>
+				<td>
+					<xsl:apply-templates select="actions/vote|actions/vote-aux" mode="bill-votes"/>
+					<xsl:if test="count($allvotes) &gt; 0">
+						<div>View <a href="?bill={http-context:param('bill')}&amp;tab=votes">all <xsl:value-of select="count($allvotes)"/> votes</a> on this bill.</div>
+					</xsl:if>
+				</td>
+				</tr>
+			</xsl:if>
+
+		</xsl:template>
+		
+		<xsl:template match="HasVoteDetails">
+			<xsl:if test="count($allvotes) &gt; 0">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="VoteDetails[http-context:param('tab')='votes']">	
+			<xsl:if test="count($allvotes) &gt; 0">
+			<table><tr><td> <!-- don't wrap around sidebar -->
+			<h3>Roll Call Votes</h3>
+			<p>Members of Congress conduct more than just up-or-down votes on bills. Below is a list of votes
+			on the <xsl:value-of select="$billresolution"/> as well as on any amendments proposed, motions to conclude debate (cloture), and other
+			motions related to the <xsl:value-of select="$billresolution"/>.</p>
+			<table cellpadding="5">
+				<tr><th>Date</th> <th>Where</th> <th>Description - Result</th></tr>
+				<xsl:for-each select="$allvotes">
+					<tr valign="top">
+						<td>
+							<nobr><xsl:value-of select="date"/></nobr>
+						</td>
+						<td>
+							<xsl:if test="not(substring-after(id, 's')='')">Senate</xsl:if>
+							<xsl:if test="not(substring-after(id, 'h')='')">House</xsl:if>
+						</td>
+						<td>
+							<div>
+							<a href="vote.xpd?vote={id}">
+								<xsl:value-of select="description"/>
+							</a>
+							</div>
+							<div>
+							<xsl:value-of select="result"/>
+							</div>
+							<xsl:variable name="votenote" select="govtrack-comments:GetPageNote(concat('vote:', id))"/>
+							<xsl:if test="not($votenote='')">
+								<p style="color: blue; font-size: 90%"><xsl:copy-of select="$votenote"/></p>
+							</xsl:if>
+						</td>
+					</tr>
+				</xsl:for-each>
+			</table>
+			</td></tr></table>
+
+			</xsl:if>
+		</xsl:template>
+			
+		<xsl:template match="Footer">
+			<div style="margin-top: 1em; padding-top: .5em; border-top: 1px solid #666666; font-size: 80%; clear: both; color: #555555">
+				<div style="margin-bottom: .5em">Because the U.S. Congress posts most legislative information online one legislative day after events occur, GovTrack is usually one legislative day behind. For more information about where this data comes from, see
+				<a href="/about.xpd">About GovTrack.us</a>.</div>
+				<div>To cite this information, click a citation format for a suggestion:
+					<a href="javascript:DHTML_ShowHide('cite_apa')">APA</a> |
+					<a href="javascript:DHTML_ShowHide('cite_mla')">MLA</a> |
+					<a href="javascript:DHTML_ShowHide('cite_wikipedia')">Wikipedia Template</a>.
+				</div>
+				<p id="cite_apa" style="display: none; margin-left: 2em">
+					<xsl:value-of select="govtrack-bills:GetDisplayNumber($bill/@type, $bill/@number)"/>
+					<xsl:text>--</xsl:text>
+					<xsl:value-of select="govtrack-util:Ordinate($bill/@session)"/>
+					<xsl:text> Congress: </xsl:text>
+					<xsl:value-of select="$PageBillTitle"/>.
+					(<xsl:value-of select="govtrack-util:DTToYearString($bill/introduced/@datetime)"/>).
+					In <i>GovTrack.us (database of federal legislation).</i>
+					Retrieved <xsl:value-of select="govtrack-util:DateNowString()"/>, from
+					http://www.govtrack.us<xsl:value-of select="http-context:fullrequest()"/>
+				</p>
+				<p id="cite_mla" style="display: none; margin-left: 2em">
+					"<xsl:value-of select="govtrack-bills:GetDisplayNumber($bill/@type, $bill/@number)"/>
+					<xsl:text>--</xsl:text>
+					<xsl:value-of select="govtrack-util:Ordinate($bill/@session)"/>
+					<xsl:text> Congress: </xsl:text>
+					<xsl:value-of select="$PageBillTitle"/>."
+					<u>GovTrack.us (database of federal legislation)</u>.
+					<xsl:value-of select="govtrack-util:DTToYearString($bill/introduced/@datetime)"/>.
+					<xsl:value-of select="govtrack-util:DateNowString()"/>
+					&lt;http://www.govtrack.us<xsl:value-of select="http-context:fullrequest()"/>&gt;
+				</p>
+				<div id="cite_wikipedia" style="display: none; margin-left: 2em">
+				<pre>{{cite web
+|url=http://www.govtrack.us<xsl:value-of select="http-context:fullrequest()"/>
+|title=<xsl:value-of select="govtrack-bills:GetDisplayNumber($bill/@type, $bill/@number)"/>
+|accessdate=<xsl:value-of select="govtrack-util:DateNowString()"/>
+|author=<xsl:value-of select="govtrack-util:Ordinate($bill/@session)"/> Congress (<xsl:value-of select="govtrack-util:DTToYearString($bill/introduced/@datetime)"/>)
+|date=<xsl:value-of select="govtrack-util:DTToDateString($bill/introduced/@datetime)"/>
+|work=Legislation
+|publisher=GovTrack.us
+|quote=<xsl:value-of select="$PageBillTitle"/>
+}}</pre>
+				</div>
+			</div>
+		</xsl:template>
+
+		<xsl:template match="backgroundinfo">
+				<p>
+				<xsl:for-each select="$bill">
+				<xsl:choose>
+				<xsl:when test="not(substring-after(govtrack-bills:DisplayTitle($bill), 'Providing for consideration of')='')">
+					Bills like this one "providing for consideration" of another bill
+					serve to pause the general order of business so that another bill 
+					can be taken up for debate.
+				</xsl:when>
+				<xsl:otherwise>
+
+				<xsl:text xml:space="preserve"> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="@type='h'">This is a bill in the U.S. Congress originating in the House of Representatives ("H.R."). A bill must be passed by both the House and Senate and then be signed by the President before it becomes law.</xsl:when>
+					<xsl:when test="@type='s'">This is a bill in the U.S. Congress originating in the Senate ("S."). A bill must be passed by both the Senate and House and then be signed by the President before it becomes law.</xsl:when>
+					<xsl:when test="@type='hj' or @type='sj'">This is a joint resolutions (H.J.Res. or S.J.Res.) in the U.S. Congress. Joint resolutions serve two purposes.
+					First, they are used exactly as bills to enact law, generally for limited matters.
+					Used this way, they must be passed by both the House and Senate and must be
+					signed by the President before becoming law.
+					Joint resolutions are also used to propose amendments to the Constitution.  Used this
+					way, they must be passed by both the House and Senate and be ratified by three-quarters of the states, but do not require
+					the signature of the President, to become a part of the Constitution.</xsl:when>
+					<xsl:when test="@type='hc' or @type='sc'">A concurrent resolution (H.Con.Res. or S.Con.Res.) like this one in the U.S. Congress is a legislative proposal
+					that must be passed by the House and Senate but does not require the signature of the President
+					and does not have the force of law.
+					Concurrent resolutions are generally used to express the sentiment of Congress or to
+					amend the internal rules of the House and Senate.</xsl:when>
+					<xsl:when test="@type='hr' or @type='sr'">A simple resolution (H.Res. or S.Res.) like this one in the U.S. Congress is a legislative proposal that
+					does not require the approval of the other chamber or the signature of the President and
+					does not have the force of law. Simple resolutions are used only to change the internal rules of one of the chambers
+					of Congress or to express the sentiments of one of the houses.</xsl:when>
+				</xsl:choose>
+
+				</xsl:otherwise>
+				</xsl:choose>
+
+				</xsl:for-each>
+				</p>
+		</xsl:template>
+
+		<xsl:template match="IfHasReports">
+			<xsl:variable name="cboreport" select="govtrack-bill:LoadBillReport('cbo')"/>
+			<xsl:variable name="ombsapreport" select="govtrack-bill:LoadBillReport('ombsap')"/>
+			<xsl:if test="not($cboreport='' and $ombsapreport='')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template name="Reports">
+			<xsl:variable name="cboreport" select="govtrack-bill:LoadBillReport('cbo')"/>
+			<xsl:variable name="cboreportsummary" select="govtrack-bill:LoadBillReport('cbo_summary')"/>
+
+			<xsl:variable name="ombsapreport" select="govtrack-bill:LoadBillReport('ombsap')"/>
+			<xsl:variable name="ombsapreportsummary" select="govtrack-bill:LoadBillReport('ombsap_summary')"/>
+
+				<table><tr><td>
+				<h3 style="margin-top: 0px">Reports</h3>
+				<div class="subsection">
+				<xsl:if test="not($cboreport='')">
+					<p><b>CBO Report</b> - 	<a href="billreport.xpd?bill={http-context:param('bill')}&amp;type=cbo">View Report</a></p>
+					<p>A budget report is available for this <xsl:value-of select="$billresolution"/> from the <a href="http://www.cbo.gov">Congressional Budget Office</a>, which serves Congress.</p>
+					<xsl:if test="not($cboreportsummary/summary='')">
+						<p>Here is an excerpt:</p>
+						<p style="margin-left: 1em"><xsl:value-of select="$cboreportsummary/summary"/></p>
+					</xsl:if>
+				</xsl:if>
+				<xsl:if test="not($ombsapreport='')">
+					<p><b>Statement of Administration Policy</b> - <a href="billreport.xpd?bill={http-context:param('bill')}&amp;type=ombsap">View Report</a></p>
+					<p>A statement is available for this <xsl:value-of select="$billresolution"/> from the <a href="http://www.omb.gov">Office of Management
+					and Budget</a>, which serves the President.
+					<xsl:if test="not($ombsapreportsummary/summary='')">
+						<p style="margin-left: 1em"><xsl:value-of select="$ombsapreportsummary/summary"/></p>
+					</xsl:if></p>
+				</xsl:if>
+				</div>
+				</td></tr></table>
+		</xsl:template>
+
+		<xsl:template match="MoneyTrail">
+			<xsl:if test="http-context:param('tab') = 'other'">
+			<h3>The Money Trail</h3>
+			<div class="subsection">
+			<p>Employees of these organizations made campaign contributions to legislators who sponsored or cosponsored this <xsl:value-of select="$billresolution"/>.  The top organizations are listed below.  This information is from the <a href="http://www.opensecrets.org">Center for Responsive Politics</a>.
+			Note that the companies themselves did not make the contribution.</p>
+			<xsl:variable name="funds" select="govtrack-bills:GetBillMoney($bill)" />
+			<xsl:for-each select="$funds/*">
+				<xsl:sort select="@sorttotal" data-type="number" order="descending"/>
+				<xsl:if test="position() &lt;= 5">
+				<div>
+					<xsl:value-of select="@name"/>:
+					$<xsl:value-of select="format-number(@total, '###,###,##0')"/>
+					
+					<span style="padding-left: 2em">
+					<togglebutton target="money{position()}" hide="Hide Details" show="Show Details"/>
+					</span>
+
+					<div style="display: none; margin-left: 2em" id="money{position()}">
+					<xsl:for-each select="rep">
+						<div>
+						$<xsl:value-of select="format-number(@amount, '###,###,##0')"/>
+						to
+						<a href="{govtrack-reps:RepLink(@id)}"><xsl:value-of select="govtrack-reps:FormatPersonName(@id, 'now', '')"/></a>
+						</div>
+					</xsl:for-each>
+					</div>
+				</div>
+				</xsl:if>
+			</xsl:for-each>
+			</div>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="IfHasSpeeches">		
+			<xsl:variable name="speeches" select="govtrack-bills:GetSpeeches($bill)/*"/>
+			<xsl:if test="not(count($speeches)=0)">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="FloorSpeeches">
+			<xsl:if test="http-context:param('tab')='speeches'">
+				<table><tr><td> <!-- don't wrap around sidebar -->
+				<h3 style="margin-top: 0px">Mentions in the Congressional Record</h3>
+				<xsl:variable name="speeches" select="govtrack-bills:GetSpeeches($bill)/*"/>
+				<p>The following are entries in the Congessional Record
+				related to this legislation.  The Congressional Record
+				is roughly a transcript of the proceedings on the Senate and
+				House floors, although it can be significantly revised and extended
+				by Members of Congress after the fact.</p>
+				<table style="font-size: 90%" cellpadding="4">
+				<xsl:for-each select="$speeches">
+					<xsl:sort select="@datetime" order="ascending"/>
+					<xsl:sort select="ordinal" data-type="number"/>
+					<tr valign="top">
+						<td>
+							<xsl:if test="@where='h'">House</xsl:if>
+							<xsl:if test="@where='s'">Senate</xsl:if>
+						</td>
+						<td><nobr><xsl:value-of select="govtrack-util:DTToDateString(@datetime)"/></nobr></td>
+						<td>
+						<a href="{govtrack-bills:CRLinkBill(., $bill)}">
+							<xsl:value-of select="@title"/>
+						</a>
+						<div style="font-size: 90%">
+							<xsl:value-of select="@excerpt"/>
+						</div>
+						</td>
+					</tr>
+				</xsl:for-each>
+				</table>
+				</td></tr></table>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="HasBillSummary">
+			<xsl:if test="not($bill/summary='') or count($pvslink) &gt; 0">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="BillSummary">
+			<xsl:if test="http-context:param('tab') = 'summary'">
+				<table><tr><td> <!-- don't wrap around sidebar -->
+				
+				<h3 style="margin-top: 0px">Summaries</h3>
+
+					<div style="font-size: 100%">
+					
+					<xsl:call-template name="PVSHighlights"/>
+					
+					<h4>Congressional Research Service Summary</h4>
+					
+					<p>The following summary was written by the Congressional Research Service,
+					a well-respected nonpartisan arm of the Library of Congress. GovTrack did not
+					write and has no control over these summaries.</p>
+					
+					<div style="font-family: Times New Roman; padding: .75em; border: 1px solid black">
+					<xsl:apply-templates select="govtrack-bill:BillSummary($bill/@session, $bill/@type, $bill/@number)"/>
+					</div>
+
+					</div>
+
+				</td></tr></table>
+			</xsl:if>
+			<!--<xsl:if test="summary=''">
+				No summary of this <xsl:value-of select="$billresolution"/> has been provided by THOMAS.
+				The best summary of the legislation available is the
+				<a href="billtext.xpd?bill={http-context:param('bill')}">full text of the legislation</a>
+				itself.
+			</xsl:if>-->
+			
+		</xsl:template>
+
+		<xsl:template match="IfHasOutsideLinks">
+			<!--<xsl:if test="count($links2) &gt; 0">-->
+				<xsl:apply-templates/>
+			<!--</xsl:if>-->
+		</xsl:template>
+
+		<xsl:template match="OutsideLinks[http-context:param('tab')='analysis']">
+			<table><tr><td> <!-- don't wrap around sidebar -->
+			<h3 style="margin-top: 0px">Analysis</h3>
+			
+			<p>It's up to citizens like <i>you</i> to analyze the benefits and costs of legislation and to share your conclusions
+			with others. Below you will find articles submitted by other users about this <xsl:value-of select="$billresolution"/>, questions and answers posted by users
+			of this site, and links to other sites providing independent analysis.
+			</p>
+			
+			<h4>Articles about this legislation</h4>
+			
+			<p>GovTrack links to nonpartisan analysis of legislation
+			in respected publications or issued by respected organizations
+			or political leaders.</p>
+						
+			<p>You can suggest an article for inclusion on this page by pasting the URL of an article below.
+			Submissions are queued for approval. Please do not submit links
+			to blogs, partisan organizations, or press releases as they will
+			not be approved.</p>
+						
+			<div style="margin-left: 2em">
+				<input id="addarticleurl" size="45"/>
+				<input type="button" value="Submit"
+				  onclick="AjaxElement('addarticle3', 'Submitting URL...', '/users/ajax_suggest_bill_url.xpd?bill={http-context:param('bill')}&amp;article_url=' + escape(getObj('addarticleurl').value));getObj('addarticleurl').value=''"/>
+				<div id="addarticle3"/>
+			</div>
+
+			<xsl:if test="count($links2) &gt; 0">
+			<p>The following links have been submitted by users and
+			were approved by the website administrator, although no
+			attempt is made to verify the accuracy of the information
+			contained at the external sites:</p>
+					
+			<ul>
+			<xsl:for-each select="$links2">
+				<li><a href="{url}" rel="nofollow"><xsl:value-of select="title"/></a></li>
+			</xsl:for-each>
+			</ul>
+			</xsl:if>
+
+			<xsl:if test="count($links2) = 0">
+			<p>No articles have been submitted about this legislation yet.</p>
+			</xsl:if>
+
+			<xsl:if test="count($cplink) &gt; 0">
+				<h4>Analysis on Congresspedia</h4>
+				<p>Congresspedia is a wiki for users to collaborate on
+				tracking and analyzing legislation. A <a href="{$cplink/url}">wiki page on Congresspedia</a> exists for this <xsl:value-of select="$billresolution"/>:</p>
+				<p style="margin-left: 2em"><xsl:value-of select="$cplink/excerpt"/></p>
+			</xsl:if>
+
+			<xsl:if test="count($pvslink) &gt; 0">
+				<h4>Analysis on Project Vote Smart</h4>
+				<p>Project Vote Smart provides independent, non-partisan analysis of legislation.
+				A <a href="{$pvslink/url}">PVS page</a> exists for this <xsl:value-of select="$billresolution"/>.
+				It is excerpted in the <a href="bill.xpd?bill={http-context:param('bill')}&amp;tab=summary">summary</a> section.</p>
+			</xsl:if>
+			
+			<h4>Question &amp; Answer</h4>
+			
+			<!-- google_ad_section_start -->
+			<xsl:call-template name="CommunityQuestions2"/>
+			<!-- google_ad_section_end -->
+
+			</td></tr></table>
+		</xsl:template>
+
+		<xsl:template match="IfHasAmendments">
+			<xsl:if test="not(count($bill/amendments/*)=0)">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="Amendments">
+			<xsl:if test="http-context:param('tab') = 'amendments'">
+				<table><tr><td> <!-- don't wrap around sidebar -->
+				<h3 style="margin-top: 0px">Amendments</h3>
+					<p>The following are amendments proposed for this legislation.
+					Click an amendment's name to read the text of the amendment, where available.</p>
+					
+					<div style="font-size: 90%">
+						<xsl:for-each select="$bill/amendments/amendment">
+							<xsl:variable name="amd" select="govtrack-bills:LoadAmendment($bill/@session, @number)"/>
+
+							<xsl:if test="name($amd)='amendment'">
+							
+							<div style="margin-bottom: 1.5em;">
+								<div>
+								<b>
+								<xsl:text>(</xsl:text>
+								<xsl:value-of select="position()"/>
+								<xsl:text>) </xsl:text>
+								<a href="amendment.xpd?session={$bill/@session}&amp;amdt={$amd/@chamber}{$amd/@number}">
+								<xsl:if test="$amd/@chamber = 'h'">H.Amdt. </xsl:if>
+								<xsl:if test="$amd/@chamber = 's'">S.Amdt. </xsl:if>
+								<xsl:value-of select="$amd/@number"/>
+								</a>
+								</b>
+								<xsl:if test="$amd/sponsor/@id">
+									<xsl:text> by </xsl:text>
+									<a href="person.xpd?id={$amd/sponsor/@id}">
+										<xsl:value-of select="govtrack-reps:FormatPersonName($amd/sponsor/@id, $amd/offered/@datetime, 'lastnamestate')"/>
+									</a>
+								</xsl:if>
+								<xsl:if test="$amd/sponsor/@committee">
+									<xsl:text> from </xsl:text>
+									<xsl:value-of select="$amd/sponsor/@committee"/>
+								</xsl:if>
+								</div>
+
+								<xsl:for-each select="$amd/actions/vote[@how='roll']">
+									<div style="float: right">
+										<a href="{govtrack-bills:GetVoteImgCarto($amd/@chamber, govtrack-util:DTToYearString(@datetime), number(@roll), 0 )}">
+											<img src="{govtrack-bills:GetVoteImgCarto($amd/@chamber, govtrack-util:DTToYearString(@datetime), number(@roll), 1 )}" style="border: 1px solid black" width="220" height="118"/>
+										</a>
+									</div>
+								</xsl:for-each>
+
+								
+								<div style="margin-top: .5em; margin-left: 1em">
+									<xsl:value-of select="$amd/description"/>
+									<div>Proposed: <xsl:value-of select="govtrack-util:DTToDateString($amd/offered/@datetime)"/>.
+									<xsl:if test="not($amd/status='offered')">
+										<xsl:if test="$amd/status='pass'"><span class="VoteAye">Accepted</span></xsl:if>
+										<xsl:if test="$amd/status='fail'"><span class="VoteNay">Rejected</span></xsl:if>
+										<xsl:if test="$amd/status='withdrawn'"><span class="VoteNay">Withdrawn</span></xsl:if>
+										<xsl:text>: </xsl:text>
+										<xsl:value-of select="govtrack-util:DTToDateString($amd/status/@datetime)"/>.
+									</xsl:if>
+									<xsl:if test="$amd/actions/vote/@how='voice vote'">
+									(Vote conducted by voice vote.)
+									</xsl:if>
+									</div>
+								</div>
+								
+								<xsl:if test="not($amd/purpose='') and not($amd/purpose=$amd/description)">
+									<div style="margin-top: .5em; margin-left: 1em">
+										<xsl:value-of select="$amd/purpose"/>
+									</div>
+								</xsl:if>
+								
+								<xsl:for-each select="$amd/actions/vote[@how='roll']">
+									<div style="margin-top: .5em; margin-left: 1em">
+										<xsl:value-of select="govtrack-util:DTToDateString(@datetime)"/>.
+										<xsl:value-of select="."/>
+										[<a href="{govtrack-bills:VoteLink($amd/@chamber, govtrack-util:DTToYearString(@datetime), @roll)}">View Details</a>]
+									</div>
+								</xsl:for-each>
+
+							</div>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
+				</td></tr></table>
+			</xsl:if>
+		</xsl:template>
+
+		<!-- RELATED BILLS BY SUBJECTS -->
+		<xsl:template name="SubjectTerms">
+			<xsl:if test="count($bill/subjects/term) &gt; 0">
+			<h4>Subject Terms</h4>
+			<div class="subsection">
+			<div style="margin-bottom: .4em">This <xsl:value-of select="$billresolution"/> is related to other bill and resolutions in these subject areas as identified by the Congressional Research Service:</div>
+			<div style="">
+			<xsl:for-each select="$bill/subjects/term">
+				<xsl:sort select="@name"/>
+				<div><a href="{govtrack-subjects:CRSLink(@name)}"><xsl:value-of select="@name"/></a></div>
+			</xsl:for-each>
+			</div>
+			</div>
+			</xsl:if>
+		</xsl:template>	
+
+		<!-- RELATED BILLS BY SUBJECTS -->
+		<xsl:template name="SubjectTerms2">
+			<xsl:if test="count($bill/subjects/term) &gt; 0">
+			<!-- google_ad_section_start -->
+			<h3>Subject Areas</h3>
+			<div style="width: 600px; padding-bottom: 4px; overflow: auto"><nobr>
+			<xsl:for-each select="$bill/subjects/term">
+				<xsl:sort select="@name"/>
+				<a href="{govtrack-subjects:CRSLink(@name)}"><xsl:value-of select="@name"/></a>
+				<xsl:if test="not(position()=last())">, </xsl:if>
+			</xsl:for-each>
+			</nobr></div>
+			<!-- google_ad_section_end -->
+			</xsl:if>
+		</xsl:template>	
+
+		<xsl:template match="vote|vote-aux" mode="bill-votes">
+			<xsl:variable name="result">
+				<xsl:choose>
+					<xsl:when test="@result='passed' or @result='pass' or @result='agreed to'">passed</xsl:when>
+					<xsl:when test="@result='fail' or @result='failed' or @result='rejected'">failed</xsl:when>
+				</xsl:choose>
+			</xsl:variable>
+			
+			<xsl:variable name="where">
+				<xsl:if test="@where='h'">House of Representatives</xsl:if>
+				<xsl:if test="@where='s'">Senate</xsl:if>
+			</xsl:variable>
+		
+			<div style="margin-bottom: 1em">
+				<xsl:value-of select="govtrack-util:DTToDateString(@datetime)"/>:
+				<xsl:choose>
+				<xsl:when test="@type='override'">
+					The <xsl:value-of select="$where"/> attempted to override
+					the President's veto of this <xsl:value-of select="$billresolution"/>,
+					<xsl:if test="@result='fail'">but <b>failed</b></xsl:if>
+					<xsl:if test="@result='pass'">and the vote <b>passed</b></xsl:if>
+					<xsl:text>,</xsl:text>
+				</xsl:when>
+				<xsl:when test="@type='cloture' and @result='pass'">
+					This <xsl:value-of select="$billresolution"/><xsl:text xml:space="preserve"> </xsl:text><b><xsl:value-of select="$result"/></b> a cloture motion, moving to consideration of the <xsl:value-of select="$billresolution"/>, in the <b><xsl:value-of select="$where"/></b>
+				</xsl:when>
+				<xsl:when test="@type='cloture' and @result='fail'">
+					This <xsl:value-of select="$billresolution"/><xsl:text xml:space="preserve"> </xsl:text><b><xsl:value-of select="$result"/></b> a cloture motion, preventing consideration of the <xsl:value-of select="$billresolution"/>, in the <b><xsl:value-of select="$where"/></b>
+				</xsl:when>
+				<xsl:when test="@type='vote' or @type='vote2'">
+					This <xsl:value-of select="$billresolution"/><xsl:text xml:space="preserve"> </xsl:text><b><xsl:value-of select="$result"/></b> in the <b><xsl:value-of select="$where"/></b>
+					<xsl:if test="@state='PASS_BACK:HOUSE' or @state='PASS_BACK:SENATE'"> with changes</xsl:if>
+				</xsl:when>
+				<xsl:when test="@type='conference'">
+					After passing both the Senate and House, a conference committee is created to work out differences
+					between the Senate and House versions of the <xsl:value-of select="$billresolution"/>.
+					A conference report resolving those differences <b><xsl:value-of select="$result"/></b> in the <b><xsl:value-of select="$where"/></b>
+					<xsl:if test="$result='passed'">, paving the way for
+					enactment of the <xsl:value-of select="$billresolution"/>, </xsl:if>
+				</xsl:when>
+				<xsl:when test="@type='pingpong'">
+					A vote in the <xsl:value-of select="$where"/> to agree with the other chamber's changes
+					<b><xsl:value-of select="$result"/></b>
+				</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="@how='roll'">
+						<xsl:text xml:space="preserve"> by roll call vote.</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text xml:space="preserve"> </xsl:text><xsl:value-of select="@how"/>.
+					</xsl:otherwise>
+				</xsl:choose>
+				
+				<xsl:if test="@suspension='1'">
+				The vote was held under a suspension of the rules to cut debate
+				short and pass the <xsl:value-of select="$billresolution"/>, needing a two-thirds majority.
+				This usually occurs for non-controversial legislation.
+				</xsl:if>
+				
+				<xsl:choose>
+					<xsl:when test="@how='roll'">
+						<xsl:variable name="totals" select="govtrack-bills:LoadRollTotals(@where, @datetime, @roll)"/>
+						<xsl:if test="$totals = ''">
+							<i>Vote details are not yet available on GovTrack. Details are usually posted by the House and
+							Senate within hours after a vote, and are usually available on GovTrack shortly thereafter.
+							Check the <xsl:value-of select="$where"/> website for more up-to-date information regarding this vote.</i>
+						</xsl:if>
+						<xsl:if test="not($totals = '')">
+						The totals were <xsl:value-of select="$totals"/>.
+
+							<a href="{govtrack-bills:VoteLink(@where, govtrack-util:DTToYearString(@datetime), @roll)}">Vote Details</a>.
+							<!--(<xsl:value-of select="$where"/> roll no. <xsl:value-of select="@roll"/>)-->
+
+						<div style="margin: 1em">
+
+							<xsl:variable name="monitoredvotes" select="govtrack-login:GetMonitorsOfType('p')"/>
+							<xsl:if test="count($monitoredvotes) = 0">
+								<div style="font-size: 85%; color: #666666;">You are not tracking any senators or representatives.  To see their votes here, <a href="findyourreps.xpd">look up a Member of Congress</a>.</div>
+							</xsl:if>
+							<xsl:if test="count($monitoredvotes) &gt; 0">
+								<xsl:for-each select="govtrack-bill:LoadMonitoredVotes(@where, @datetime, @roll)">
+									<xsl:if test="position()=1"><p style="font-style: italic; margin-bottom: 3px">Votes of representatives you are tracking:</p></xsl:if>
+									<div>
+										<a href="person.xpd?id={id}">
+											<xsl:value-of select="name"/>
+										</a>
+										<span>
+										<xsl:choose>
+											<xsl:when test="vote='+'">
+												<xsl:attribute name="class">VoteAye</xsl:attribute>
+												 voted Aye.</xsl:when>
+											<xsl:when test="vote='-'">
+												<xsl:attribute name="class">VoteNay</xsl:attribute>
+												voted Nay.</xsl:when>
+											<xsl:otherwise>
+												<xsl:attribute name="class">VoteNone</xsl:attribute>
+												did not vote.</xsl:otherwise>
+										</xsl:choose>
+										</span>
+									</div>
+								</xsl:for-each>
+							</xsl:if>
+						</div>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						A record of each
+						<xsl:if test="@where='h'">representative</xsl:if>
+						<xsl:if test="@where='s'">senator</xsl:if>
+						<xsl:text>’s position was not kept.</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+				<xsl:choose>
+					<xsl:when test="@type='vote'">
+					</xsl:when>
+					<xsl:when test="@type='vote2'">
+					</xsl:when>
+				</xsl:choose>
+			</div>
+			
+			<xsl:variable name="votenote" select="govtrack-comments:GetPageNote(concat('vote:', substring(@where, 1, 1), govtrack-util:DTToYearString(@datetime), '-', @roll))"/>
+			<xsl:if test="not($votenote='')">
+				<p style="color: blue; margin-left: 1em"><xsl:copy-of select="$votenote"/></p>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="*" mode="action">
+			<xsl:value-of select="."/>
+		</xsl:template>
+		
+		<xsl:template match="summary">
+			<xsl:apply-templates/>
+		</xsl:template>
+
+		<xsl:template match="summary//Division|summary//Title|summary//Subtitle|summary//Part|summary//Chapter|summary//Section">
+			<xsl:if test="not(@number='meta')">
+			<div>
+				<xsl:choose>
+				<xsl:when test="@name='' and count(*)=1">
+				<div style="margin-top: .75em">
+				<span xml:space="preserve" style="font-weight: bold;"><xsl:value-of select="name()"/> <xsl:value-of select="@number"/>.</span>
+				<xsl:value-of select="Paragraph"/>
+				</div>
+				</xsl:when>
+
+				<xsl:otherwise>
+				<div style="font-weight: bold; margin-top: .75em" xml:space="preserve">
+					<xsl:value-of select="name()"/>
+					<xsl:value-of select="@number"/>
+					<xsl:if test="not(@name='')"> - </xsl:if>
+					<xsl:value-of select="@name"/>
+				</div>
+				<div style="margin-left: 2em">
+					<xsl:apply-templates/>
+				</div>
+				</xsl:otherwise>
+				</xsl:choose>
+			</div>
+			</xsl:if>
+		</xsl:template>
+
+		
+		<xsl:template match="summary//Paragraph">
+			<div style="margin-top: .5em; margin-bottom: .5em">
+				<xsl:apply-templates/>
+			</div>
+		</xsl:template>
+
+
+		<xsl:template match="BillType">
+			<xsl:if test="not(xpd:perl('$type')='')">
+			<xsl:value-of select="xpd:perl('$BillTypeName{$type}')"/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="BillTypeDefinition">
+			<xsl:if test="not(xpd:perl('$type')='')">
+			<xsl:value-of select="xpd:perl('$BillTypePrefix{$type}')"/>
+			means
+			<xsl:value-of select="xpd:perl('$BillTypeName{$type}')"/>.
+			<xsl:value-of select="xpd:perl('$BillTypeDescription{$type}')"/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="RelatedSites">
+				<xsl:variable name="relatedsites" select="govtrack-subjects:GetRelatedPages(http-context:param('bill'), $bill/subjects/term/@name)"/>
+				<xsl:if test="count($relatedsites) &gt; 0">
+				<p>Learn more about
+				<xsl:for-each select="$relatedsites[position() &lt;= 3]">
+					<xsl:sort select="title"/>
+					<a href="{link}"><xsl:value-of select="title"/></a>
+					<xsl:if test="not(position()=last())">, </xsl:if>
+					<xsl:if test="(not(position()=last()) and last()=2) or (position()=last()-1)"> or </xsl:if>
+				</xsl:for-each>
+				<xsl:text> from citizenJoe.</xsl:text>
+				</p>
+				</xsl:if>
+		</xsl:template>
+	
+		<xsl:template match="WhichSummaries">
+							<xsl:text> (</xsl:text>
+								<xsl:if test="not($bill/summary='')">CRS</xsl:if>
+								<xsl:if test="not($bill/summary='') and count($pvslink) &gt; 0">, </xsl:if>
+								<xsl:if test="count($pvslink) &gt; 0">PVS</xsl:if>
+							<xsl:text>)</xsl:text>
+		</xsl:template>
+
+		<xsl:template name="CommunityQuestions">
+			<CommunityQuestions topic="bill:{$bill/@type}{$bill/@session}-{$bill/@number}" type="bill"/>
+		</xsl:template>
+		<xsl:template name="CommunityQuestions2">
+			<CommunityQuestions topic="bill:{$bill/@type}{$bill/@session}-{$bill/@number}" type="bill" mode="expanded"/>
+		</xsl:template>
+		
+		<xsl:template match="twitterverse">
+			<xsl:variable name="hashtag" select="govtrack-bills:GetHashtag(http-context:param('bill'))"/>
+			<xsl:variable name="tinythomas" select="govtrack-bills:GetTinyThomasUrl(http-context:param('bill'))"/>
+			<a href="http://twitter.com/share" class="twitter-share-button" data-text="#usbill {$hashtag}" data-count="horizontal" data-via="govtrack">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+			<!--
+			<xsl:if test="not($tinythomas='')">
+				<a href="http://twitter.com/share" class="twitter-share-button" data-text="#usbill {$hashtag} {$tinythomas}" data-url="" data-count="horizontal" data-via="govtrack">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+			</xsl:if>
+			Our <a href="/twitter.xpd">recommended hashtags</a> for this bill are
+			<a href="http://search.twitter.com/search?q={govtrack-util:UrlEncode('#usbill')}">#usbill</a>&#8194;<a href="http://search.twitter.com/search?q={govtrack-util:UrlEncode($hashtag)}"><xsl:value-of select="$hashtag"/></a>
+			<xsl:if test="not($tinythomas='')">or use <a href="{$tinythomas}"><xsl:value-of select="$tinythomas"/></a></xsl:if>
+			-->
+		</xsl:template>
+		
+		<xsl:template match="Popvox">
+			<script src="http://www.popvox.com/widgets/js/bill.js?bill={govtrack-bills:GetPopvoxUrl(http-context:param('bill'))}"></script> 
+		</xsl:template>
+		
+		<xsl:template match="xxMoney[http-context:param('tab')='' and $bill/@session &gt;= 110 and not(http-context:iscrawler())]">
+			<xsl:variable name="maplight" select="govtrack-util:CallAPI(concat('http://maplight.org/services_open_api/map.bill_positions_v1.xml&amp;jurisdiction=us&amp;session=', $bill/@session, '&amp;prefix=', $bill/@type, '&amp;number=', $bill/@number, '&amp;apikey=11491044a178e54aad051ff6c098e6cb'), 'xml', 60*24)"/>
+			
+			<xsl:if test="count($maplight/organizations/organization[disposition='support' or disposition='oppose']) &gt; 0">
+				<h3>Sources of Influence</h3>
+				
+				<p><a href="{$maplight/url}">MAPLight.org</a> reports that the following organizations
+				have taken a stance on this <xsl:value-of select="$billresolution"/>:</p>
+				
+				<div style="max-height: 8em; overflow: auto; margin-left: 1em">
+				<table cols="2">
+				<tr>
+					<th width="50%">Support</th>
+					<th width="50%">Oppose</th>
+				</tr>
+				<tr valign="top">
+					<td style="padding-right: 2em">
+						<xsl:if test="count($maplight/organizations/organization[disposition='support'])=0">
+							(none)
+						</xsl:if>
+						<xsl:for-each select="$maplight/organizations/organization[disposition='support']">
+							<div><xsl:value-of select="name"/></div>
+						</xsl:for-each>
+					</td>
+					<td>
+						<xsl:if test="count($maplight/organizations/organization[disposition='oppose'])=0">
+							(none)
+						</xsl:if>
+						<xsl:for-each select="$maplight/organizations/organization[disposition='oppose']">
+							<div><xsl:value-of select="name"/></div>
+						</xsl:for-each>
+					</td>
+				</tr>
+				</table>
+				</div>
+
+				<p>Follow the link to <a href="{$maplight/url}">MAPLight.org</a> to see if campaign contributions from employees of these organizations are correlated with how Members of Congress voted on this <xsl:value-of select="$billresolution"/>.</p>
+			</xsl:if>
+
+			<!--
+			<h3>In the social world...</h3>
+			<fb:comments xmlns:fb="notimportant" xid="govtrack::bill:{$bill/@type}{$bill/@session}-{$bill/@number}" numposts="5" width="420" />
+			-->
+		</xsl:template>
+		
+		<xsl:template name="BillStatusDescription">
+			<xsl:if test="not(@session = govtrack-util:GetCurrentSession())">
+				<xsl:choose>
+				<xsl:when test="name(status/*)='enacted'">This bill became law.
+				<xsl:variable name="prez" select="govtrack-reps:WhoWasPresidentAt(status/*/@datetime)"/>
+				It was signed by <a href="person.xpd?id={$prez}"><xsl:value-of select="govtrack-reps:FormatPersonName($prez, status/*/@datetime, '')"/></a>.</xsl:when>
+				<xsl:when test="@type='h' or @type='s'"><b>This bill never became law.</b></xsl:when>
+				</xsl:choose>
+
+				<xsl:if test="not(name(status/*) = 'enacted')">
+				This <xsl:value-of select="$billresolution"/> was proposed in a previous session of Congress.  Sessions
+				of Congress last two years, and at the end of each session all
+				proposed bills and resolutions that haven't passed are cleared from the books.
+				Members often reintroduce bills that did not come up for debate
+				under a new number in the next session.
+				</xsl:if>
+			</xsl:if>
+
+			<xsl:if test="@session = govtrack-util:GetCurrentSession()">
+			<xsl:variable name="chambername">
+				<xsl:choose>
+					<xsl:when test="@type='h'">House</xsl:when>
+					<xsl:when test="@type='hr'">House</xsl:when>
+					<xsl:when test="@type='hj'">House</xsl:when>
+					<xsl:when test="@type='hc'">House</xsl:when>
+					<xsl:when test="@type='s'">Senate</xsl:when>
+					<xsl:when test="@type='sr'">Senate</xsl:when>
+					<xsl:when test="@type='sj'">Senate</xsl:when>
+					<xsl:when test="@type='sc'">Senate</xsl:when>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:variable name="otherchambername">
+				<xsl:choose>
+					<xsl:when test="@type='s'">House</xsl:when>
+					<xsl:when test="@type='sr'">House</xsl:when>
+					<xsl:when test="@type='sj'">House</xsl:when>
+					<xsl:when test="@type='sc'">House</xsl:when>
+					<xsl:when test="@type='h'">Senate</xsl:when>
+					<xsl:when test="@type='hr'">Senate</xsl:when>
+					<xsl:when test="@type='hj'">Senate</xsl:when>
+					<xsl:when test="@type='hc'">Senate</xsl:when>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="name(status/*)='introduced'">
+				<strong>Status:</strong>
+				This <xsl:value-of select="$billresolution"/> is in the first step in the legislative process.
+				<strong>Explanation:</strong>
+				Introduced bills and resolutions first go to committees that deliberate, investigate, and revise
+				them before they go to general debate. The majority of bills and resolutions never make it out of committee.
+				</xsl:when>
+				
+				<xsl:when test="name(status/*)='calendar'">
+				<strong>Status:</strong>
+				This <xsl:value-of select="$billresolution"/> was considered in committee which has recommended it be considered by
+				the <xsl:value-of select="$chambername"/> as a whole.
+				<strong>Explanation:</strong>
+				Although it has been placed on a calendar of business, the order in which legislation is considered
+				and voted on is determined by the majority party leadership.
+				Keep in mind that sometimes the text of one bill is incorporated into another bill, and in those cases the original bill, as it would appear here, would seem to be abandoned.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='vote' and status/vote/@result='pass' and not (@type='hr' or @type='sr')">
+				<strong>Status:</strong>
+				This <xsl:value-of select="$billresolution"/> has been passed in the <xsl:value-of select="$chambername"/>.
+				<strong>Next:</strong>
+				The <xsl:value-of select="$billresolution"/> goes on to be voted on in the <xsl:value-of select="$otherchambername"/>.
+				<strong>Explanation:</strong>
+				Keep in mind that debate may be taking place on a companion <xsl:value-of select="$billresolution"/> in the
+				<xsl:value-of select="$otherchambername"/>, rather than on this particular <xsl:value-of select="$billresolution"/>.
+				</xsl:when>
+				<xsl:when test="name(status/*)='vote' and status/vote/@result='pass' and (@type='hr' or @type='sr')">
+				<strong>Status:</strong>
+				This resolution has been passed in the <xsl:value-of select="$chambername"/>.
+				<strong>Explanation:</strong>
+				That is the end of the legislative process for simple resolutions.  The resolution
+				now takes effect.
+				</xsl:when>
+				<xsl:when test="name(status/*)='vote' and not(status/vote/@result='pass')">
+				By failing to be passed in the <xsl:value-of select="$chambername"/>, this
+				<xsl:value-of select="$billresolution"/> is now dead.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='vote2' and status/vote2/@result='pass' and (@type='h' or @type='s')">
+				<strong>Status:</strong>
+				Bill passed both chambers.
+				<strong>Next:</strong>
+				The bill may now proceed to
+				a conference committee of senators and representatives to work out
+				differences in the versions of the bill each chamber approved.
+				</xsl:when>
+				<xsl:when test="name(status/*)='vote2' and status/vote2/@result='pass' and (@type='hj' or @type='sj')">
+				<strong>Status:</strong>
+				This resolution passed in both chambers.
+				<strong>Next:</strong>
+				If the resolution proposes an amendment to the Constitution, three-fourths of the states must ratify the proposal.
+				Otherwise, the resolution awaits the signature of the President before becoming law.
+				</xsl:when>
+				<xsl:when test="name(status/*)='vote2' and status/vote2/@result='pass' and (@type='hc' or @type='sc')">
+				<strong>Status:</strong>
+				This resolution passed in both chambers and now takes effect.
+				<strong>Explanation:</strong>
+				A resolution does not require the signature of the President and does not have the force of law.
+				</xsl:when>
+				<xsl:when test="name(status/*)='vote2' and not(status/vote2/@result='pass')">
+				<strong>Status:</strong>
+				Failed.
+				<strong>Explanation:</strong>
+				By failing to be passed in both houses of Congress, this
+				<xsl:value-of select="$billresolution"/> is now dead.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='topresident'">
+				<strong>Status:</strong>
+				Passed Congress.
+				<strong>Next:</strong>
+				Having passed in identical form in both the House and Senate, this <xsl:value-of select="$billresolution"/> now awaits the
+				signature of the President before becoming law.
+				</xsl:when>
+				
+				<xsl:when test="name(status/*)='signed'">
+				<strong>Status:</strong>
+				Signed.
+				<strong>Next:</strong>
+				This <xsl:value-of select="$billresolution"/> has been passed by both chambers of Congress and has been signed by the President.
+				It will become law once administrative actions are complete.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='enacted'">
+				<strong>Status:</strong>
+				This <xsl:value-of select="$billresolution"/> has become law.
+				<strong>Explanation:</strong>
+				<xsl:variable name="prez" select="govtrack-reps:WhoWasPresidentAt(status/*/@datetime)"/>
+				It was signed by <a href="person.xpd?id={$prez}"><xsl:value-of select="govtrack-reps:FormatPersonName($prez, status/*/@datetime, '')"/></a>.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='veto' and not(status/veto/@pocket='1')">
+				<strong>Status:</strong>
+				Vetoed.
+				<strong>Next:</strong>
+				This <xsl:value-of select="$billresolution"/> has been vetoed by the President.  Congress may attempt to
+				override the veto with a two-thirds vote in each chamber, starting
+				with the <xsl:value-of select="$chambername"/>.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='veto' and (status/veto/@pocket='1')">
+				<strong>Status:</strong>
+				Pocket Vetoed.
+				<strong>Next:</strong>
+				This <xsl:value-of select="$billresolution"/> has been pocket vetoed by the President. This means that Congress adjourned
+				before the President signed the <xsl:value-of select="$billresolution"/>. The result is a veto which Congress cannot override.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='override' and status/*/@result='fail'">
+				<strong>Status:</strong>
+				Vetoed.
+				<strong>Explanation:</strong>
+				Congress failed to override the President's veto, and so the <xsl:value-of select="$billresolution"/>
+				is now dead.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='override' and status/*/@result='pass' and status/*/@where = substring(@type, 1, 1)">
+				<strong>Status:</strong>
+				Vetoed. Attempting Override.
+				<strong>Next:</strong>
+				Congress has taken the first step in overriding the President's veto 
+				through a successful two-thirds vote in the <xsl:value-of select="$billresolution"/>'s originating chamber.
+				The <xsl:value-of select="$billresolution"/> is next voted on again in the other chamber.
+				</xsl:when>
+
+				<xsl:when test="name(status/*)='override' and status/*/@result='pass' and not(status/*/@where = substring(@type, 1, 1))">
+				<strong>Status:</strong>
+				Veto Overridden.
+				<strong>Next:</strong>
+				Congress successfully overrided the President's veto and the
+				<xsl:value-of select="$billresolution"/> will be enacted pending procedural actions.
+				</xsl:when>
+			</xsl:choose>
+			<span style="font-size: 90%; color: #555555;">[Last Updated: <xsl:value-of select="govtrack-util:DTToDateTimeString(@updated)"/>]</span> <!-- go in the past because the data generally reflects status of the previous day -->
+			
+			</xsl:if>
+		</xsl:template>
+		
+	</Templates>
+	
+	
+   
+ </Page>

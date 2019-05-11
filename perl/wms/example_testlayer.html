@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>WMS Test Map with OpenLayers</title>
+        
+        <script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=euzuro-openlayers"></script>
+        <script src="http://www.openlayers.org/dev/lib/OpenLayers.js"></script>
+        <script type="text/javascript">
+        	var layername = "test";
+			var fullURL = document.URL;
+			if (fullURL.indexOf('?') > 0)
+				layername = fullURL.substring(fullURL.indexOf('?')+1, fullURL.length);
+        
+            var lon = -85;
+            var lat = 40;
+            var zoom = 5;
+            var map;
+
+            function init(){
+            	options = {
+	            	projection: "EPSG:4326",
+	            	//projection: "EPSG:54004",
+	            };
+            
+                map = new OpenLayers.Map( 'map', options );
+
+                var wms = new OpenLayers.Layer.WMS( "OpenLayers WMS",
+                          "http://labs.metacarta.com/wms/vmap0",
+                          {layers: 'basic'} );
+                var wms2 = new OpenLayers.Layer.WMS( "The Open Planning Project",
+                          "http://sigma4.openplans.org/tilecache-1.3/tilecache.py",
+                          {layers: 'sigma'} );
+                var my_layer = new OpenLayers.Layer.WMS( "My Layer",
+                          "http://www.govtrack.us/perl/wms/wms.cgi",
+                          {layers: layername} );
+                var my_layer_overlay = new OpenLayers.Layer.WMS( "My Layer (Overlay)",
+                          "http://www.govtrack.us/perl/wms/wms.cgi",
+                          {layers: layername, transparent: 'true',
+                           srs: 'EPSG:54004'},
+                          {isBaseLayer: false, opacity: 0.7});
+                var cd110_layer_overlay = new OpenLayers.Layer.WMS( "Congressional Districts)",
+                          "http://www.govtrack.us/perl/wms/wms.cgi",
+                          {layers: "cd-110", transparent: 'true',
+                           srs: 'EPSG:54004'},
+                          {isBaseLayer: false, opacity: 0.2});
+
+                map.addLayers([wms, wms2, my_layer, my_layer_overlay, cd110_layer_overlay]);
+
+                map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+                map.addControl( new OpenLayers.Control.LayerSwitcher() );
+                map.addControl( new OpenLayers.Control.MousePosition() );
+
+            }
+        </script>
+    </head>
+    <body onload="init()">
+    	<p>This page shows the "<script>document.write(layername)</script>" layer. If you modify the layer while this window is open,
+    	reload this page. It's possible you may have to clear your cache
+    	or use Ctrl+Shift+R to reload without going to the cache, or something.</p>
+    	
+        <div id="controls">
+            <div id="map"></div>
+        </div>
+    </body>
+</html>

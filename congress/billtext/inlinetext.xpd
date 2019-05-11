@@ -1,0 +1,79 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+
+<!--  Returns a version of the bill with the changes shown inline. -->
+
+<Page>
+
+<Templates
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+    exclude-result-prefixes="govtrack-bill">
+
+<xsl:include href="cleanup.xsl"/>
+
+<xsl:template match="/">
+    <xsl:variable name="cleaned">
+        <xsl:apply-templates select="govtrack-bill:LoadBillText()" mode="cleanup"/>
+    </xsl:variable> 
+    
+    <!-- Portable usage is 'exsl:node-set($cleaned)' -->
+	<xsl:processing-instruction name="cache">server</xsl:processing-instruction>
+    <xsl:apply-templates select="$cleaned"/>
+</xsl:template>
+
+
+<!-- Real processing -->
+
+<xsl:include href="common.xsl"/>
+
+<xsl:template match="changed">
+    <xsl:apply-templates/>
+</xsl:template>
+    
+<xsl:template match="inserted|changed-to">
+    <xsl:choose>
+        <!-- can still end up with empty spans b/c '`' might be removed -->
+        <xsl:when test="not(node())">
+        </xsl:when>
+        <xsl:when test="descendant::p">
+            <div class="inserted">
+                <xsl:apply-templates/>
+            </div>
+        </xsl:when>
+        <xsl:otherwise>
+            <span class="inserted">
+                <xsl:apply-templates/>
+            </span>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+    
+<xsl:template match="removed|changed-from">
+    <xsl:choose>
+        <!-- can still end up with empty spans b/c '`' might be removed -->
+        <xsl:when test="not(node())">
+        </xsl:when>
+        <xsl:when test="descendant::p">
+            <div class="removed inline-removed">
+                <xsl:apply-templates/>
+            </div>
+        </xsl:when>
+        <xsl:otherwise>
+            <span class="removed inline-removed">
+                <xsl:apply-templates/>
+            </span>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+    
+<!--  matches definition of a section from common.xsl, and looks for any changes. -->
+<xsl:template name="haschange">
+    <xsl:if test="descendant::changed or descendant::removed or descendant::inserted or
+                  following-sibling::*[1][self::ul][descendant::changed or descendant::removed or descendant::inserted]">
+        <xsl:attribute name="changed">1</xsl:attribute>
+    </xsl:if>
+</xsl:template>
+
+</Templates>
+
+</Page>

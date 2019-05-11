@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <title>A WMS Map with the Google Maps API</title>
+    <script type="text/javascript" src="/scripts/ajax.js"></script>
+    <style type="text/css"> 
+				v\:* { behavior:url(#default#VML); }
+	</style>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAsrOexgmxnPO4u3qqssNz6BTSWu0oDPXlD672f64CK_i4O7ZO8RTJr2ghyYddfWwwA2du8CiKUg3szQ" type="text/javascript"></script>
+    <script src="/scripts/gmap-wms.js"></script>
+    <script src="/scripts/jsr_class.js"></script>
+
+    <script>
+var map;
+var click_location;
+
+function addLayer(layer_name, layer_title, isdefault) {
+		var WMS_URL = 'http://www.govtrack.us/perl/wms/wms.cgi?';
+		var G_MAP_LAYER_FILLED = createWMSTileLayer(WMS_URL, layer_name, null, "image/png", null, null, null, .5);
+		var G_MAP_OVERLAY = createWMSOverlayMapType([G_NORMAL_MAP.getTileLayers()[0], G_MAP_LAYER_FILLED], layer_title);
+		G_MAP_OVERLAY.layer = layer_name;
+		map.addMapType(G_MAP_OVERLAY);
+		if (isdefault) {
+			map.setMapType(G_MAP_OVERLAY);
+		}
+}
+
+function initMap() {
+	if (!GBrowserIsCompatible()) {
+		alert("This page uses Google Maps, which is unfortunately not supported by your browser.");
+	} else {
+		document.getElementById("googlemap").style.height = (screen.height - 485) + "px";
+		map = new GMap2(document.getElementById("googlemap"));
+		map.enableContinuousZoom();
+		map.enableScrollWheelZoom();
+
+		addLayer("cd-110", "Congressional Districts", 1);
+		addLayer("sldu", "State Leg Districts Upper");
+		addLayer("sldl", "State Leg Districts Lower");
+
+		map.addControl(new GLargeMapControl());
+		map.addControl(new GMapTypeControl());
+		//map.addControl(new GOverviewMapControl());
+		map.addControl(new GScaleControl());
+		map.setCenter(new GLatLng(39, -96), 4);
+
+		GEvent.addListener(map, "click", function (overlay, point) {
+			if (point) {
+				layer_name = map.getCurrentMapType().layer;
+				click_location = point;
+				req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/get-region.cgi?layer=' + layer_name + '&lat=' + point.lat() + '&long=' + point.lng() + '&format=json&json_callback=wms_info_callback');
+				req.buildScriptTag();
+				req.addScriptTag();
+			}
+		});	
+	}
+}
+
+function wms_info_callback(wms_listing) {
+	if (wms_listing.length == 0) { return; }
+
+	var item = wms_listing[0];
+	var point = click_location; // new GLatLng(item[2], item[1]);
+	var html = "<ol>";
+
+	for (var i=0; i < wms_listing.length; i++) {
+		var item = wms_listing[i];
+		
+		uri = item[0]
+		info = item[3]
+		
+		html += "<li>region: " + uri + "";
+		html += "<div>markerdata: " + info + "</div></li>";
+	}
+	
+	html += "</ol>";
+
+	map.openInfoWindowHtml(point, "<div style='font-size: 90%'>" + html + "</div>");
+
+}
+
+function endsWith(a, b) {
+	if (a == null || b == null) return false;
+	if (b.length > a.length) return false;
+	return a.substring(a.length-b.length) == b;
+}
+		</script>
+		
+  </head>
+  <body onLoad="initMap()">
+  
+  	<p>This is an example of using the WMS server with the Google Maps API map widget. View the page source to see how it works.</p>
+  	<p>The map below shows color-coded U.S. congressional districts. Change which layer is displayed by changing the calls to addLayer in the script in this page.
+  	This also demonstrates using click pop-ups.</p>
+  	
+  	<p>Note that my own Google API Key is used in the example. You will have to get your own from Google if you want to copy this page to your own website.</p>
+  	
+    <div id="googlemap" style="width: 100%; height: 355px; border: 1px solid blue; margin-top: 1em"></div>
+  </body>
+</html>

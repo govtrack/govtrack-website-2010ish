@@ -1,0 +1,453 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1"
+	xmlns:xspforms="xspforms">
+
+	<Title PrependSiteTitle="1">Bills by Subject: <PageTitle/></Title>
+
+	<Sidebar>
+		<monitorbox/>
+		<Section Name="About The Subject Areas">
+			<p>Subject terms are assigned to bills by the Congressional Research Service, which is a government entity that serves Congress.
+			GovTrack uses those subjects.</p>
+		</Section>
+	</Sidebar>
+	
+	<Breadcrumbs>
+		<ifnoterm>
+		<iftypecrs>
+			<a href="/congress/">Congress</a> &gt; <a href="legislation.xpd">Legislation</a>
+		</iftypecrs>
+		</ifnoterm>
+		<ifterm><a href="index.xpd">Congress</a> &gt; <a href="legislation.xpd">Legislation</a> &gt; <a href="subjects.xpd">Subject Terms</a></ifterm>
+	</Breadcrumbs>
+	
+
+	<Body-A>
+		<ifnoterm>
+		<iftypecrs>
+				<h1>Bills by Subject</h1>
+			
+				<h4 style="margin-top: 0px">What interests you?</h4>
+
+				<ifnoletter>
+				<p>Thousands of keywords are used to index all of the
+				bills in Congress.  Select a letter to see some of those subject terms.
+				You'll be able to track particular subject terms so that your <a href="/users/events.xpd">tracked
+				events</a> page and email updates alerts you activity on legislation matching your
+				interests.</p>
+				</ifnoletter>
+				
+				<p><b>Go to subjects starting with... </b></p>
+
+				<div style="margin-top: .5em;">
+				<AlphabetList url="subjects.xpd?letter="/>
+				</div>
+		</iftypecrs>
+		<iftypecommittee>
+				<h1 class="PageTitle">Bills by Committee Assignment</h1>
+
+				Browse bills by the committees they have been assigned to.
+				Select a committee or subcommittee:
+		</iftypecommittee>
+		</ifnoterm>
+		<ifterm>
+			<h1 class="norule">Bills by Subject</h1>
+		</ifterm>
+	</Body-A>
+	
+	<Body-B>
+		<ifnoterm>
+		<iftypecrs>
+				<ifnoletter>
+				<table cols="2">
+				<tr valign="top">
+				<td style="padding-right: 2em">
+				<PopularSubjects/>
+				</td>
+				<td>
+				<TopTerms/>
+				</td>
+				</tr>
+				</table>
+				</ifnoletter>
+
+				<!--<RandomSubjects/>-->
+		</iftypecrs>
+		<iftypecommittee>
+				<div style="margin-top: .5em">
+				<CommitteeList/>
+				</div>
+		</iftypecommittee>
+		</ifnoterm>
+	
+		<table><tr><td> <!-- prevent wrap around sidebar -->
+		<MainArea/>
+		</td></tr></table>
+	</Body-B>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-subjects2 = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Subjects"
+		xmlns:govtrack-login = "assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-index = "assembly://GovTrackWeb/GovTrack.Web.Pages.Index"
+		xmlns:xspforms="xspforms"
+		exclude-result-prefixes="http-context govtrack-util govtrack-bills govtrack-subjects govtrack-login xspforms govtrack-index">
+
+		<xsl:template match="PageTitle">
+			<xsl:choose>
+			<xsl:when test="http-context:param('letter') = '' and http-context:param('term') = ''">Keywords and Committees</xsl:when>
+			<xsl:when test="not(http-context:param('term') = '')">
+				<xsl:value-of select="http-context:param('term')"/>
+			</xsl:when>
+			<xsl:when test="not(http-context:param('letter') = '')">
+				Subject Terms: <xsl:value-of select="http-context:param('letter')"/>
+			</xsl:when>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="ifnoterm">
+			<xsl:if test="http-context:param('term') = ''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="ifterm">
+			<xsl:if test="not(http-context:param('term') = '')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="ifletterorterm">
+			<xsl:if test="not(http-context:param('term') = '') or not(http-context:param('letter') = '')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="iftypecrs">
+			<xsl:if test="http-context:param('type') = '' or http-context:param('type') = 'crs'">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="ifnoletter">
+			<xsl:if test="http-context:param('letter') = ''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="iftypecommittee">
+			<xsl:if test="http-context:param('type') = 'committee'">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="MainArea">
+			<xsl:choose>
+			<xsl:when test="not(http-context:param('term') = '')">
+				<xsl:call-template name="billlist">
+					<xsl:with-param name="term" select="http-context:param('term')"/>
+					<xsl:with-param name="type" select="http-context:param('type')"/>
+					<xsl:with-param name="limit" select="0"/>
+					<xsl:with-param name="random" select="0"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="not(http-context:param('letter') = '')">
+				<xsl:call-template name="subjectlist"/>
+			</xsl:when>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="RandomSubjects">
+			<xsl:if test="http-context:param('letter') = '' and http-context:param('term') = ''">
+				<p>Some example subjects and bills for those subjects are listed below.</p>
+
+				<xsl:for-each select="govtrack-subjects:GetRandomCRS(5)">
+				<xsl:call-template name="billlist">
+					<xsl:with-param name="term" select="."/>
+					<xsl:with-param name="type" select="'crs'"/>
+					<xsl:with-param name="limit" select="4"/>
+					<xsl:with-param name="random" select="1"/>
+				</xsl:call-template>
+				</xsl:for-each>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="monitorbox">
+			<xsl:if test="not(http-context:param('term')='' or http-context:param('type')='')">
+			<Section Name="Track Bills" Icon="/media/feed-icon-20x20.gif">
+			<xsl:if test="govtrack-subjects2:IsCurrentTerm(http-context:param('term'))">
+			<monitor-subscribe
+				title="'{http-context:param('term')}' bills"
+				desc="subject term"
+				type="{http-context:param('type')}"
+				term="{http-context:param('term')}">
+				<events>major activity on legislation related to this subject</events>
+			</monitor-subscribe>
+			</xsl:if>
+			<xsl:if test="not(govtrack-subjects2:IsCurrentTerm(http-context:param('term')))">
+			<monitor-subscribe-archival
+				title="'{http-context:param('term')}' bills"
+				desc="subject term"
+				type="{http-context:param('type')}"
+				term="{http-context:param('term')}">
+				<events>major activity on legislation related to this subject</events>
+			</monitor-subscribe-archival>
+			</xsl:if>
+			</Section>
+
+			<Section Name="Previous Legislation">
+				<div style="margin: .5em">
+				<div><a href="subjects.xpd?type={http-context:param('type')}&amp;term={http-context:param('term')}&amp;session=111">111th Congress (2009-10)</a></div>
+				<div><a href="subjects.xpd?type={http-context:param('type')}&amp;term={http-context:param('term')}&amp;session=110">110th Congress (2007-08)</a></div>
+				<div><a href="subjects.xpd?type={http-context:param('type')}&amp;term={http-context:param('term')}&amp;session=109">109th Congress (2005-06)</a></div>
+				<div><a href="subjects.xpd?type={http-context:param('type')}&amp;term={http-context:param('term')}&amp;session=108">108th Congress (2003-04)</a></div>
+				<div><a href="subjects.xpd?type={http-context:param('type')}&amp;term={http-context:param('term')}&amp;session=107">107th Congress (2001-02)</a></div>
+				<div><a href="subjects.xpd?type={http-context:param('type')}&amp;term={http-context:param('term')}&amp;session=106">106th Congress (1999-00)</a></div>
+				</div>
+			</Section>
+			
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template name="billlist">
+			<xsl:param name="term"/>
+			<xsl:param name="type"/>
+			<xsl:param name="limit"/>
+			<xsl:param name="random"/>
+
+			<xsl:if test="$random=0">
+
+			<xsl:if test="$type='crs'">
+				<h1 class="PageTitle"><xsl:value-of select="$term"/> bills</h1>
+
+				<p>Below are the bills that are related to the "<xsl:value-of select="$term"/>" subject term.
+				Click the <I>Add Tracker</I> button to the right to subscribe
+				to this subject term.
+				<!--(<a href="?type=crs">choose another subject</a>)-->
+				</p>
+				
+				<xsl:variable name="subterms" select="govtrack-subjects2:GetSubTerms($term)"/>
+				<xsl:if test="not(count($subterms)=0)">
+					<h3>Refine Your Subject</h3>
+					<p>This is a "Top Term."  You can narrow your search by choosing a more specific category or browse all relevant legislation below.</p>
+
+					<div style="height: 12em; width: 20em; overflow: auto">
+					<table>
+					<xsl:for-each select="$subterms">
+						<tr valign="top">
+							<td style="padding: 3px .5em 0px .75em"><MonitorButton monitor="crs:{.}" name="This Subject"/></td>
+							<td><a href="?type=crs&amp;term={.}"><xsl:value-of select="."/></a></td>
+						</tr>
+					</xsl:for-each>
+					</table>
+					</div>
+					
+					<h3>Legislation In This Subject Area</h3>
+				</xsl:if>
+
+
+				<xsl:if test="$random=0">
+					<xsl:call-template name="relatedsubjectlist"/>
+				</xsl:if>
+
+			</xsl:if>
+
+			<xsl:if test="$type='committee'">
+				<h1 class="PageTitle"><xsl:value-of select="$term"/></h1>
+
+				<p>Below are the bills that are assigned to the <xsl:value-of select="$term"/> committee.
+				Click the <I>Add This Tracker</I> button to the right to subscribe to this committee's events.
+				(<a href="?type=committee">Choose another committee</a>)
+				</p>
+
+			</xsl:if>
+
+			</xsl:if>
+
+			<xsl:if test="$random=1">
+			<h3>Bills about '<a href="subjects.xpd?type={$type}&amp;term={$term}"><xsl:value-of select="$term"/></a>'</h3>
+			</xsl:if>
+			
+			<xsl:variable name="bills" select="govtrack-subjects:GetBills($type, $term)"/>
+			
+			<xsl:if test="count($bills)=0">
+				<p>There is no legislation in this session of Congress for this subject term.</p>
+			</xsl:if>
+			
+			<xsl:if test="not(govtrack-subjects2:IsCurrentTerm($term))">
+				<p><b>This subject term is no longer used.</b> In 2009, the Congressional Research Service, an arm of Congress that classifies bills, changed the way they categorize bills.
+				Some subject terms used before 2009, including this one, are no longer used and will not apply to bills on GovTrack anymore.</p>
+			</xsl:if>
+
+			<xsl:if test="count($bills)&gt;0">
+
+			<xsl:if test="http-context:param('session') = ''">
+				<p>The following is a list of current pending legislation in Congress.  These bills and
+				resolutions have been proposed by Members of Congress but may not have had any action
+				taken on them on their path to becoming law.  In fact, the vast majority of proposed
+				legislation never becomes law.</p>
+			</xsl:if>
+
+			<table class="rowborders">
+			<tr>
+				<th></th>
+				<th>Bill</th>
+				<th><center>Status</center></th>
+			</tr>
+			<xsl:if test="http-context:param('sort')=''">
+				<xsl:for-each select="$bills">
+					<xsl:sort select="name(statusxml/*)='introduced'"/>
+					<xsl:sort select="statusxml/*/@datetime" order="descending"/>
+					<xsl:call-template name="billrow">
+						<xsl:with-param name="limit" select="$limit"/>
+					</xsl:call-template>
+				</xsl:for-each>
+			</xsl:if>
+			<xsl:if test="http-context:param('sort')='lastaction'">
+				<xsl:for-each select="$bills">
+					<xsl:sort select="statusxml/*/@datetime" order="descending"/>
+					<xsl:call-template name="billrow">
+						<xsl:with-param name="limit" select="$limit"/>
+					</xsl:call-template>
+				</xsl:for-each>
+			</xsl:if>
+			</table>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template name="billrow">
+			<xsl:param name="limit"/>
+			<xsl:if test="position()&lt;$limit or $limit=0">
+			<tr>
+				<td>
+					<MonitorButton monitor="bill:{type}{session}-{number}" name="This Bill"/>
+				</td>
+				<td style="padding-top: .25em; padding-bottom: .25em">
+				<a href="{govtrack-bills:BillLink3(session, type, number)}">
+					<xsl:value-of select="title"/>
+				</a>
+				</td>
+				<td style="text-align: center">
+					<div><nobr><xsl:value-of select="govtrack-bills:GetStatusIndexed(statusxml/*)"/></nobr></div>
+					<div style="font-size: 90%; color: #444444"><nobr><xsl:value-of select="statusdate"/></nobr></div>
+				</td>
+			</tr>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template name="subjectlist">
+			<xsl:variable name="crsterms" select="govtrack-subjects:GetCRSTerms(http-context:param('letter'))"/>
+			
+			<h3>Subjects starting with "<xsl:value-of select="govtrack-util:ToUpper(http-context:param('letter'))"/>"</h3>
+			
+			<p>Pick a subject term that interests you.  You'll be able to <i>track</i> that term to follow
+			activity on pertinent legislation.</p>
+			
+			<table class="subsection">
+			<xsl:for-each select="$crsterms">
+				<tr>
+				<td style="padding: 3px .5em 0px 0px"><MonitorButton monitor="crs:{.}" name="This Subject"/></td>
+				<td style="padding-bottom: .25em">				
+					<xsl:if test="http-context:param('session')=''">
+						<a href="subjects.xpd?type=crs&amp;term={.}">
+							<xsl:value-of select="." />
+						</a>
+					</xsl:if>
+					<xsl:if test="not(http-context:param('session')='')">
+						<a href="subjects.xpd?type=crs&amp;term={.}&amp;session={http-context:param('session')}">
+							<xsl:value-of select="." />
+						</a>
+					</xsl:if>
+				</td>
+				</tr>
+			</xsl:for-each>
+			</table>
+		</xsl:template>
+
+		<xsl:template name="relatedsubjectlist">
+			<!--<xsl:variable name="crsterms" select="govtrack-subjects:GetCRSTerms(http-context:param('term'))"/>
+			
+			<xsl:if test="count($crsterms) &gt; 0 and count($crsterms) &lt; 20">
+			<p>
+			See also:
+			<xsl:for-each select="$crsterms">
+				<a href="subjects.xpd?type=crs&amp;term={.}">
+					<xsl:value-of select="." />
+				</a>
+				<xsl:if test="not(position()=last())">, </xsl:if>
+			</xsl:for-each>
+			</p>
+			</xsl:if>-->
+		</xsl:template>
+			
+		<xsl:template match="AlphabetList">
+			<xsl:variable name="L" select="."/>
+			<div style="padding: 3px; padding-left: 6px;">
+			<xsl:for-each select="govtrack-util:Alphabet()">
+				<xsl:variable name="LETTER" select="."/>
+				<a href="{$L/@url}{$LETTER}">&#160;<xsl:value-of select="$LETTER"/>&#160;</a>
+				<xsl:if test="position() &lt; last()"> | </xsl:if>
+			</xsl:for-each>
+			</div>
+		</xsl:template>
+		
+		<xsl:template match="CommitteeList">
+			<xsl:choose>
+			<xsl:when test="http-context:param('term') = ''">
+			<xsl:for-each select="govtrack-subjects:GetCommittees()">
+				<xsl:sort select="substring-after(., 'House ')"/>
+				<xsl:sort select="."/>
+				<xsl:if test="substring-after(.,'--')=''">
+					<div style="margin: .25em"><a href="subjects.xpd?type=committee&amp;term={.}"><xsl:value-of select="."/></a></div>
+				</xsl:if>
+				<xsl:if test="not(substring-after(.,'--')='')">
+					<div style="margin: .25em; margin-left: 2em"><a href="subjects.xpd?type=committee&amp;term={.}"><xsl:value-of select="."/></a></div>
+				</xsl:if>
+			</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="subjects.xpd?type=committee">Return to Committee List</a>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="PopularSubjects">
+			<h3>Popular Subjects</h3>
+
+			<p>Here are some of the most popular subject terms GovTrack users are tracking:</p>
+
+            <xsl:variable name="popularmonitors" select="govtrack-index:GetPopularMonitors('SubjectMonitor')"/>
+			<table>
+			<xsl:for-each select="$popularmonitors[govtrack-subjects2:IsCurrentTerm(title)][position() &lt; 35]">
+				<tr>
+				<td style="padding: 3px .5em 0px 0px"><MonitorButton monitor="crs:{title}" name="This Subject"/></td>
+				<td style="padding-bottom: .25em">				
+				<a href="{link}"><xsl:value-of select="title"/></a>
+					(<xsl:value-of select="users"/> users)
+				</td>
+				</tr>
+			</xsl:for-each>
+			</table>
+		</xsl:template>
+
+		<xsl:template match="TopTerms">
+			<h3>Major Subject Areas</h3>
+
+			<p>These are the "Top Terms" in the vocabulary used to categorize bills:</p>
+
+			<table>
+			<xsl:for-each select="govtrack-subjects2:GetTopTerms()">
+				<tr>
+				<td style="padding: 3px .5em 0px 0px"><MonitorButton monitor="crs:{.}" name="This Subject"/></td>
+				<td style="padding-bottom: .25em">				
+				<a href="?type=crs&amp;term={.}"><xsl:value-of select="."/></a>
+				</td>
+				</tr>
+			</xsl:for-each>
+			</table>
+		</xsl:template>
+	</Templates>
+   
+ </Page>

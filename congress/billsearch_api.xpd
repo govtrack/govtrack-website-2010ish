@@ -1,0 +1,34 @@
+<?xml-stylesheet xpath="/search-results/Templates" type="text/xsl" ?>
+
+<search-results>
+		<Results/>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-search = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.BillSearch"
+		xmlns:xspforms="xspforms"
+		exclude-result-prefixes="govtrack-search govtrack-bills xspforms govtrack-search govtrack-subjects govtrack-util HttpContext">
+
+		<xsl:template match="Results">
+			<xsl:variable name="results" select="govtrack-search:SearchApi()"/>
+		
+			<xsl:for-each select="$results/results/*" xml:space="preserve">
+<result>
+	<!--<score><xsl:value-of select="@search_score"/></score>-->
+	<congress><xsl:value-of select="session"/></congress>
+	<bill-type><xsl:value-of select="type"/></bill-type>
+	<bill-number><xsl:value-of select="number"/></bill-number>
+	<title><xsl:value-of select="title"/></title>
+	<link>http://www.govtrack.us<xsl:value-of select="govtrack-bills:BillLink3(session, type, number)"/></link>
+	<bill-status><xsl:value-of select="govtrack-bills:GetStatusIndexed(statusxml)"/></bill-status>
+</result>
+			</xsl:for-each>
+		</xsl:template>
+
+	</Templates>
+   
+</search-results>

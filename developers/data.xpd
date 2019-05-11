@@ -1,0 +1,164 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1">Source Data</Title>
+	
+	<Breadcrumbs><a href="/about.xpd">About GovTrack</a> &gt; <a href="/developers">Developers</a></Breadcrumbs>
+
+	<Body-A>
+		<h1 class="PageTitle">Source Data</h1>
+		
+		<img src="/media/publicdomain.gif" style="float: right; padding: 2em"/>
+
+		<p>The underlying data about the U.S. Congress that powers this 
+		site is the only such database made freely available for others 
+		to reuse. The data covers the activity of bills, PDFs of bill 
+		texts, roll call votes, and photos of members of Congress.  
+		Almost all of the data files are in XML format. You can browse 
+		the underlying source data for this website <a 
+		href="/data/">here</a>. These are the very same data files that 
+		GovTrack uses to make itself go, so pretty much anything you see 
+		on the site is in one of those files.</p>
+		
+		<p>The data files are released into the public domain but see the
+		<a href="license.xpd">license terms</a> which covers your access.
+		Please contact me if you would like to start using the
+		data, just because I'm curious and like to know what it's being
+		used for. Also, if you are an ongoing user of the data it is
+		really important that you <a href="http://groups.yahoo.com/group/govtrack/">join the GovTrack mail list</a>
+		to stay updated with any data format changes which are occasionally
+		not backwards compatible.</p>
+	</Body-A>
+	<Body-B>
+
+		<h3>Data Directory</h3>
+		
+		<p>Here is an overview of much of the data provided by GovTrack.
+		Read on below for how to access the data. Occasional downloads
+		by HTTP are permitted, but in most cases the only supported method
+		for you to get these files is to download them in bulk with Unix
+		rsync (see below).</p>
+
+		<ul>
+		<li>The root of the data directory is <a href="/data">http://www.govtrack.us/data</a>. Feel free to explore. However, do not use HTTP to refresh a file more than once daily or to download data in bulk. See the section on rsync below for that.</li>
+		
+		<li><a href="/data/us/people.xml">data/us/people.xml</a>:
+		This file contains everyone that has ever served in Congress, and U.S. presidents, with their party
+		affiliation, terms in Congress, birthdays, etc.
+		This file is quite large... best not to open it in your browser.
+		This file has been put together from a variety of sources and is
+		maintained by hand. All people in the database are identified by
+		a numeric ID with no particular meaning.
+			<ul>
+				<li>The format of this file is essentially self-explanatory.</li>
+				<li>On the person elements, the only required fields are id, firstname, lastname, name, and bioguideid. Other fields are omitted if they are not known.</li>
+				<li>bioguideid, osid, and pvsid refer to the ids assigned at <a href="http://bioguide.congress.gov">bioguide.congress.gov</a>, the <a href="http://www.opensecrets.org">Center for Responsive Politics</a>, and <a href="http://www.votesmart.org">VoteSmart</a>.</li>
+				<li>title and state attributes are set if the person currently has a role in Congress.</li>
+				<li>role elements within each person node indicate each elected term in Congress the person has served or is serving.</li>
+				<li>The current attribute is present and set to 1 if the role is current. You can also determine this by looking at the start and end dates, which are in YYYY-MM-DD format.</li>
+				<li>The type attribute is sen (senator), rep (congressman), or prez (U.S. president). For senators, a class attribute gives their election class (1, 2, or 3). For representatives, the district attribute gives the congressional district: 0 for at-large, -1 for historical data where the district is not known.</li>
+				<li>For senators and representatives, the state attribute gives the USPS state abbreviation of the state or territory they represent. Besides the 50 states, this includes delegates from American Samoa (AS), District of Columbia (DC), Guam (GU), Northern Mariana Islands (MP), Puerto Rico (PR), Virgin Islands (VI), and the former (for historical data) Dakota Territory (DK), Philippines Territory/Commonwealth (PI), and Territory of Orleans (OL). Puerto Rico's delegate is called a Resident Commissioner.</li>
+			</ul>
+		</li>
+
+		<li>The <a href="/data/photos">data/photos</a> directory 
+		contains jpeg images of Members of Congress, past and present. 
+		Not all MoC's have photos. The name of the photo is the GovTrack 
+		numeric identifier for the person followed by: nothing, for the 
+		largest original image available; 200px, 100px, 50px, for three 
+		sizes of the photo, by width; all followed by .jpeg. -credit.txt files
+		give a tab-delimeted source URL and source description information
+		for each photo.</li>
+		
+		<li>Most other files are organized by "Congress". A "Congress" 
+		is a two-year session of activity, starting in the year after an 
+		election year. Many things in Congress reset after each two year 
+		term, such as bill numbers. In GovTrack, a "Congress" is called 
+		a "session", which is actually a misnomer because each 
+		"Congress" is made up of two "sessions" which follow the 
+		calendar years. 2011 starts the 112<sup>th</sup> Congress.
+		Each session is in its own directory: data/us/112, data/us/111,
+		data/us/110, etc. We have roll call data going back to the first
+		Congress, so we have that going back to data/us/1.</li>
+		
+		<li><a href="/data/us/sessions.tsv">data/us/sessions.tsv</a>
+		gives the start and end date of each (one-year) session and 
+		(two-year) Congress.</li>
+
+		<li><a href="/data/us/111/people.xml">data/us/111/people.xml</a>
+		mimics the layout of the full people.xml file described above but
+		only contains those Members of Congress who have or had a role
+		during this particular session of Congress.</li>
+		
+		<li>Roll call votes in <a href="/data/us/111/rolls">data/us/111/rolls</a>
+		represent all votes where individual votes have been recorded. Votes by unanimous consent, for instance,
+		are not included here. The format of this file type is described in <a href="datadoc.xpd">additional documentation</a>.</li>
+
+		<li>Bills are resolutions are encoded in <a href="/data/us/111/bills">data/us/111/bills</a>.
+		The format of this file type is described in <a href="datadoc.xpd">additional documentation</a>.</li>
+
+		<li><a href="/data/us/gis/zip4dist-prefix.txt.gz">data/us/gis/zip4dist-prefix.txt.gz</a>:
+		A table (.gz-compressed) mapping ZIP+4 codes to congressional districts.
+		If all zipcodes starting with a prefix map to the same district, only
+		the prefix is included. An entry like "123 NY-01" means all zip and zip4
+		codes starting with "123" are in New York's first congressional district.
+		Current as of the summer of 2008; this comes from work by Carl Malamud
+		and Aaron Swartz <a href="http://watchdog.net/about/api#zip2rep">here</a>.</li>
+		
+		</ul>
+
+		<h3>Bulk Access</h3>
+		
+		<p>To download files in bulk, or if you plan to regularly update files,
+		you must use the rsync tool. I require rsync because it will only download
+		updated files when you want to refresh your local files, and it supports
+		compression.</p>
+		
+		<h4>Getting the Data On Linux/Mac OS X</h4>
+		<p>rsync is available on Linux and you should be
+		able to find it for Mac OS X as well; just type on a command-line e.g.:</p>
+		
+		<p><tt>rsync -az --delete --delete-excluded govtrack.us::govtrackdata/us/111/bills .</tt></p>
+		
+		<p>This will download the 111th Congress bill data into a directory
+		called <tt>bills</tt> in the current directory.</p>
+
+		<h4>Getting the Data on Windows</h4>
+		
+		<p>On Windows, install <a href="http://www.aboutmyip.com/AboutMyXApp/DeltaCopy.jsp">DeltaCopy</a>,
+		which contains rsync for Windows. Then on a command line type:</p>
+		
+		<pre>mkdir C:\GovTrackData
+cd "\Program Files\Synametrics Technologies\DeltaCopy"
+rsync -avz --delete govtrack.us::govtrackdata/us/111/bills /GovTrackData</pre>
+
+		<p>Note that you have to give a relative path to your GovTrackData directory
+		because rsync will interpret "C:" as something other than a drive letter,
+		since there are no drive letters in the Unix world.</p>
+
+		<p>This will put bill XML files in either C:\GovTrackData\bills or C:\cygwin\GovTrackData\bills.
+		cygwin is the name of a common Windows wrapper around Unix tools. That's something to do with
+		DeltaCopy, not GovTrack.</p>
+
+		<h4>What This Does</h4>
+		
+		<p>This will download the 111th Congress bill data. The first
+		download should be roughly 75MB.  Subsequent updates will
+		be much less.  The directory structure exposed by rsync mirrors
+		the HTTP-browsable <a href="/data">data</a> directory (but, again,
+		please don't do massive downloading by HTTP).</p>
+		
+		<p>The source data in all is 16 gigabytes, so <b>don't
+		think about downloading the whole thing in one shot</b>.  And
+		be nice on my bandwidth.</p>
+
+		<p>The XML files are updated roughly daily (a good time for you
+		to rsync them is 4PM Eastern time, daily). The directories for
+		roll call votes (e.g. <tt>data/us/111/rolls</tt>) are updated much more
+		frequently. If you need almost-real-time roll call vote data,
+		you can rsync that directory hourly.</p>
+
+	</Body-B>
+	
+ </Page>

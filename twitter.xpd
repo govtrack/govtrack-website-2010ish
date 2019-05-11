@@ -1,0 +1,98 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1">
+
+	<Title PrependSiteTitle="1">Tweeting About Congress</Title>
+
+	<Breadcrumbs><a href="about.xpd">About GovTrack</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="PageTitle">Tweeting About Congress</h1>
+		
+		<p><a href="http://www.twitter.com">Twitter</a> is a great platform
+		for mobilizing around bills in Congress, and it gives us an
+		opportunity to see what people are saying around the web.
+		We're tracking the conversations around legislation. You can
+		find the tweets of congressmen over at <a href="http://tweetcongress.org/">TweetCongress</a>
+		or <a href="http://legistalker.org/">Legistalker</a>.</p>
+	</Body-A>
+	<Body-B>
+		<table cols="2">
+		<tr valign="top">
+		<td width="50%" style="padding-right: 3em">
+			<h3 style="margin-top: 0px">Use These Hashtags</h3>
+			
+			<p>Hashtags are little words or mnemonics starting with a 
+			#-sign that people use to tie their tweets to a larger topic. 
+			GovTrack recommends the hashtag
+			<span style="font-family: monospace; font-weight: bold"><a href="http://search.twitter.com/search?q=%23usbill">#usbill</a></span>
+			when discussing legislation in the U.S. Congress.</p>
+			
+			<p>Combine <span style="font-family: monospace; font-weight: bold"><a href="http://search.twitter.com/search?q=%23usbill">#usbill</a></span>
+			with a hashtag for a particular bill, like
+			<span style="font-family: monospace; font-weight: bold"><a href="http://search.twitter.com/search?q=%23hr2737">#hr2737</a></span>
+			if you're talking about <a href="congress/bill.xpd?bill=h111-2737">H.R. 2737: Child Protection Compact Act</a>.</p>
+
+			<p>You don't have to worry about the details. Just
+			<a href="congress/legislation.xpd">find the bill</a>
+			on GovTrack and grab the hashtags we list in the blue
+			box in the sidebar.</p>
+			
+			<p>Also check out <a href="http://tinythom.as">tinythom.as</a> for short URLs to legislative pages.</p>
+			
+			<h3>Forming Bill Hashtags</h3>
+			
+			<p>There are six types of bills in Congress. Each has a different
+			abbreviation. Use these abbreviations in your hashtags:</p>
+			<ul>
+			<li><tt>hr###</tt> for "H.R." House bills,</li>
+			<li><tt>hres###</tt> for "H.Res." House simple resolutions,</li>
+			<li><tt>hjres###</tt> for "H.J.Res." House joint resolutions,</li>
+			<li><tt>hconres###</tt> for "H.Con.Res." House concurrent resolutions,</li>
+			<li><tt>s###</tt> for "S." Senate bills,</li>
+			<li><tt>sres###</tt> for "S.Res." Senate simple resolutions,</li>
+			<li><tt>sjres###</tt> for "S.J.Res." Senate joint resolutions, and</li>
+			<li><tt>sconres###</tt> for "S.Con.Res." Senate concurrent resolutions.</li>
+			</ul>
+
+			<p>But again you don't have to worry about this. Just find the bill
+			on GovTrack and grab the hashtags we list.</p>
+			
+			<h3>Bills In Past Years</h3>
+			
+			<p>Congress works in two-year sessions and the numbering of
+			bills and resolutions restarts every two years. That means there
+			actually have been more than one hundred "H.R. 1" bills going
+			back to the start of the nation. Let's assume that if you're
+			refering to a current bill, you don't need to be more specific
+			than the simple hashtag described above.</p>
+			
+			<p>If you're referring back to legislation from a previous
+			session of Congress, tack on a forward slash and then the
+			Congress number. Here's an example:
+			<span style="font-family: monospace; font-weight: bold"><a href="http://search.twitter.com/search?q=%23hr1/105">#hr1/105</a></span>
+			for <a href="congress/bill.xpd?bill=h105-1">H.R. 1: Working Families Flexibility Act of 1997</a>.</p>
+		</td>
+		<td>
+			<p style="margin-top: 0px; text-align: center; font-size: 120%; font-weight: bold">incoming <a style="font-family: monospace" href="http://search.twitter.com/search?q=%23usbill">#usbill</a> tweets</p>
+
+			<script language="javascript">
+			var jtw_search = "#usbill";
+			var jtw_width = "auto";
+			var jtw_height  = "50em";
+			var jtw_widget_border = '0px';
+			var jtw_tweet_background = '#FAFAEE';
+			var jtw_tweet_border = '1px dashed #999';
+			var jtw_pre_html = ' ';
+			var jtw_widget_style_misc = 'font-family: verdana, arial, sans;';
+			</script>
+			<script src="http://tweetgrid.com/widget/widget.js" type="text/javascript"></script>
+		</td>
+		
+		</tr>
+		</table>
+		
+	</Body-B>
+	
+</Page>
+

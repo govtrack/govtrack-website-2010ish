@@ -1,0 +1,22 @@
+<?xml-stylesheet xpath="/div/Templates" type="text/xsl" ?>
+
+<div>
+	<Body/>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-email="assembly://GovTrackWeb/GovTrack.Web.Email"
+		xmlns:govtrack-comments="assembly://GovTrackWeb/GovTrack.Web.Comments"
+		>
+		
+		<xsl:template match="Body">
+			<!--<xsl:value-of select="govtrack-email:SendToWebmaster('Auto: Answer Submitted', concat(http-context:param('question'), ': ', http-context:param('answer')))"/>-->
+			<xsl:value-of select="govtrack-comments:AddAnswer(http-context:param('question'), http-context:param('answer'))"/>
+			<xsl:value-of select="http-context:param('response-text')"/>
+			<script><xsl:value-of select="http-context:param('run-after')"/></script>
+			Your answer has been submitted and will appear after it has been approved.
+		</xsl:template>
+		
+	</Templates>
+</div>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <title>A WMS Map with the Google Maps API</title>
+    <script type="text/javascript" src="/scripts/ajax.js"></script>
+    <style type="text/css"> 
+				v\:* { behavior:url(#default#VML); }
+	</style>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAsrOexgmxnPO4u3qqssNz6BTSWu0oDPXlD672f64CK_i4O7ZO8RTJr2ghyYddfWwwA2du8CiKUg3szQ" type="text/javascript"></script>
+    <script src="/scripts/gmap-wms.js"></script>
+    <script src="/scripts/jsr_class.js"></script>
+
+    <script>
+var map;
+var click_location;
+
+function addLayer(layer_name, layer_title, isdefault) {
+		var WMS_URL = 'http://www.govtrack.us/perl/wms/wms.cgi?';
+		var G_MAP_LAYER_FILLED = createWMSTileLayer(WMS_URL, layer_name, null, "image/png", null, null, null, .3);
+		var G_MAP_LAYER_OUTLINES = createWMSTileLayer(WMS_URL, layer_name + "_bl", null, "image/png", null, null, null, 1);
+		var G_MAP_OVERLAY = createWMSOverlayMapType([G_NORMAL_MAP.getTileLayers()[0], G_MAP_LAYER_FILLED, G_MAP_LAYER_OUTLINES], layer_title);
+		G_MAP_OVERLAY.layer = layer_name;
+		map.addMapType(G_MAP_OVERLAY);
+		if (isdefault) {
+			map.setMapType(G_MAP_OVERLAY);
+		}
+}
+
+function initMap() {
+	if (!GBrowserIsCompatible()) {
+		alert("This page uses Google Maps, which is unfortunately not supported by your browser.");
+	} else {
+		document.getElementById("googlemap").style.height = (screen.height - 485) + "px";
+		map = new GMap2(document.getElementById("googlemap"));
+		map.enableContinuousZoom();
+		map.enableScrollWheelZoom();
+
+		addLayer("txschooldistricts", "TX SDs", 1);
+
+		map.addControl(new GLargeMapControl());
+		map.addControl(new GMapTypeControl());
+		//map.addControl(new GOverviewMapControl());
+		map.addControl(new GScaleControl());
+		map.setCenter(new GLatLng(35, -100), 5);
+
+		GEvent.addListener(map, "click", function (overlay, point) {
+			if (point) {
+				layer_name = map.getCurrentMapType().layer;
+				click_location = point;
+				req = new JSONscriptRequest('http://www.govtrack.us/perl/wms/get-region.cgi?layer=' + layer_name + "_bl" + '&lat=' + point.lat() + '&long=' + point.lng() + '&format=json&json_callback=wms_info_callback');
+				req.buildScriptTag();
+				req.addScriptTag();
+			}
+		});	
+		GEvent.addListener(map, "dblclick", function (overlay, point) { click_location = null; });
+	}
+}
+
+function wms_info_callback(wms_listing) {
+	if (wms_listing.length == 0 || click_location == null) { return; }
+
+	var item = wms_listing[0];
+	html = eval("[" + item[3] + "]")[0].NAME;
+
+	map.openInfoWindowHtml(click_location, "<div style='font-size: 90%'>" + html + "</div>");
+
+}
+
+function endsWith(a, b) {
+	if (a == null || b == null) return false;
+	if (b.length > a.length) return false;
+	return a.substring(a.length-b.length) == b;
+}
+		</script>
+		
+  </head>
+  <body onLoad="initMap()">
+  
+  	<p>For more details, see <a href="example_googlemaps.html">this</a>.</p>
+  	
+    <div id="googlemap" style="width: 100%; height: 355px; border: 1px solid blue; margin-top: 1em"></div>
+  </body>
+</html>

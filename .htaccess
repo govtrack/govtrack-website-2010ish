@@ -1,0 +1,49 @@
+Deny From 208.112.97.19
+Deny From 74.208.96.180
+Deny From 208.43.85.166
+Deny From 208.111.154.15
+Deny From 208.111.154.16
+Deny From 68.178.254.108
+Deny From 67.23.29.59
+Deny From 66.35.209.244
+Deny From 208.88.66.214
+Deny From 174.121.174.90
+
+Allow From 98.114.109.88
+#Deny From all
+
+ErrorDocument 500 /sitedown.html
+ErrorDocument 503 /sitedown.html
+
+Redirect permanent /atom.xml http://www.govtrack.us/blog/feed/
+Redirect permanent /source.xpd http://www.govtrack.us/developers/
+Redirect permanent /sparql.xpd http://www.govtrack.us/developers/rdf.xpd
+
+Redirect permanent /users/events-rdf.xpd http://www.govtrack.us/users/events-rss2.xpd
+Redirect permanent /users/events-atom.xpd http://www.govtrack.us/users/events-rss2.xpd
+
+Redirect permanent /demo/census http://www.rdfabout.com/demo/census
+
+# Off-load the WMS server to my AWS instance.
+#Redirect temp /perl/wms/wms.cgi http://174.129.221.6/wms/wms.cgi
+
+# when people access our PDFs for bill text, redirect them
+# to GPO since I don't want to use my own bandwidth
+RewriteEngine on
+RewriteRule ^data/us/bills.text/(.+\.pdf)$ /perl/pdf-gpo-redirect.cgi?path=$1
+
+RewriteRule ^drafts/file/([^/]*)$ /drafts/file.xpd?code=$1
+RewriteRule ^drafts/file/([^/]*)/download$ /perl/download-draft-document.cgi?code=$1
+RewriteRule ^govtrack-insider.html http://www.govtrackinsider.com/govtrack-frontpage-embed.html [P]
+
+#### Shutting down the site... ###
+
+<FilesMatch "sitedown.html">
+	Allow from all
+</FilesMatch>
+
+# To shut down the site...
+#ErrorDocument 403 /sitedown.html
+#Order Deny,Allow
+#Deny from all
+

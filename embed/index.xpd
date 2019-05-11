@@ -1,0 +1,91 @@
+<?xml-stylesheet type="text/xsl" xpath="Page/Templates"?>
+<?xml-stylesheet type="text/xsl" href="../style/master.xsl"?>
+<Page HideAds="1">
+	<Title>GovTrack: Widgets for Your Web Page</Title>
+	
+	<Body-A>
+		<h1>Widgets for Your Web Page</h1>
+
+		<p>GovTrack has a few widgets that you can embed on your web page.</p>
+	</Body-A>
+	<Body-B>
+		<table>
+		<tr valign="top">
+		<td style="padding-right: 2em">
+
+		<h3>Embed Any Feed On Your Webpage</h3>
+
+		<p>Any feed on this site can be embedded on your
+		web page as a little HTML widget. See <a href="sample-events.xpd?monitors=misc:allvotes">this sample</a>.
+		To construct one of these widgets, find the appropriate feed
+		on this site (search for legislation, subjects, committees,
+		people, etc. and follow the link to the <a href="/users/events.xpd">Tracked Events</a>
+		page feed, or <a href="/users/trackers.xpd">build up some
+		monitors</a> and then use your personal <a href="/users/events.xpd">Tracked Events</a>
+		page to get to the feed. Then follow the link to <i>embed</i> the
+		feed on your website.</p>
+
+
+<style>
+	.GovTrackEmbed { font-size: 85%; color: black; border: 1px solid black; background-color: white; padding: 5px; width: 350px }
+	.GovTrackEmbedTable { font-size: 100%; color: black }
+	.GovTrackEmbedTitle { font-weight: bold; color: blue; text-align: center }
+	.GovTrackEmbedHighlight { background-color: AntiqueWhite }
+	.GovTrackEmbedFooter { font-size: 90% }
+	.GovTrackEmbedDate { font-size: 90%; }
+	.GovTrackEmbed a { text-decoration: none }
+</style>
+
+		<center>Example
+		<div style=" margin-bottom: 2em">
+		<script src="http://www.govtrack.us/embed/events.xpd?monitors=misc:allvotes&amp;options=&amp;count=4" type="text/javascript"/>
+		</div>
+		</center>
+		
+		<h3>For Web Developers: APIs</h3>
+		
+		<p>Web developers should also see the <a href="/developers">developers section</a>.</p>
+		
+		</td>
+		<td>
+
+		<h3>Embed a Bill Status Box On Your Webpage</h3>
+
+		<p>Include a little status widget for any bill on your site.
+		See <a href="sample-bill.xpd?bill=h110-1">this example</a>.
+		To construct one of these widgets, <a href="/congress/legislation.xpd">search for the bill</a>
+		and follow the link on the page to embed the status of the
+		bill on your webpage.</p>
+		
+		<center>Example
+		<div style="margin-bottom: 2em">
+		<script src="http://www.govtrack.us/embed/bill.xpd?bill=h110-1" type="text/javascript"/>
+		</div>
+		</center>
+
+		<h3>Congressional District Maps</h3>
+		
+		<p>There are three ways for you to reuse our <a href="/congress/findyourreps.xpd">congressional district maps</a>:</p>
+		
+		<p>1) On that page you'll find a "+Google" button to add the map overlays to your Google My Maps page.</p>
+		
+		<p>2) If you choose a state and then click on a district, you'll be given the option below
+		the map to embed a simple map widget on your site.</p>
+
+		<p>3) For web developers, the Google Maps overlays can be used on your own Google Maps API mash-ups.
+		See <a href="googlemaps.xpd">these instructions</a>.</p>
+
+		</td>
+		</tr>
+		</table>
+
+	</Body-B>
+
+<Templates xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+      xmlns:http-context = "HttpContext">
+	<xsl:template match="scriptblock">
+	</xsl:template>
+</Templates>
+
+</Page>
+

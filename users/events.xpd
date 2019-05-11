@@ -1,0 +1,189 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1">
+	<NoCache/>
+
+	<Title PrependSiteTitle="1"><PageTitle/> - Tracked Events</Title>
+
+	<FeedLink/>
+
+	<Sidebar>
+		<subscribe/>
+	
+		<syndicatebuttons/>
+
+		<IfParam name="monitors" value="">
+		<IfNotLoggedIn>
+			<Section Name="Log In">
+				<LoginForm/>
+			</Section>
+			<Section Name="Cookies">
+				<p>When you are not registered, your trackers are stored in a "cookie" in your computer, which
+				means that if you go to another computer or if you clear your cookies, you will no longer see the trackers you
+				chose. If you register, you'll avoid this problem.</p>
+			</Section>
+		</IfNotLoggedIn>
+		</IfParam>
+	</Sidebar>
+
+	<Breadcrumbs>Tracked Events</Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="norule"><PageTitle/></h1>
+	</Body-A>
+	
+	<Body-B>
+		<description/>
+		
+		<IfParam name="monitors" value="">
+		<IfNotLoggedIn>
+				<p><b>Want email updates?</b> You'll need to <a href="register.xpd">sign up</a> (it's free) to get your tracked events sent to you
+				by email.</p>
+		</IfNotLoggedIn>
+		</IfParam>
+
+		<table><tr><td> <!-- don't wrap around sidebar -->
+
+		<watchevents/>
+		
+		</td></tr></table>
+	</Body-B>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context = "HttpContext"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-events="assembly://GovTrackWeb/GovTrack.Web.Pages.Users.Events"
+		xmlns:govtrack-index = "assembly://GovTrackWeb/GovTrack.Web.Pages.Index"
+		xmlns:xspforms="xspforms"
+		exclude-result-prefixes="http-context govtrack-util govtrack-login govtrack-events govtrack-index xspforms">
+		
+		<xsl:include href="watchevents.xsl"/>
+		
+		<xsl:variable name="monitors" select="govtrack-events:GetMonitors()"/>
+		<xsl:variable name="events" select="govtrack-events:GetEvents(-1, 0, 0)"/>
+
+		<xsl:template match="PageTitle">
+			<xsl:choose>
+			<xsl:when test="http-context:param('monitors') = ''">
+				Your Tracked Events
+			</xsl:when>
+			<xsl:when test="not(count($monitors) = 1)">
+				Events for Multiple Trackers
+			</xsl:when>
+			<xsl:otherwise>
+				Tracking
+				<xsl:variable name="m" select="govtrack-login:MonitorLink($monitors[1])"/>
+				<xsl:value-of select="$m/title"/>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="description">
+			<xsl:if test="count($monitors) = 0">
+				<p>You haven't yet chosen any trackers.  Get started by tracking
+				<a href="/congress/findyourreps.xpd">your representatives</a> or
+				<a href="/congress/subjects.xpd">subjects that interest you</a>.
+				(<a href="/users/">Learn more about Trackers</a>.)</p>
+			</xsl:if>
+		
+			<xsl:if test="http-context:param('monitors')='' and count($monitors) &gt; 0">
+			<!--<div style="border: 1px solid #DDDDFF; background-color: #EEEEFF; padding: 1em; font-size: 90%">-->
+			<!--You've chosen to track 
+			<xsl:for-each select="$monitors">
+				<xsl:variable name="m" select="govtrack-login:MonitorLink(.)"/>
+				<a href="{$m/href}"><xsl:value-of select="$m/title"/></a>
+				<xsl:if test="not(position()=last())">, </xsl:if>
+			</xsl:for-each>
+			<xsl:text>.  Below are the tracked events matching these trackers.</xsl:text>-->
+			<p>
+			Below are the tracked events for your <xsl:value-of select="count($monitors)"/> trackers.
+			Edit your trackers on the <a href="yourmonitors.xpd">Your Trackers</a> page.
+			</p>
+			</xsl:if>
+
+		</xsl:template>
+
+		<xsl:template match="FeedLink">
+			<Link rel="alternate" type="application/rss+xml" title="RSS Feed for Tracked Events"
+                    href="http://www.govtrack.us/users/events-rdf.xpd?{govtrack-events:GetMonitorsEncoded()}" />
+		</xsl:template>
+		
+		<xsl:template match="syndicatelink">
+			<a href="javascript:showFeed(&quot;{govtrack-events:GetMonitorsEncoded()}&quot;)"
+				title="Click for feed options">
+				RSS/Atom feed</a>
+		</xsl:template>
+		
+		<xsl:template match="syndicatebuttons">
+			<xsl:variable name="menc" select="govtrack-events:GetMonitorsEncoded()"/>
+			
+			<xsl:if test="$menc='monitors='">
+			</xsl:if>
+		
+			<xsl:if test="not($menc='monitors=')">
+				<Section Name="Subscribe to a Feed">
+
+				<p>You can follow these events in a feed reader of your choice. If you know what that means, grab the feed address from the feed icon here:</p>
+				<div onmouseover="DHTML_ShowHide('feedhelp', 1)" onmouseout="DHTML_ShowHide('feedhelp', 0)">
+
+				<table style='margin-left: 1em'>
+				<!--<tr><td><a href="events-rdf.xpd?{$menc}" title="RSS 1.0/RDF Feed"><img src='/media/feed_rss1.gif' border='0' width='95' height='16' alt="RSS 1.0/RDF Feed"/></a></td></tr>-->
+				<tr><td><a href="events-rss2.xpd?{$menc}" title="RSS 2.0 Feed"><img src='/media/feed_rss2.gif' border='0' width='95' height='16' alt="RSS 2.0 Feed"/></a></td></tr>
+				<!--<tr><td><a href="events-atom.xpd?{$menc}" title="Atom Feed"><img src='/media/feed_atom.gif' border='0' width='95' height='16' alt="Atom Feed"/></a></td></tr>-->
+				<xsl:if test="count($events[typename='Committee Meeting Notice']) > 0">
+					<tr><td><a href="events-ical.xpd?{$menc}" title="iCal Feed"><img src='/media/feed_ical.gif' border='0' width='95' height='16' alt="iCal Feed"/></a></td></tr>
+				</xsl:if>
+				</table>
+				<!--<p style='margin-left: 1em'>(<a href="http://www.sixapart.com/about/feeds/" style='font-size: 80%'>What is RSS?</a>)</p>-->
+
+				</div>
+				<p id="feedhelp" style="display: none">You may need to right-click the image and <i>copy the link target/location</i> to the clipboard and then paste that into your feed reader.</p>
+
+				<hr size="1"/>
+				<p><a href="/embed/sample-events.xpd?{govtrack-events:GetMonitorsEncoded()}">Embed</a>
+				 these events using a widget for your website.</p>
+				</Section>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="bloglines">
+			<a href="http://www.bloglines.com/sub/http://www.govtrack.us/users/events-rdf.xpd?{govtrack-events:GetMonitorsEncoded()}">
+				<img src="http://www.bloglines.com/images/sub_modern7.gif" border="0" alt="Subscribe with Bloglines" style="padding-left: .25em" />
+			</a>
+		</xsl:template>
+
+		<xsl:template match="ownevents">
+			<xsl:if test="govtrack-events:ShowLinkToOwnEvents()">
+				<floatrightbox title="Your Tracked Events">
+					You are viewing the tracked events for a particular tracker.
+					<a href="?">Click here</a> to see the tracked events for all of <i>your</i> trackers.
+				</floatrightbox>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="subscribe">
+			<xsl:if test="count($monitors) = 1">
+				<Section Name="Your Tracked Events" xIcon="/media/feed-icon-20x20.gif">
+					<div id="subscribe">
+					<xsl:choose>
+					<xsl:when test="govtrack-login:HasMonitor($monitors[1])">
+						<p>This tracker is included in your personalized <a href="events.xpd">Tracked Events</a> page and email updates (if you've <a href="yourmonitors.xpd">turned emails on</a>). If you no longer want to include these events...</p>
+						<p style="text-align: center"><input type="button" onclick="SetInnerHtml('subscribe', 'Removing tracker...'); SetInnerHTMLFromAjaxResponse('/users/ajax_addmonitor.xpd?monitor={govtrack-util:UrlEncode($monitors[1])}&amp;action=remove&amp;elemid=subscribe', 'subscribe')" value="Remove This Tracker"/></p>
+					</xsl:when>
+					<xsl:otherwise>
+						<p>To include these events in your personalized <a href="events.xpd">Tracked Events</a> page and <a href="yourmonitors.xpd">email updates</a>, just click on...</p>
+						<p style="text-align: center"><input type="button" onclick="SetInnerHtml('subscribe', 'Adding tracker...'); SetInnerHTMLFromAjaxResponse('/users/ajax_addmonitor.xpd?monitor={govtrack-util:UrlEncode($monitors[1])}&amp;elemid=subscribe', 'subscribe')" value="Add This Tracker"/></p>
+					</xsl:otherwise>
+					</xsl:choose>
+					</div>
+				</Section>
+			</xsl:if>
+		</xsl:template>
+
+		
+	</Templates>
+
+</Page>

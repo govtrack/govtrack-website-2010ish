@@ -1,0 +1,309 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideSidebar="1">
+	<Title>Presidential Candidates 2008: Congressional Timber</Title>
+	
+	<Body>
+		<div class="PreTitle">Special Page</div>
+		<h1 class="PageTitle">Presidential Candidates 2008: The Congressional Timber</h1>
+
+		<p style="margin: 1.5em 0em 1em 0em; width: 45em">It's still 2007, but the campaigning for Presidential Election
+		2008 has already quite begun. We've picked out the candidates
+		<b>who have served in the Congress</b> and put some of their legislative statistics below.</p>
+
+		<candidate id="300008" maplightid="P80000722"/>
+		<candidate id="300013" maplightid="P80003288"/>
+		<candidate id="300022" maplightid="P00003392"/>
+		<candidate id="300034" maplightid="P80003387"/>
+		<candidate id="300039" maplightid="P40002347"/>
+		<candidate id="404587"/>
+		<candidate id="300050"/>
+		<candidate id="400191" maplightid="P80003395"/>
+		<candidate id="400227" maplightid="P40002545"/>
+		<candidate id="300071" maplightid="P80002801"/>
+		<candidate id="400629" maplightid="P80003338"/>
+		<candidate id="400311" maplightid="P80000748"/>
+		<candidate id="409205" maplightid="P80003411"/>
+		<candidate id="400394" maplightid="P80003429"/>
+		<candidate id="300158"/>
+
+		<p>Click on a candidate or scroll down for more information.</p>
+
+		<candidates-list/>
+
+		<hr style="margin-bottom: 2em"/>
+
+		<candidates-blocks/>
+
+		<p>Photos are from the <a href="http://www.gpoaccess.gov/pictorial/">Congressional Pictorial Directory</a>.
+		For those candidates who no longer serve in Congress, their most recent
+		photo from the Congressional Pictorial Directory is shown.</p>
+	</Body>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-person = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Person"
+		exclude-result-prefixes="govtrack-util govtrack-reps"
+	>
+
+		<xsl:variable name="firstyear" select="2007"/>
+	
+		<xsl:template match="candidate">
+		</xsl:template>
+
+		<xsl:template match="candidates-list">
+			<div style="margin-left: 20px">
+
+			<table>
+			<tr><td style="font-size: 85%; letter-spacing: 1px; font-weight: bold">
+			<div style="float: right;">. . . Conservative</div>
+			<div>Liberal . . .</div>
+			</td></tr>
+			<tr><td>
+			<xsl:for-each select="//candidate[count(govtrack-reps:GetSpectrumInfo(@id)/zscore) &gt; 0]">
+				<xsl:sort select="-govtrack-reps:GetSpectrumInfo(@id)/score" data-type="number"/>
+
+				<xsl:variable name="info" select="govtrack-person:GetGeneralInfo(@id)"/>
+			
+				<xsl:variable name="clr">
+					<xsl:if test="$info/party='Democrat'">#333399</xsl:if>
+					<xsl:if test="$info/party='Republican'">#993333</xsl:if>
+				</xsl:variable>
+			
+				<a href="#{@id}">
+					<img src="/data/photos/{@id}-50px.jpeg" style="border: 1px solid black; border-bottom: 4px solid {$clr}; margin-right: 1px"
+						onmouseover="DHTML_ShowHide('p1{position()}', 1)"
+						onmouseout="DHTML_ShowHide('p1{position()}', 0)"/>
+				</a>
+				<div style="position: absolute; left: {20+(position()-1)*50}px; display: none; font-size: 88%; font-weight: bold; color: {$clr}" id="p1{position()}">
+					<xsl:value-of select="govtrack-reps:FormatPersonName(@id, 'now', '')"/>
+				</div>
+			</xsl:for-each>
+			</td></tr>
+			<tr><td height="20"></td></tr></table>
+
+			<table>
+			<tr><td style="font-size: 85%; letter-spacing: 1px; font-weight: bold; text-align: center">
+				(no ideological ranking available)
+			</td></tr>
+			<tr><td>
+			<xsl:for-each select="//candidate[count(govtrack-reps:GetSpectrumInfo(@id)/zscore) = 0]">
+				<xsl:sort select="govtrack-reps:FormatPersonName(@id, 'now', 'lastname')"/>
+
+				<xsl:variable name="info" select="govtrack-person:GetGeneralInfo(@id)"/>
+			
+				<xsl:variable name="clr">
+					<xsl:if test="$info/party='Democrat'">#333399</xsl:if>
+					<xsl:if test="$info/party='Republican'">#993333</xsl:if>
+				</xsl:variable>
+			
+				<a href="#{@id}">
+					<img src="/data/photos/{@id}-50px.jpeg" style="border: 1px solid black; border-bottom: 4px solid {$clr}; margin-right: 1px"
+						onmouseover="DHTML_ShowHide('p2{position()}', 1)"
+						onmouseout="DHTML_ShowHide('p2{position()}', 0)"/>
+				</a>
+				<div style="position: absolute; left: {20+(position()-1)*50}px; display: none; font-size: 88%; font-weight: bold; color: {$clr}" id="p2{position()}">
+					<xsl:value-of select="govtrack-reps:FormatPersonName(@id, 'now', '')"/>
+				</div>
+
+			</xsl:for-each>
+			</td></tr>
+			<tr><td height="20"></td></tr></table>
+
+			</div>
+		</xsl:template>
+		
+		<xsl:template match="candidates-blocks">
+			<xsl:for-each select="//candidate">
+				<xsl:call-template name="candidate-block"/>
+			</xsl:for-each>
+
+		</xsl:template>
+		
+		<xsl:template name="candidate-block">
+			<xsl:variable name="id" select="@id"/>
+		
+			<xsl:variable name="info" select="govtrack-person:GetGeneralInfo($id)"/>
+			<xsl:variable name="stats" select="govtrack-reps:GetPersonalStats($id, 0)"/>
+			
+			<xsl:variable name="clr">
+				<xsl:if test="$info/party='Democrat'">#333399</xsl:if>
+				<xsl:if test="$info/party='Republican'">#993333</xsl:if>
+			</xsl:variable>
+			
+			<xsl:comment>
+The RDF URI for <xsl:value-of select="govtrack-reps:FormatPersonName($id, 'now', '')"/> is:
+http://www.rdfabout.com/rdf/usgov/congress/people/<xsl:value-of select="$info/bioguideid"/>
+			</xsl:comment>
+			
+			<a name="{$id}"></a>
+			<div>
+				<div style="font-size: 120%; font-weight: bold; margin-bottom: 1em; background-color: {$clr}; padding: 2px">
+					<a href="person.xpd?id={$id}" style="color: white">
+						<xsl:value-of select="govtrack-reps:FormatPersonName($id, 'now', '')"/>
+					</a>
+				</div>
+				
+				<table>
+				<tr valign="top">
+				<td width="230" style="padding-bottom: 1em;">
+					<xsl:if test="govtrack-reps:HasImage($id)">
+						<a href="person.xpd?id={$id}">
+							<img src="/data/photos/{$id}-200px.jpeg" style="border: 2px solid black"/>
+						</a>
+					</xsl:if>
+					<xsl:if test="not(govtrack-reps:HasImage($id))">
+						<center>(No Image Available)</center>
+					</xsl:if>
+				</td>
+				
+				<td>
+					<xsl:variable name="roles">
+						<xsl:for-each select="govtrack-person:GetRoles($id, 1)">
+							<xsl:sort select="startdate" data-type="number" order="descending"/>
+							<xsl:copy-of select="."/>
+						</xsl:for-each>
+					</xsl:variable>
+					<div style="font-weight: bold; margin-bottom: 1em"><xsl:text xml:space="preserve">
+</xsl:text>
+						<xsl:value-of select="govtrack-reps:FormatPersonName($id, '', 'lastname')"/>,
+						a <xsl:value-of select="$info/party"/>,
+						<xsl:if test="govtrack-util:DTToYearString($roles[1]/enddate) &gt;= $firstyear">
+							has been
+						</xsl:if>
+						<xsl:if test="govtrack-util:DTToYearString($roles[1]/enddate) &lt; $firstyear">
+							was
+						</xsl:if>
+						a
+						<xsl:if test="$roles[1]/type='sen'">Senator</xsl:if>
+						<xsl:if test="$roles[1]/type='rep'">Representative</xsl:if>
+						from
+						<xsl:value-of select="govtrack-util:GetStateName($roles[1]/state)"/>
+						<xsl:if test="govtrack-util:DTToYearString($roles[1]/enddate) &gt;= $firstyear">
+							since
+						</xsl:if>
+						<xsl:if test="govtrack-util:DTToYearString($roles[1]/enddate) &lt; $firstyear">
+							from
+						</xsl:if>
+						<xsl:value-of select="govtrack-util:DTToYearString($roles[1]/startdate)"/>
+						<xsl:if test="govtrack-util:DTToYearString($roles[1]/enddate) &gt;= $firstyear">.
+						</xsl:if>
+						<xsl:if test="govtrack-util:DTToYearString($roles[1]/enddate) &lt; $firstyear">
+							to
+							<xsl:value-of select="govtrack-util:DTToYearString($roles[1]/enddate)"/>.
+						</xsl:if>
+					</div>
+				
+					<xsl:variable name="spectrum" select="govtrack-reps:GetSpectrumInfo($id)"/>
+					<table width="90%">
+		
+					<xsl:if test="count($spectrum/zscore) &gt; 0">
+						<tr>
+						<td width="120">
+							<a href="spectrum.xpd">
+								<img src="/data/us/109/repstats/images/people/spectrum-{$id}.png" border="0" title="Political Spectrum Idiology Meter"/>
+							</a>
+						</td>
+						<td>
+							<xsl:value-of select="govtrack-reps:FormatPersonName($id, '', 'lastname')"/>
+							is a
+							<b><xsl:value-of select="$spectrum/description"/></b>
+							according to GovTrack's own <a href="spectrum.xpd">analysis of bill sponsorship</a>.
+							(<a href="/faq.xpd#ideometer">Where do these labels come from?</a>)
+						</td>
+						</tr>
+					</xsl:if>
+		
+					<xsl:variable name="approval" select="govtrack-reps:GetApprovalRating($id)"/>
+					<xsl:if test="count($approval/mean) &gt; 0">
+						<tr>
+						<td width="120">
+							<img src="/data/us/110/repstats/images/people/approval-{$id}.png" border="0"/>
+						</td>
+						<td>
+						<a href="http://www.surveyusa.com/">SurveyUSA</a> reports
+						<xsl:value-of select="govtrack-reps:FormatPersonName($id, '', 'lastname')"/>'s job
+						<b>approval rating at <xsl:value-of select="$approval/approval"/>%</b>
+						as of <xsl:value-of select="$approval/date"/>.
+						The average approval rating among senators in states surveyed is <xsl:value-of select="$approval/mean"/>%.
+						See their <a href="{$approval/link-survey}">survey details</a> for more information.
+						</td>
+						</tr>
+					</xsl:if>
+					
+					<xsl:if test="count($stats/novote/@FirstVoteDate) &gt; 0 and not($stats/novote/@FirstVoteDate='')">
+					<tr valign="top">
+					<td>
+						<a href="person.xpd?id={$id}&amp;tab=votes">
+							<img src="/data/us/{govtrack-util:GetCurrentSession()}/repstats/images/people/votes-{$id}-thumb.png" border="0"/>
+						</a>
+					</td>
+					<td>
+						<xsl:value-of select="govtrack-reps:FormatPersonName($id, '', 'lastname')"/>
+						missed <xsl:value-of select="$stats/novote/@NoVote"/> of
+						<xsl:value-of select="$stats/novote/@NumVote"/> <b> votes </b>
+						(<xsl:value-of select="round($stats/novote/@NoVote div $stats/novote/@NumVote*100)"/>%)
+						since
+						<xsl:value-of select="govtrack-util:DTToDateString($stats/novote/@FirstVoteDate)"/>
+						(<xsl:value-of select="govtrack-person:ZScoreText($stats/novote/@stat-z, 'Good', 'Poor')"/> relative to peers).
+						Click the image for a graph of this candidate's missed votes over time.
+					</td>
+					</tr>
+					</xsl:if>
+
+					</table>
+
+					<xsl:variable name="comms" select="govtrack-reps:GetPersonCommittees($id)"/>
+					<xsl:if test="$comms[parent='' and not(role='')]">
+						<p>
+							<xsl:value-of select="govtrack-reps:FormatPersonName($id, '', 'lastname')"/>
+							has a senior role on the following <b>committees</b>:
+							<xsl:for-each select="$comms[parent='' and not(role='')]">
+								<xsl:variable name="t" select="thomasname"/>
+								<xsl:variable name="n" select="id"/>
+								<a href="committee.xpd?id={id}"><xsl:value-of select="displayname"/></a>
+								<xsl:if test="not(role='')"> (<xsl:value-of select="role"/>)</xsl:if>
+								<xsl:if test="not(position()=last())">, </xsl:if>
+							</xsl:for-each>
+						</p>
+					</xsl:if>
+					
+					<xsl:if test="not(count($stats/novote/@FirstVoteDate) &gt; 0 and not($stats/novote/@FirstVoteDate=''))">
+					<p><i>Voting statistics are not available for this candidate.</i></p>
+					</xsl:if>
+						
+					<xsl:if test="count($stats/enacted/@FirstSponsoredDate) &gt; 0 and not($stats/enacted/@FirstSponsoredDate = '')">
+					<p>
+						<xsl:value-of select="govtrack-reps:FormatPersonName($id, '', 'lastname')"/>
+						<b> sponsored </b>
+						<xsl:value-of select="$stats/enacted/@NumSponsor"/> bills
+						since
+						<xsl:value-of select="govtrack-util:DTToDateString($stats/enacted/@FirstSponsoredDate)"/>,
+						of which <xsl:value-of select="$stats/introduced/@SponsorIntroduced"/>
+						(<xsl:value-of select="round(100 * $stats/introduced/@SponsorIntroduced div $stats/enacted/@NumSponsor)"/>%)
+						haven't made it out of committee
+						and
+						<xsl:value-of select="$stats/enacted/@SponsorEnacted"/>
+						were successfully enacted.
+					</p>
+					</xsl:if>
+					<xsl:if test="not(count($stats/enacted/@FirstSponsoredDate) &gt; 0 and not($stats/enacted/@FirstSponsoredDate = ''))">
+					<p><i>Legislative statistics are not available for this candidate.</i></p>
+					</xsl:if>
+
+					<xsl:if test="count(@maplightid) &gt; 0">
+					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="309" height="89" id="ticker5" align="middle"><param name="allowScriptAccess" value="sameDomain"></param><param name="movie" value="http://data.maplight.org/c3.swf?widget_title=Funds+Raised&amp;show_names=full&amp;show_party=hide&amp;show_bars=show&amp;sort_by=party_dem&amp;candidates={@maplightid}&amp;color_title=#000000&amp;color_candidates=#46311c&amp;color_footnotes=#9c8363&amp;color_bars_democrat=#24679e&amp;color_bars_republican=#cd1229&amp;color_bars_independent=#2c6d40&amp;color_background_top=#fae9aa&amp;color_background_bottom=#ffffff&amp;color_background_chart=#ffffff&amp;code=8b8aae93"></param><param name="quality" value="high"></param><param name="bgcolor" value="#000000"></param><param name="wmode" value="transparent"></param><embed src="http://data.maplight.org/c3.swf?widget_title=Funds+Raised&amp;show_names=full&amp;show_party=hide&amp;show_bars=show&amp;sort_by=party_dem&amp;candidates={@maplightid}&amp;color_title=#000000&amp;color_candidates=#46311c&amp;color_footnotes=#9c8363&amp;color_bars_democrat=#24679e&amp;color_bars_republican=#cd1229&amp;color_bars_independent=#2c6d40&amp;color_background_top=#fae9aa&amp;color_background_bottom=#ffffff&amp;color_background_chart=#ffffff&amp;code=8b8aae93" quality="high" bgcolor="#ffffff" width="309" height="89" name="ticker5" align="middle" wmode="transparent" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed></object>
+					</xsl:if>
+
+				</td>
+				</tr>
+				</table>
+			</div>
+		</xsl:template>
+
+	</Templates>
+
+</Page>

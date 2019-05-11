@@ -1,0 +1,142 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1">Source Data Additional Documentation</Title>
+	
+	<Breadcrumbs><a href="/about.xpd">About GovTrack</a> &gt; <a href="/developers">Developers</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1>Source Data Additional Documentation</h1>
+		
+		<h2>Roll Call Votes</h2>
+		
+		<p>Roll call votes can be found in directories such as
+		<a href="/data/us/111/rolls">data/us/111/rolls</a>. As indicated
+		on the main page, 111 indicates the Congress number, a two-year
+		period.</p>
+		
+		<p>The files are named as follows: data/us/CCC/rolls/[hs]SSSS-NNN.xml.</p>
+		<ul>
+
+		<li>CCC signifies the Congress number. See the first column of <a href="/data/us/sessions.tsv">data/us/sessions.tsv</a>.
+		It is a number from 1 to 111 (at the time of writing) and does NOT have
+		zero-padding.</li>
+
+		<li>"h" or "s" signifies whether the vote took place in the House or Senate.</li>
+
+		<li>SSSS is the "session" of Congress that the vote took 
+		place in. Here I mean what is really called a session. Today, 
+		sessions follow calendar years and are named in GovTrack 
+		accordingly. So SSSS will be the four-digit year that vote took 
+		place in. Before the end of World War II, there were usually 
+		three sessions to Congress and these are labeled either 1, 2, 3 
+		or with a letter. See the second column of <a href="/data/us/sessions.tsv">data/us/sessions.tsv</a>.
+		(There is no zero- or space-padding.)</li>
+		
+		<li>NNN is the roll call number according to the House or 
+		Senate. There is no zero-padding. The Senate restarts its 
+		numbering every calendar year, whereas the House restarts its 
+		numbering after each two-year session.</li>
+
+		</ul>
+		
+		<p>The root element is "roll" and has the following attributes:</p>
+		<ul>
+			<li> <b>where</b> attribute: either &quot;house&quot; or &quot;senate&quot;</li>
+			<li> <b>session</b> attribute which contains what GovTrack calls a session but is really the Congress number, e.g. 111</li>
+			<li> <b>year</b> attribute: the year the vote took place in (same as in the file name for recent data)</li>
+			<li> <b>roll</b> attribute: the number of the vote (same as in the file name)</li>
+			<li> <b>datetime</b> attribute: the date and time of the vote, such as &quot;2007-01-04T12:32:00-05:00&quot;. If the time of day is not known, the date will be in YYYY-MM-DD format.</li>
+			<li> <b>updated</b> attribute: the date and time the file was updated, same date format as above (but time is always present)</li>
+			<li> <b>aye</b>, <b>nay</b>, <b>nv</b>, <b>present</b> attributes: total counts for aye, nay, not voting, and present votes.</li>
+			<li> <b>source</b> is either &quot;house.gov&quot;, &quot;senate.gov&quot; or &quot;keithpoole&quot; which refers to data imported from <a href="http://voteview.com/dwnl.htm" class="external text" title="http://voteview.com/dwnl.htm" rel="nofollow">this page</a>.</li>
+		</ul>
+		
+		<p>Then there are these elements:</p>
+		
+		<ul>
+		<li> <b>type</b> element: The type of the vote, taken right from the source data.  Something like &quot;On Passage&quot;. This is suitable for display. It's up to you to scan all of the different values of this element if you want to use it programmatically.</li>
+		<li> <b>question</b> element: A description of the vote, taken right from the source data. Again, suitable for display, not necessarily processing.</li>
+		<li> <b>required</b> element: Describes what is required for the vote to pass.  Values can be unknown, 1/2, 2/3, 3/5, and QUORUM (if it's a quorum call) but be prepared for other things to show up.
+		However, this isn't simple to use. For most votes, this means out of the Members voting, so exclude the "voter" elements whose vote is "0". 1/2 means more than 50% of those voting, 2/3 means at least 2/3rds of Members voting, etc. Senate quorum calls, cloture votes, Motions to Waive Rule XXVIII, and XLIV are out of all senators "duly sworn", meaning including those who didn't actually vote: meaning include all voter elements except those with VP=1.</li>
+		<li> <b>result</b> element: This is a textual element for human consumption, but any of the following substrings indicate a passing vote: &quot;Passed&quot;, &quot;Agreed&quot;, &quot;Confirmed&quot;.  &quot;Failed&quot;, &quot;Defeated&quot;, &quot;Rejected&quot;, and &quot;Not Sustained&quot; indicating a failing vote.</li>
+		<li> <b>bill</b> element: If this vote is related to a bill (on passage of bill, on a motion related to the bill, on an amendment to the bill, etc.), this node will be present with <b>session</b>, <b>type</b>, and <b>number</b> attributes.</li>
+		<li> <b>amendment</b> element: If this vote is related to an amendment, this node will be present.  The <b>ref</b> attribute will be either &quot;bill-serial&quot; and the <b>number</b> attribute indicates the ordinal number of the amendment for the bill given in the <b>bill</b> node.  That is, if the <b>number</b> attribute is &quot;5&quot;, the amendment referred to is the 5th amendment to the bill referenced in the <b>bill</b> node.  If <b>ref</b> is &quot;regular&quot;, <b>number</b> contains an identifier of an amendment, such as &quot;s1234&quot;.</li>
+		<li> <b>option</b> elements: These elements indicate the types of votes that are permitted to be cast. Each vote option has a key and a textual description of the vote cast. The reason for this is primarily that votes in favor can be both Aye and Yea depending on the type of vote, and we want to preserve this info. The keys for normal votes are always "+" (aye/yea), "-" (nay,no), "P" (present but not voting), "0" (zero; absent/not voting). There are also quorum calls and votes to determine the Speaker of the House which have other values.</li>
+		</ul>
+		
+		<p>And finally there is a "voter" element for each Member of Congress
+		who was elligible to vote. There are two oddities here. First,
+		the Vice President casts tie-breakers in the Senate. The VP has a
+		voter element just when he casts a tie-breaker. Second, the Speaker
+		of the House is not required to vote, generally. That means that when
+		the Speaker abstains in such a vote, he or she is simply omitted
+		from the roll call, rather than portraying the speaker as having
+		abstained or missed the vote. (We just do what the House does.)
+		These elements have the following attributes:</p>
+		
+		<ul>
+		<li> <b>id</b> attribute: The GovTrack ID of the person who cast the vote. Can be &quot;0&quot; if the ID of the voter could not be determined (but the node is left in so that the totals are correct).  Also &quot;0&quot; if <b>VP</b> = &quot;1&quot;.</li>
+		<li> <b>VP</b> attribute.  Set to &quot;1&quot; if the node represents the vote of the vice president in the case of a tie in the Senate.  The <b>id</b> attribute is set to &quot;0&quot;.  Otherwise the attribute is absent.</li>
+		<li> <b>vote</b> attribute: Generally &quot;+&quot;, &quot;-&quot;, &quot;0&quot;, or &quot;P&quot; indicating an aye, nay, a &quot;no vote&quot; (absence), or a &quot;Present&quot; vote, which is used in quorum calls (and perhaps can show up elsewhere). These correspond to the keys of the vote options, described above.</li>
+		<li> <b>value</b> attribute: This is a textual name for the actual vote cast, e.g. Aye, Yea, etc.</li>
+		</ul>
+		
+	<h2>Bills and Resolutions</h2>
+	
+		<p>Bills (and resolutions) can be found in directories such as
+		<a href="/data/us/111/bills">data/us/111/bills</a>. As indicated
+		on the main page, 111 indicates the Congress number, a two-year
+		period.</p>
+		
+		<p>The files are named as follows: data/us/CCC/rolls/TTTNNN.xml.</p>
+		<ul>
+		<li>CCC signifies the Congress number. See the first column of <a href="/data/us/sessions.tsv">data/us/sessions.tsv</a>.
+		It is a number from 1 to 111 (at the time of writing) and does NOT have
+		zero-padding.</li>
+		<li>TTT is the type of bill or resolution from the following codes:
+		h ("H.R." i.e. a House bill), hr ("H.Res.", a House resolution),
+		hj ("H.J.Res." i.e. a House joint resolution), hc ("H.Con.Res.", i.e.
+		a House Concurrent Resolution), and similarly s, sr, sj, and sc.
+		See <a href="http://www.govtrack.us/blog/2009/11/11/what-are-the-different-types-of-bills/">this blog post</a> for an explanation of the
+		types.</li>
+		<li>NNN is the bill number, without zero-padding.</li>
+		</ul>
+		
+<p>The format of the XML file is:</p> 
+<ul><li> <b>bill</b> root element
+<ul><li> attributes:
+<ul><li> <b>session</b>: The session (i.e. Congress) that this bill is a part of (i.e. 110).</li>
+<li> <b>type</b>: The type of the bill (h, hr, hc, etc., as above).</li>
+<li> <b>number</b>: The number of the bill.</li>
+<li> <b>updated</b>: The date the bill XML file was last updated, such as "2007-01-05T15:30:39-05:00".</li>
+</ul> </li>
+<li> <b>state</b> element: Contains a value indicating the current status of the bill.  See below.</li>
+<li> <b>introduced</b> element: <b>datetime</b> attribute gives the date the bill was introduced.</li>
+<li> <b>titles</b> element:
+<ul><li> <b>title</b> element, once for each title given to the bill.  The element content has the text of the title.  <b>type</b> attribute is "official", "short", or "popular", and <b>as</b> attribute is the status of the bill in which the title was assigned, such as "introduced".  This is all as given by THOMAS.</li><li> The elements are in the order that they appear in THOMAS, which is chronological order, so the last element tells you the last <b>as</b> status available.</li></ul> </li><li> <b>sponsor</b> element: Most bills have sponsors, and in that case the <b>id</b> attribute is the GovTrack ID of the person sponsoring the bill. Otherwise, a <b>none</b> attribute is set to <b>true</b> if the bill has no sponsor, which has been the case for debt limit raising bills.</li><li> <b>cosponsors</b>:
+<ul><li> <b>cosponsor</b> element: Once for each cosponsor. <b>id</b> attribute gives the ID of the cosponsor.  (ID attribute is always present.)</li></ul> </li><li> <b>actions</b>:
+<ul><li> These elements come in various forms.  In all cases, the node (whatever it is), has a <b>text</b> subnode containing a description of the action.  It may also have <b>reference</b> subnodes (siblings of the <b>text</b> node) that indicate references to pages in the Congressional Record, as given in THOMAS.</li><li> <b>vote</b> nodes represent votes on the passage of bills. The <b>where</b> attribute is <b>h</b> or <b>s</b> indicating where the vote took place. <b>type</b> is <b>vote</b> for the vote in the originating chamber, <b>vote2</b> for the vote in the other chamber, <b>override</b> if the vote is on a veto override. <b>result</b> is <b>pass</b> or <b>fail</b>. <b>how</b> is a textual description of how the vote was conducted, or the string <b>roll</b> if it was a roll call vote, in which case the <b>roll</b> attribute gives the roll call number. <b>suspension</b> may be set to <b>1</b> and indicates that the vote was conducted under a suspension of the rules (i.e. On motion to suspend the rules and pass), which requires a 2/3 vote.</li><li> <b>vote-aux</b> nodes are for other votes. <b>type</b> is <b>conference</b> for conference reports, or <b>cloture</b> for a motion in the Senate to invoke cloture on a motion to proceed to consideration.</li><li> Other actions are:</li><li> <b>calendar</b>: Bill was put on a legislative calendar or ordered to be reported by a committee.</li><li> <b>topresident</b>: Cleared for White House or Presented to President.</li><li> <b>signed</b>: Signed by president.</li><li> <b>veto</b>: Vetoed by president. @pocket="1" if it was a pocket veto (not set otherwise).</li><li> <b>enacted</b>: Bill was enacted. <b>type</b> and <b>number</b> attributes give the law number assigned to the bill.</li></ul> </li><li> <b>committees</b>:
+<ul><li> <b>committee</b> element: Once per committee or subcommittee assignment.  <b>name</b> attribute gives the name of the main committee.  <b>subcommittee</b> attribute is "" for main committee assignments, otherwise the name of the subcommittee.  <b>activity</b> attribute give some additional information that I do not understand.</li></ul> </li><li> <b>relatedbills</b>:
+<ul><li> <b>bill</b> element: One per related bill or resolution. 
+<ul><li> attributes:
+<ul><li> <b>relation</b> attribute (rule, unknown, ?).  </li><li> <b>session</b> attribute gives the session for the related item (i.e. 111).</li><li> <b>type</b> attribute gives the type of the related item (see Bill Type Codes above).</li><li> <b>number</b> attribute gives the number of the related item (the number of the bill.)</li></ul> </li></ul> </li></ul> </li><li> <b>subjects</b>:
+<ul><li> <b>term</b> element: <b>name</b> attribute defines a subject that might be used as a search or categorization term.</li></ul> </li></ul> </li></ul> 
+<p>The status of the bill is given in a "state" element.</p>
+<ul><li> INTRODUCED. The bill or resolution was introduced but not yet referred to committee.</li><li> REFERRED. The bill or resolution has been referred to committee in the originating chamber and needs committee action to continue.</li><li> REPORTED. The bill or resolution was reported by committee in the originating chamber and can now continue with floor debate in the originating chamber.</li><li> PASS_OVER:. These are a family of status codes indicating the bill or joint or concurrent resolution has passed favorably in its originating chamber and now goes on to the other chamber. If it failed, the status would be the corresponding FAIL:ORIGINATING:.
+<ul><li> PASS_OVER:HOUSE. The bill or resolution passed the House (Senate next).</li><li> PASS_OVER:SENATE. The bill or resolution passed the Senate (House next).</li></ul> </li><li> PASSED:. These are a family of status codes indicating the bill has passed favorably out of Congress. It is a final status code for resolutions but not for bills. If the vote that PASSED it had gone the other way, the status would be the corresponding FAIL:ORIGINATING: for PASSED:SIMPLERES or FAIL:SECOND: for the others.
+<ul><li> PASSED:SIMPLERES. A simple resolution has been passed in its originating chamber. This is the end of the life for a simple resolution. </li><li> PASSED:CONSTAMEND. A joint resolution which is proposing an amendment to the Constitution has passed both chambers. This is the end of the life for the resolution in the legislative branch. It goes on subsequently to the states.</li><li> PASSED:CONCURRENTRES. A concurrent resolution has been passed by both chambers. This is the end of the life for concurrent resolutions.</li><li> PASSED:BILL. A bill or a joint resolution not proposing an amendment to the constitution has been passed by both chambers. It may require a conference committee first, but will eventually go on to the President.</li></ul> </li><li> PASS_BACK:. These are a family of status codes that occur when a bill is passed in both chambers, but the second chamber made changes that the first chamber now has to agree to. The bill goes to conference or "ping pong" ensues where the chambers go back and forth between passing the bill until no one makes any more changes. When that finishes, the bill goes into the state PASSED:BILL.
+<ul><li> PASS_BACK:HOUSE. The House voted on a Senate bill, making changes and sending it back to the Senate.</li><li> PASS_BACK:SENATE. The Senate voted on a House bill, making changes and sending it back to the House.</li></ul> </li><li> PROV_KILL:. These are a family of status codes indicating the bill or resolution is provisionally killed, meaning Congress took some action that would often mean the end of life for it (often enough to warrant a status code) but that it could still recover.
+<ul><li> PROV_KILL:SUSPENSIONFAILED. The bill or resolution was brought up "under suspension of the rules" and failed that vote. It could be voted on again. If the vote had passed, the status would be one of PASSED, PASS_OVER, etc.</li><li> PROV_KILL:CLOTUREFAILED. A cloture vote was taken on the bill or resolution and the vote failed, meaning it was successfully filibustered. If the vote had succeeded, no status would be noted.</li><li> PROV_KILL:PINGPONGFAIL. After both chambers have passed a bill or joint/concurrent resolution, if the second chamber made a change the chambers have to resolve their differences. When the second chamber's changes go back to the first chamber for a vote, if the vote fails it's a provisional failure since I think they can try again.</li><li> PROV_KILL:VETO. The bill "PASSED:BILL" out of Congress but was vetoed by the President. A veto can be overridden. This status applies until an override attempt is made. If the bill was signed instead, the ENACTED status would follow (but not immediately). A pocket veto is indicated separately with VETOED:POCKET.</li></ul> </li><li> FAIL:. These are a family of status codes indicating the end of life of a bill or resolution. (Unlike PROVKILL, these are always final.)
+<ul><li> FAIL:ORIGINATING:. This is a subgroup for when a bill or resolution fails in its originating chamber.
+<ul><li> FAIL:ORIGINATING:HOUSE. The bill or resolution failed in its originating chamber, the House.</li><li> FAIL:ORIGINATING:SENATE. The bill or resolution failed in its originating chamber, the Senate.</li></ul> </li><li> FAIL:SECOND. This is a subgroup for when a bill or joint or concurrent resolution fails in the second chamber. It must have passed in the originating chamber to get this far.
+<ul><li> FAIL:SECOND:HOUSE. The bill or resolution passed in the Senate but failed in the House.</li><li> FAIL:SECOND:SENATE. The bill or resolution passed in the House but failed in the Senate.</li></ul> </li></ul> </li><li> OVERRIDE_PASS_OVER:. This is a family of status codes indicating a veto override attempt was successful in the originating chamber, and that it is now up to the second chamber to attempt the override. If the override failed, the status would be one of VETOED:OVERRIDE_FAIL_ORIGINATING:.
+<ul><li> OVERRIDE_PASS_OVER:HOUSE. The House (the originating chamber) succeeded at the veto override. It goes on to the Senate next.</li><li> OVERRIDE_PASS_OVER:SENATE. The Senate (the originating chamber) succeeded at the veto override. It goes on to the House next.</li></ul> </li><li> VETOED:. These are a family of status codes indicating the end of life for a bill that has been vetoed. It is a final status code for a bill.
+<ul><li> VETOED:POCKET. This status code is for bills that were pocket-vetoed, meaning the President does not sign the bill and Congress adjourns. The bill does not become law and Congress has no opportunity to override.</li><li> VETOED:OVERRIDE_FAIL_ORIGINATING:. This is a subgroup for bills who failed in the veto-override attempt of its originating chamber, which comes first.
+<ul><li> VETOED:OVERRIDE_FAIL_ORIGINATING:HOUSE. Veto override failed in the House, the bill's originating chamber. It had not gotten to the Senate yet for an override.</li><li> VETOED:OVERRIDE_FAIL_ORIGINATING:SENATE. Veto override failed in the Senate, the bill's originating chamber. It had not gotten to the House yet for an override.</li></ul> </li><li> VETOED:OVERRIDE_FAIL_SECOND::. This is a subgroup for bills whose veto was successfully overridden in its originating chamber but failed in the veto-override attempt of the other chamber, which comes second. If the override had passed, the status would shortly be ENACTED:VETO_OVERRIDE.
+<ul><li> VETOED:OVERRIDE_FAIL_SECOND:HOUSE. Veto override passed in the Senate (the originating chamber) but failed in the House.</li><li> VETOED:OVERRIDE_FAIL_SECOND:SENATE. Veto override passed in the House (the originating chamber) but failed in the Senate.</li></ul> </li></ul> </li><li> ENACTED:. These are a family of status codes for bills and joint resolutions not proposing an amendment to the constitution that have been enacted as law. It comes after a short delay between the signature or override and the administrative action to actually make the bill law.
+<ul><li> ENACTED:SIGNED. The president signed the bill.</li><li> ENACTED:VETO_OVERRIDE. The bill was vetoed but the veto was overridden in both chambers.</li></ul> </li></ul> 
+
+	</Body-A>
+ </Page>

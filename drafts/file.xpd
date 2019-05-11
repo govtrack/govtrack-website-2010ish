@@ -1,0 +1,67 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title>Draft Document: <DocTitle/></Title>
+	
+	<Body>
+		<div class="PreTitle"><a href="/drafts">Draft Documents</a></div>
+		<h1 class="PageTitle">Draft Document: <DocTitle/></h1>
+
+		<p><DocDescription/></p>
+		
+		<Display/>
+	</Body>
+
+	<Templates             
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:httpcontext="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-drafts = "assembly://GovTrackWeb/GovTrack.Web.Drafts"
+		exclude-result-prefixes="httpcontext govtrack-util govtrack-drafts"
+		>
+		
+		<xsl:variable name="doc" select="govtrack-drafts:LoadDraft(httpcontext:param('code'))"/>
+		
+		<xsl:template match="DocTitle">
+			<xsl:value-of select="$doc/title"/>
+		</xsl:template>
+
+		<xsl:template match="DocDescription">
+			Submitted <xsl:value-of select="$doc/submitdate"/> by
+			<xsl:choose>
+				<xsl:when test="$doc/submitter='admin'">
+					GovTrack staff.
+				</xsl:when>
+				<xsl:when test="contains($doc/submitter, '@mail.house.gov')">
+					a staff member for a representative in Congress.
+				</xsl:when>
+				<xsl:otherwise>
+					an unrecognized user in the <xsl:value-of select="substring-after($doc/submitter, '@')"/> domain. The document has not been verified.
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:value-of select="$doc/description"/>
+		</xsl:template>
+
+		<xsl:template match="Display">
+			<xsl:if test="$doc/status = 'unverified'">
+				<p style="color: red">This document is now verified and will appear on a public index. If you accidentally approved
+				a document you did not submit, please contact us at <contactemailaddress/>.</p>
+			</xsl:if>
+		
+			<xsl:variable name="sid" select="httpcontext:parse($doc/scribd_api_result)/doc_id"/>
+			<xsl:variable name="skey" select="httpcontext:parse($doc/scribd_api_result)/access_key"/>
+
+			<p>
+				<a href="/drafts/file/{httpcontext:param('code')}/download">Download This File</a>
+				<xsl:if test="$doc/contenttype='application/pdf'"> (PDF)</xsl:if>
+				| <a href="http://www.scribd.com/doc/{$sid}/Download">Open on Scribd</a>
+			</p>
+			
+			<object codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" id="doc_541808209571000" name="doc_541808209571000" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" align="middle"	height="600" width="725" >		<param name="movie"	value="http://d1.scribdassets.com/ScribdViewer.swf?document_id={$sid}&amp;access_key={$skey}&amp;page=1&amp;version=1&amp;viewMode=list"/> 		<param name="quality" value="high"/> 		<param name="play" value="true"/>		<param name="loop" value="true"/> 		<param name="scale" value="showall"/>		<param name="wmode" value="opaque"/> 		<param name="devicefont" value="false"/>		<param name="bgcolor" value="#ffffff"/> 		<param name="menu" value="true"/>		<param name="allowFullScreen" value="true"/> 		<param name="allowScriptAccess" value="always"/> 		<param name="salign" value=""/>    			    	<param name="mode" value="list"/>	    		<embed src="http://d1.scribdassets.com/ScribdViewer.swf?document_id={$sid}&amp;access_key={$skey}&amp;page=1&amp;version=1&amp;viewMode=list" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" play="true" loop="true" scale="showall" wmode="opaque" devicefont="false" bgcolor="#ffffff" name="doc_541808209571000_object" menu="true" allowfullscreen="true" allowscriptaccess="always" salign="" type="application/x-shockwave-flash" align="middle" mode="list" height="600" width="725"></embed>	</object>
+			
+		</xsl:template>
+	</Templates>
+</Page>

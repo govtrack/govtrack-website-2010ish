@@ -1,0 +1,31 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<NoCache/>
+
+	<Title>Failed Log In to GovTrack.us</Title>
+	<Meta Name="ROBOTS">NOINDEX</Meta>
+	
+	<Body-A>
+		<h1 class="PageTitle">Log In Failed</h1>
+		
+		<p>Your third-party sign-in failed.</p>
+		
+		<p class="error"><DoLogin/></p>
+		
+		<p><a href="login.xpd">Try again</a>!</p>
+	</Body-A>
+
+	
+	<Templates
+ 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+ 		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+ 	 	>
+ 	 	
+ 	 	<xsl:template match="DoLogin">
+ 		 	<xsl:value-of select="govtrack-login:DoRpxLogin()"/>
+ 	 	</xsl:template>
+ 	 	
+ 	</Templates>
+</Page>

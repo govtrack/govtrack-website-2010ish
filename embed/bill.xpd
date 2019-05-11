@@ -1,0 +1,74 @@
+<?xml-stylesheet xpath="/*/Templates" type="text/xsl" ?>
+<?xml-stylesheet type="filter/javascript" ?>
+<?mime-type text/html ?>
+<div class="GovTrackEmbed" xml:space="preserve">
+	<div class="GovTrackEmbedTitle" style="margin-bottom: .5em">
+	<description/>
+	</div>
+	
+	<table class="GovTrackEmbedTable" border="0" cellspacing="0" cellpadding="0">
+	<bill/>
+	</table>
+	
+	<div style="text-align: center; margin-top: .5em; font-weight: bold">
+		<link/>
+	</div>
+	<div class="GovTrackEmbedFooter" style="font-size: 80%; color: #666666; text-align: center; margin-top: .5em">
+		Powered by <a href="http://www.govtrack.us">GovTrack.us</a>.
+	</div>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context = "HttpContext"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps="assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-bills="assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-bill="assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		exclude-result-prefixes="http-context govtrack-util govtrack-reps govtrack-login govtrack-bills govtrack-bill"
+		>
+		
+		<xsl:variable name="bill" select="govtrack-bill:LoadBill()" />
+		
+		<xsl:template match="description">
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>: 
+			<xsl:value-of select="govtrack-bills:DisplayTitle($bill)"/>
+		</xsl:template>
+		<xsl:template match="link">
+			<a href="http://www.govtrack.us{govtrack-bills:BillLink($bill)}">
+				View <xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>...
+			</a>
+		</xsl:template>
+
+		<xsl:template match="bill">
+			<tr>
+				<td style="padding: 3px" class="GovTrackEmbedHighlight">Introduced</td>
+				<td style="padding: 3px;">
+					<xsl:value-of select="govtrack-util:DTToDateString($bill/introduced/@datetime)"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="padding: 3px" class="GovTrackEmbedHighlight">Sponsor</td>
+				<td style="padding: 3px;">
+					<a href="http://www.govtrack.us{govtrack-reps:RepLink($bill/sponsor/@id)}">
+						<xsl:value-of select="govtrack-reps:FormatPersonName($bill/sponsor/@id, $bill/introduced/@datetime, '')"/>
+					</a>
+				</td>
+			</tr>
+			
+			<tr valign="top">
+				<td style="padding: 3px" class="GovTrackEmbedHighlight">Status</td>
+				<td style="padding: 3px;"><xsl:value-of select="govtrack-bills:GetStatusSource($bill)"/></td>
+			</tr>
+			
+			<tr valign="top">
+				<xsl:variable name="lastaction" select="$bill/actions/*[position()=last()]"/>
+				<td style="padding: 3px" class="GovTrackEmbedHighlight"><nobr>Last Action</nobr></td>
+				<td style="padding: 3px;"><xsl:value-of select="govtrack-util:DTToDateString($lastaction/@datetime)"/>:
+					<xsl:value-of select="$lastaction" />
+				</td>
+			</tr>
+		</xsl:template>
+	</Templates>
+</div>

@@ -1,0 +1,129 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds='1'>
+	<NoCache/>
+	
+	<Title PrependSiteTitle="1">Trackers</Title>
+
+	<Breadcrumbs><a href="/users">Track Congress</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1>Trackers</h1>
+		
+		<p>We have what we call "trackers" for every aspect of Congress.
+		You can pick up trackers throughout the site to customize your <a href="events.xpd">Tracked Events</a>
+		page or to find an RSS feed. To get email updates, <IfNotLoggedIn>you will need to <a href="javascript:DHTML_ShowHide('masterlogin')">log in or sign up</a></IfNotLoggedIn><IfLoggedIn>check your <a href="account.xpd">account settings</a> </IfLoggedIn>.
+		</p>
+
+		<IfHasMonitors>
+		<p>Since you've already chosen some trackers, you can also <a href="yourmonitors.xpd">edit your tracker selection or get email updates</a>, or <a href="events.xpd">see the events that match your trackers</a>.</p>
+		</IfHasMonitors>
+	</Body-A>
+
+	<Body-B>
+		<table border="0" cellspacing="0" cellpadding="0">
+		<tr valign="top">
+		
+		<td width="50%" style="padding-right: 1em; border-right: 1px solid #999">
+
+		<h3 style="margin-top: 0px">General Trackers</h3>
+			
+			<p>The following general trackers cover the activity of the whole Congress. Follow the link to preview the recent events tracked by each tracker. Options to add the events to your personalized <a href="events.xpd">Tracked Events</a> page or to subscribe to a feed will be presented on the next page.</p>
+					
+			<table>
+			<monitor name="misc:allvotes" title="All Roll Call Votes"
+				description="This feed includes all roll call votes on all legislation, amendments, etcetera."/>
+			<monitor name="misc:activebills" title="Activity on All Legislation"
+				description="This feed includes all major legislative activity, including the introduction of each new bill and all votes on legislation."/>
+			<monitor name="misc:activebills2" title="Activity on All Legislation Except Newly Introduced Bills"
+				description="This feed includes all major legislative activity, excluding the introduction of each new bill."/>
+			<monitor name="misc:introducedbills" title="Newly Introduced Bills"
+				description="This feed includes the introduction of each new bill or resolution."/>
+			<monitor name="misc:enactedbills" title="Enacted Bills"
+				description="This feed tracks the enactment of bills."/>
+			<monitor name="misc:allcommittee" title="Upcoming Committee Meetings"
+				description="This feed includes tracked upcoming Congressional committee meetings."/>
+			<monitor name="misc:questions" title="Community Questions &amp; Answers"
+				description="This feed includes questions posed and answers suggested by the community of GovTrack users on all topics."/>
+			<monitor name="misc:videos" title="Videos from Representatives' and Senators' YouTube Channels"
+				description="This feed includes videos posted to the official YouTube channels of Members of Congress."/>
+			</table>
+			
+			<p>We also recommend the <a href="http://twitter.com/HouseFloor">HouseFloor</a> and <a href="http://twitter.com/SenateFloor">SenateFloor</a> Twitter feeds for close-to-live updates of Congressional action,
+			and <a href="http://twitter.com/legislate">Legislate</a> for a Twitter feed of votes. These are
+			unofficial streams not created by the government or GovTrack.</p>
+			
+		</td>
+		<td width="50%" style="padding-left: 1em">
+			
+		<h3 style="margin-top: 0px">Targetted Trackers</h3>
+		
+		<p>Trackers are available for every Member of Congress, bill, subject area, and congressional committe. To
+		select these trackers, you must get to the appropriate page on GovTrack and look for the <i>Add Tracker</i> button.</p>
+		
+		<h4>Members of Congress</h4>
+		<div style="margin-left: 1em">
+			<p>Track your elected representatives by <a href="../congress/findyourreps.xpd">finding your Members of Congress</a>.
+			Events included with these trackers are:</p>
+			<p>* Activity on <b>bills</b> introduced by those representatives.</p>
+			<p>* <b>Speeches</b> on the House and Senate floors by those representatives.</p>
+			<p>* <b>The votes</b> of those representatives in alerts about the passage or failure of bills.</p>
+		</div>
+
+		<h4>Subject Areas</h4>
+		<div style="margin-left: 1em">
+			<p>Track <a href="../congress/subjects.xpd">subject areas</a> as classified by the Library of Congress to get alerts when</p>
+			<p>* <b>Bills</b> related to those subjects are introduced, voted on, and enacted.</p>
+			<p>* <b>Speeches</b> on the House and Senate floors mention bills that are related to those subjects.</p>
+		</div>
+		
+		<h4>Bills</h4>
+		<div style="margin-left: 1em">
+			<p>When you are tracking individual <a href="../congress/legislation.xpd">bills</a>, you'll get alerts when</p>
+			<p>* <b>Any action</b> is taken on those bills.</p>
+		</div>
+		
+		<h4>Committees</h4>
+		<div style="margin-left: 1em">
+			<p>To track a committee, look through the <a href="../congress/committee.xpd">committee list</a>. Events from
+			these trackers include:</p>
+			<p>* <b>Bills</b> assigned to the committee are introduced, voted on, and enacted.</p>
+		</div>
+		
+		</td></tr></table>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:xspforms="xspforms"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		pre-process-addremovemonitor="GovTrack.Web.Pages.Users.AddRemoveMonitor, GovTrackWeb"
+		>
+
+		<xsl:template match="email">
+			<xsl:if test="govtrack-login:IsLoggedIn()">
+			<xsl:value-of select="govtrack-login:GetLoginEmail()"/>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="monitor">
+			<tr valign="top">
+				<td style="padding-top: 3px; padding-left: 1em">
+					<MonitorButton monitor="{@name}" name="These Events"/>
+				</td>
+				<td>
+					<div style="font-weight: bold;">
+						<a href="events.xpd?monitors={govtrack-util:UrlEncode(@name)}"><xsl:value-of select="@title"/></a>
+					</div>
+					<div style="margin-bottom: .75em">
+						<xsl:value-of select="@description"/>
+					</div>
+			</td>
+			</tr>
+		</xsl:template>
+		
+	</Templates>
+
+</Page>

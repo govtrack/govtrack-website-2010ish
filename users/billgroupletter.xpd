@@ -1,0 +1,130 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page Width="Max">
+
+	<Title PrependSiteTitle="1"><PageTitle/></Title>
+
+	<AllowEmail/>
+	<Param>bill</Param>
+	<Param>side</Param>
+	
+	<Head>
+		<script>
+			function Next() {
+				DHTML_ShowHide('intro', 0);
+				DHTML_ShowHide('widget', 1);
+			}
+		</script>
+	</Head>
+	
+	<Body>
+		<div class="PageTitle">
+			<PageTitle/>
+		</div>
+		
+		<IntroInfo/>
+		
+		<Widget/>
+	</Body>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		>
+		
+		<xsl:variable name="bill" select="govtrack-bill:LoadBill()" />
+
+		<xsl:template match="PageTitle">
+			Group Letter
+			<xsl:choose>
+			<xsl:when test="http-context:param('side')='against'">Opposing</xsl:when>
+			<xsl:when test="http-context:param('side')='support'">Supporting</xsl:when>
+			</xsl:choose>
+			<xsl:text xml:space="preserve"> </xsl:text>
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+			<span style="font-size: 76%; font-weight: normal">
+            (<xsl:value-of select="$bill/@session"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix($bill/@session)"/></sup> Congress)
+            </span>
+		</xsl:template>
+		
+		<xsl:template match="IntroInfo">
+			<p>On this page join in with others writing a letter
+			<xsl:choose>
+			<xsl:when test="http-context:param('side')='against'"> opposing </xsl:when>
+			<xsl:when test="http-context:param('side')='support'"> supporting </xsl:when>
+			</xsl:choose>
+			<a href="/congress/bill.xpd?bill={http-context:param('bill')}"><xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>:
+			<xsl:value-of select="govtrack-util:Trunc(govtrack-bills:DisplayTitle($bill), 75)"/>
+            (<xsl:value-of select="$bill/@session"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix($bill/@session)"/></sup> Congress)</a>.
+            </p>
+            
+            <div id="intro">
+            <center><p><a href="javascript:Next()">Skip the intro...</a></p></center>
+
+			<p>We're trying out an experiment in writing group letters to Congress.
+			Congress is under seige, receiving far more letters from constituents
+			than they can read carefully. We want to aggregate voices to make
+			your message more powerful, but a petition won't do. Congressmen don't
+			like petitions because they're too easy to sign on to: they don't show
+			that the constituent really cares. That's where a "group letter" comes
+			in: a cross between a personalized letter and a petition. GovTrack
+			is the first to try this new method of communicating with Congress.</p>
+			
+			<p>Groups letters on GovTrack work in three phases:</p>
+			
+			<p><b>Phase I.</b> Write, rate, and remix letters for three weeks.
+			See what others are writing and synthesize the most convincing letter, or write your own 
+			letter from scratch. Then rate the contenders so the best rises to 
+			the top. This isn't a place to rant. It's an opportunity to work together 
+			convince congressmen why this is a good or bad bill.
+			Tips: be personal, concise, targeted, and informative.</p>
+			
+			<p><b>Phase II.</b> Rate letters only. In this short period following
+			writing, you have a final chance to get the best letter to
+			the top.</p>
+			
+			<p><b>Phase III.</b> Sign on to the final version. Come back here after
+			the rating period is over to sign the final letter. Senators and
+			congressmen want to know who is contacting them. It's important
+			both to participate in the writing and to put your name on the
+			final letter once its done. After the signing phase, GovTrack
+			will deliver the final letter to Members of Congress in person. You
+			can check back here for how that went.</p>
+			
+            <center><p><a href="javascript:Next()">Get Started!</a></p></center>
+            </div>
+
+			<p>Remember, this page is for <b>
+			<xsl:choose>
+			<xsl:when test="http-context:param('side')='against'"> opposing </xsl:when>
+			<xsl:when test="http-context:param('side')='support'"> supporting </xsl:when>
+			</xsl:choose>
+			</b> the bill. If you
+			<xsl:choose>
+			<xsl:when test="http-context:param('side')='against'"> support </xsl:when>
+			<xsl:when test="http-context:param('side')='support'"> oppose </xsl:when>
+			</xsl:choose>
+			the bill, go
+			<xsl:choose>
+			<xsl:when test="http-context:param('side')='against'"> <a href="?bill={http-context:param('bill')}&amp;side=support">here</a> </xsl:when>
+			<xsl:when test="http-context:param('side')='support'"> <a href="?bill={http-context:param('bill')}&amp;side=against">here</a> </xsl:when>
+			</xsl:choose>
+			instead. And check back here often to rate letters and to
+			sign onto the top-rated version once the signing phase begins.
+			</p>
+		</xsl:template>
+		
+		<xsl:template match="Widget">
+			<center id="widget" style="display: none">
+			<iframe src="http://mixedink.com/GovTrackUs/{$bill/@session}{govtrack-bills:DisplayNumber($bill)}{http-context:param('side')}?w" width="730" height="580" scrolling="no" scrollbar="no" frameborder="1" style="border-color:#EEEEEE; border-width:1px; border-style:solid;"/>
+			</center>
+		</xsl:template>
+
+	</Templates>
+   
+ </Page>

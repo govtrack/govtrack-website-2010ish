@@ -1,0 +1,199 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideSidebar="1">
+	<Title PrependSiteTitle="1">Congressional Statistics</Title>
+
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a>
+		&gt; <a href="findyourreps.xpd">Members of Congress</a>
+	</Breadcrumbs>
+	
+	<Body-A>
+		<h1>Congressional Statistics</h1>
+
+		<p>These statistics were generated based on the data GovTrack
+		has collected.  Because GovTrack collects its data automatically
+		from various sources, the data may contain errors, and these
+		statistics may not be fully accurate.  Stats are updated weekly.</p>
+	</Body-A>
+	
+	<Body-B>
+		<table>
+		<tr valign="top">
+
+		<td>
+		<h3 style="margin: 0px;">Bill Sponsorship and Success</h3>
+
+		<h4>Successful Bills</h4>
+		
+		<Stat desc="Bills"
+			stat="enacted"
+			since="FirstSponsoredDate"
+			count="6"
+			text="These representatives have brought to the floor the greatest number of bills that were later enacted."/>
+		
+		<h4>Unsuccessful Bills</h4>
+		<Stat desc="Bills"
+			stat="introduced"
+			since="FirstSponsoredDate"
+			count="6"
+			text="These prolific representatives have introduced the highest number of bills that never made it out of committee."/>
+
+		<!--
+		<h4>Leader-Follower Scores</h4>
+		<Stat desc="Score"
+			stat="leaderfollower"
+			mode="round2"
+			count="6"
+			text="These representatives have the highest leader-follower scores in this session of Congress."
+			info="To compute a leader-follower score for a Member of Congress, call him X, we make a table that lists all other Members of Congress. Each row has the number bills sponsored by X and cosponsored by the other Member of Congress divided by the number of bills sponsored by the other Member of Congress and cosponsored by X. This is a measure of who is following who. The higher the number, the more times others are cosponsoring X's bills without X returning the favor. We then take the mean of (the logorithms of) these ratios. Only sponsorship in the current two-year Congress is considered. Thanks to Joe Barillari for the idea."/>
+		-->
+
+		<h4>Cosponsorship</h4>
+		<Stat desc="Bills"
+			stat="cosponsor"
+			since="FirstSponsoredDate"
+			count="6"
+			text="These representatives have cosponsored the greatest number of bills."/>
+		</td>
+			
+		<td style="padding-left: 2em">
+		<h3 style="margin: 0px;">Other Statistics</h3>
+
+		<h4>Political Spectrum &amp; Legislative Leadership</h4>
+		<p>GovTrack's unique <a href="spectrum.xpd">political spectrum &amp; legislative leadership</a> analysis is another
+		perspective on the behavior of our legislators.</p>
+
+		<a href="spectrum.xpd">
+			<div style="margin-bottom: 2em"><img src="/data/us/112/stats/sponsorshipanalysis_s.png" title="Political Spectrum &amp; Legislative Leadership -- Senate" width="375"/></div>
+		</a>
+
+		<h4>The Incumbency Advantage</h4>
+		<p>Check out how incumbents have become more and more popular over
+		the last two centuries!</p>
+		<center><img src="/data/us/111/repstats/images/incumbent_reelection.png" title="The Incumbency Advantage"/></center>
+		<p>(This plots the percent of Members of Congress ending their term
+		in any given year who were present in Congress the following year.)</p>
+		
+		</td>
+		</tr>
+		
+		<tr valign="top">
+		<td style="height: 1em"/>
+		</tr>
+
+		<tr valign="top">
+
+		<td>
+		<h3 style="margin: 0px;">Voting Record</h3>
+		<h4>Missed Votes</h4>
+		<Stat desc="Missed Votes"
+			stat="novote"
+			since="FirstVoteDate"
+			count="14"
+			mode="percent"
+			alt="NoVote"
+			text="These representatives have the highest percentage of missed votes."/>
+		</td>
+
+		<td>
+		<!--<h3 style="margin: 0px;">Floor Speeches</h3>
+		<h4>Likes to Chime In</h4>
+		<Stat desc="Speeches"
+			stat="speeches"
+			count="5"
+			text="These representatives have made a speech on the greatest number of issues, since 2003."/>
+
+		<h4>Verbosity</h4>
+		<Stat desc="Words"
+			stat="verbosity"
+			count="5"
+			text="These representatives have had the greatest number of words per speech, since 2003."/>
+		-->
+		</td>
+
+		</tr>
+		</table>
+
+
+	</Body-B>
+	
+	<Templates
+			xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+			xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+			xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util">
+			
+		<xsl:template match="Stat">
+			<xsl:variable name="stat" select="@stat"/>
+			<xsl:variable name="count" select="@count"/>
+			<xsl:variable name="mode" select="@mode"/>
+			<xsl:variable name="alt" select="@alt"/>
+			<xsl:variable name="since" select="@since"/>
+			
+			<xsl:variable name="stats" select="govtrack-reps:GetStats($stat)"/>
+			
+			<xsl:variable name="field" select="$stats/@key"/>
+			
+			<p>
+				<xsl:value-of select="@text"/>
+				<span class="seemore"> (<a href="/data/us/112/repstats/{@stat}.xml">View All Representatives</a>)</span>
+			</p>
+			
+			<table>
+			<tr>
+				<th style="text-align: center"><xsl:if test="count($alt)"><xsl:attribute name="colspan">2</xsl:attribute></xsl:if>
+					<xsl:value-of select="@desc"/>
+				</th>
+				<th>Representative</th>
+			</tr>
+
+			<xsl:for-each select="$stats/*[not(@id='')]">
+				<xsl:if test="position() &lt;= $count">
+				<xsl:variable name="value" select="@*[name()=$field]"/>
+			
+				<tr>
+				<td style="text-align: center; font-size: 90%">
+					<xsl:choose>
+					<xsl:when test="$mode='percent'">
+						<xsl:value-of select="round(100*$value)"/>%
+					</xsl:when>
+					<xsl:when test="$mode='dollar'">
+						$<xsl:value-of select="format-number($value, '###,###,##0')"/>
+					</xsl:when>
+					<xsl:when test="$mode='round2'">
+						<xsl:value-of select="round(100*$value) div 100"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$value"/>
+					</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<xsl:if test="count($alt)"><td>(<xsl:value-of select="@*[name()=$alt]"/>)</td></xsl:if>
+				<td style="font-size: 90%">
+					<nobr>
+					<a href="{govtrack-reps:RepLink(@id)}"><xsl:value-of select="govtrack-reps:FormatPersonName(@id, 'now', '')"/></a>
+					<xsl:if test="count($since) &gt; 0">
+						<xsl:variable name="sincedate" select="@*[name()=$since]"/>
+						<xsl:if test="count($sincedate) &gt; 0 and not($sincedate='')">
+							<span class="seemore"> since <xsl:value-of select="govtrack-util:DTToDateString($sincedate)"/></span>
+						</xsl:if>
+					</xsl:if>
+					</nobr>
+				</td>
+				</tr>
+				</xsl:if>
+			</xsl:for-each>
+			
+			</table>
+			
+			<div style="font-size: 95%; color: #444; padding-top: .75em; margin-left: 2em">
+			<xsl:value-of select="@info"/> 
+			Mean:
+				<xsl:value-of select="format-number($stats/@mean, '###,##0.##')"/>;
+			Standard Deviation:
+				<xsl:value-of select="format-number($stats/@stddev, '###,##0.##')"/>.
+			</div>
+		</xsl:template>               
+</Templates>
+</Page>

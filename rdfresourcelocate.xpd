@@ -1,0 +1,27 @@
+<?xml-stylesheet xpath="results/Templates" type="text/xsl" ?>
+<results>
+	<X/>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:httpcontext="HttpContext"
+		xmlns:govtrack-rdf = "assembly://GovTrackWeb/GovTrack.Web.RDF"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util">
+
+		<xsl:template match="X">
+			<xsl:variable name="results" select="govtrack-rdf:ResourceLocate()"/>
+			
+			<xsl:for-each select="$results">
+				<result>
+					<uri><xsl:value-of select="uri"/></uri>
+					<title><xsl:value-of select="title"/></title>
+					<description><xsl:value-of select="description"/></description>
+					<link><xsl:value-of select="link"/></link>
+					<source>GovTrack.us</source>
+				</result>
+			</xsl:for-each>			
+			
+		</xsl:template>
+	</Templates>
+        	
+</results>

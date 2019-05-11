@@ -1,0 +1,105 @@
+<?xml-stylesheet xpath="div/Templates" type="text/xsl" ?>
+<?xml-stylesheet type="filter/javascript" ?>
+<?mime-type text/html ?>
+<div class="GovTrackEmbed">
+	<div class="GovTrackEmbedTitle" style="margin-bottom: .5em">
+		<BillTitle/>
+	</div>
+	<div style="margin-bottom: 1em; font-size: 85%">
+		This is an excerpt from the text of the bill (status: <this-version/>).
+		<link/>.
+	</div>
+	
+	<hr size="1"/>
+	
+	<Text/>
+
+	<div class="GovTrackEmbedFooter" style="font-size: 80%; color: #666666; text-align: center; margin-top: 5px">
+		(Powered by <a href="http://www.govtrack.us">GovTrack.us</a>.)
+	</div>
+            
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		exclude-result-prefixes="http-context govtrack-util govtrack-bill govtrack-bills govtrack-reps"
+		>
+		
+		<xsl:variable name="bill" select="govtrack-bill:LoadBill()" />
+		<xsl:variable name="text" select="govtrack-bill:LoadBillText()" />
+
+		<xsl:variable name="statuses" select="govtrack-bill:LoadBillAvailabeTextVersions()"/>
+
+		<xsl:template match="BillTitle">
+			<a href="http://www.govtrack.us/congress/bill.xpd?bill={http-context:param('bill')}"><xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>: <xsl:value-of select="govtrack-util:Trunc(govtrack-bills:DisplayTitle($bill), 100)"/></a>
+		</xsl:template>
+
+		<xsl:template match="link">
+			<a href="http://www.govtrack.us/congress/billtext.xpd?bill={http-context:param('bill')}&amp;version={http-context:param('version')}&amp;nid={http-context:param('nid')}">Jump to this paragraph</a> in the full text.
+		</xsl:template>
+
+		<xsl:template match="IfNotMainVersion">
+			<xsl:if test="not(http-context:param('version') = '')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:variable name="thisversion" select="$statuses[http-context:param('version') = code or (http-context:param('version') = '' and position()=1)]"/>
+		<xsl:template match="this-version">
+			<span title="{$thisversion/description}" style="border-bottom: 1px dotted black"><xsl:value-of select="$thisversion/name"/></span>
+		</xsl:template>
+		
+		<xsl:template match="Text[count($text/text)]">
+			<p>An embeddable text widget cannot be made for this bill.</p>
+		</xsl:template>
+
+		<xsl:template match="Text">
+			<div style="font-family: Garamond, Lucidia Bright, Times, serif">
+				<xsl:apply-templates select="$text" mode="billhtml"/>
+			</div>
+		</xsl:template>
+
+		<xsl:template match="@*|node()" mode="billhtml" xml:space="default">
+			<xsl:choose>
+			<xsl:when test="@nid = http-context:param('nid') or (name() = 'ul' and preceding-sibling::*[position()=last()]/@nid = http-context:param('nid'))">
+				<xsl:apply-templates select="." mode="billhtml2"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates mode="billhtml"/>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="p|h2|h3|h4|h5|pre|blockquote" mode="billhtml2">
+			<div><xsl:attribute name="style" xml:space="default">
+					margin-bottom: .5em;
+					<xsl:if test="name(.)='h2'">font-weight: bold;</xsl:if>
+					<xsl:if test="name(.)='h3'">font-weight: bold;</xsl:if>
+					<xsl:if test="name(.)='h4'">font-weight: bold;</xsl:if>
+					<xsl:if test="name(.)='h5'">font-weight: bold;</xsl:if>
+					<xsl:if test="name(.)='pre'">font-family: mono;</xsl:if>
+					<xsl:if test="name(.)='blockquote'">margin-left: 3em; border-left: 1px solid #999999; padding-left: .5em;</xsl:if>
+					<xsl:if test="name(.)='inserted'"></xsl:if>
+					<xsl:if test="name(.)='changed'"></xsl:if>
+					<xsl:if test="name(.)='removed'">text-decoration: line-through;</xsl:if>
+				</xsl:attribute>
+				<xsl:apply-templates select="node()" mode="billhtml2"/>
+			</div>
+		</xsl:template>
+		<xsl:template match="usc-reference" mode="billhtml2">
+			<a href="http://www.law.cornell.edu/usc-cgi/newurl?type=titlesect&amp;title={@title}&amp;section={@section}" target="_blank">
+				<xsl:apply-templates select="node()" mode="billhtml"/>
+			</a>
+		</xsl:template>
+		<xsl:template match="@*|node()" mode="billhtml2">
+			<xsl:copy>
+				<xsl:apply-templates select="@*|node()" mode="billhtml2"/>
+			</xsl:copy>
+		</xsl:template>
+
+	</Templates>
+   
+</div>

@@ -1,0 +1,150 @@
+<?xml-stylesheet href="layout.xsl" type="text/xsl" ?>
+
+<Article>
+	<Title>Designing Websites Like Programs: The GovTrack Pipeline</Title>
+
+	<Author Contact="mailto:tauberer@for.net">Joshua Tauberer</Author>	
+	<Date>10/3/2004</Date>
+	
+	<Logo>/media/annuitcoeptis.png</Logo>
+	
+	<Abstract>
+	Websites have some of the same design issues as programs.  One common issue is how to avoid duplication, but while software developers have solved this issue with functions, website developers are still struggling for a solution.  GovTrack.us, my new website, solves this problem using XSL transformations and the Mono framework.
+	</Abstract>
+	
+	<Body>
+		<p>There is a huge divide between citizens and government in the United States.  I'm no expert in politics, but it seems to me that this is bad.  We can have better government if we can make it simpler for people to see what their representatives are doing.  <a href="http://www.govtrack.us">GovTrack.us</a> brings together information about Congress from various sources, and then presents it to users in new and useful ways.  GovTrack is the power of the Internet put to use to close the citizen-country divide.</p>
+		<p>GovTrack has two parts.  The first part is bringing the information together, which is a topic for another article.  The second part is making the information useful through the web.  In particular, I'm going to talk here about how <a href="http://www.mono-project.com">Mono</a> and a custom page generation system make GovTrack's website go.</p>
+
+		<h3>There's nothing I despise more than . . .</h3>
+		<p>Duplicated code.  In any programming project, I go to great lengths to ensure everything is programmed exactly once, and at any cost.  No copy-pasting, not even a few lines.  If you're a programmer, you know that copy-pasting will burn you later, either because you forget to change a variable when you paste, or you later have to make a change to each place where the code is copied.  But the problem of duplicated code isn't too bad: most of the time there isn't a need for duplication, and when there is we can use functions to avoid it.</p>
+		<p>The problem is factors worse for websites.  Every page of a website requires duplication: each page has to have the same set of tables for layout, the same color tags, the same header and footer text, and on.  But worse yet, there are no "functions" in HTML.  There is no way to avoid duplication (save some hacks like server side includes and creative uses of JavaScript).  Are web designers bound to get burned again and again by copy-pasting?  What we web developers need is a method to explain to our web servers how to put the parts of a page together in a programmatic way.</p>
+
+		<h3>The goal is . . .</h3>
+
+		<p>Separation of concerns.  Each file that makes up the website should have one purpose.  The file that describes the home page should not have "instructions" shared by other pages, such as how to lay out the page.  There should be a master layout page, but it shouldn't care about how to do DHTML menus.  And programming code shared by many pages should be on its own, too.</p>
+
+		<p>Simple templates where fields like "[body]" are replaced with the body of the page aren't enough.   They can't capture notions like <i>display the Email This Page link only on pages  X, Y, and Z</i>.  And they can't capture shared paradigms repeated across pages, such as <i>figures are tables containing an image thumbnail and caption</i>.  On the left, below, is a figure whose format is shared across dozens of pages.  On the right is how the figure should be encoded in the "HTML" pages on disk:</p>
+
+		<table>
+		<tr valign="top">
+			<td>
+				<code title="XHTML As Sent To User">
+&lt;table class="figureClass">
+&lt;tr>&lt;td>
+  &lt;a href="media/photo1.jpg">
+    &lt;img src="media/photo1_thumbnail.jpg"/>
+  &lt;/a>
+&lt;/td>&lt;/tr>
+&lt;tr>
+  &lt;td>&lt;b>This is the first photo.&lt;/b>&lt;/td>
+&lt;/tr>
+&lt;/table>
+				</code>
+			</td>
+			<td>
+				<code title="Figure As Entered By Web Developer">
+&lt;figure source="photo1"
+  caption="This is the first photo."/>
+				</code>
+			</td>
+		</tr>
+		</table>
+
+		<p>It's left up to the web server to transform the instructions on disk into the final HTML output for the visitor.</p>
+		<p>The benefits of separation of concerns for websites are evident.  Extracting the common elements of websites means they're easier to design because there is less to type, and easier to maintain because nothing is duplicated.</p>
+
+		<h3>Transforming documents</h3>
+
+		<p><a href="http://www.w3.org/TR/xslt">XSLT, XML stylesheet language transformations</a>, is perfect for transforming source documents, like the <i>figure</i> tag above, into output documents.  An XSL transform is an XML document which specifies rules for transforming one XML document into another.  Here is the XSLT that takes the <i>figure</i> tag above and transforms it into the XHTML that would be sent to the user:</p>
+		
+		<code title="XSL Transformation for the Figure Tag">
+&lt;xsl:template match="figure">
+   &lt;table class="figureClass">
+   &lt;tr> &lt;td>
+          &lt;a href="media/{@source}.jpg">
+               &lt;img src="media/{@source}_thumbnail.jpg"/>
+          &lt;/a>
+   &lt;/td> &lt;/tr>
+   &lt;tr> &lt;td>
+      &lt;b>&lt;xsl:value-of select="@caption"/>&lt;/b>
+   &lt;/td> &lt;/tr>
+   &lt;/table>
+&lt;/xsl:template>
+		</code>
+
+		<p>Each time the XSLT engine encounters a figure tag in the source document, it replaces it with the contents of the template, following rules like inserting the value of the <i>source</i> and <i>caption</i> attributes where told to do so.  XSL templates support the equivalent of if statements, for loops, and functions, making them much more powerful than I've shown here.</p>
+		<p>Now imagine XSLT templates for each common aspect of a website, applied to a document on disk one by one until the document is ready to be sent to the visitor.  You design the site with tags like <i>menu</i> and <i>popup</i>, and the stylesheets convert those tags into their DHTML forms.  Later you can even reuse the stylesheets in other websites.</p>
+		<p>The following diagram shows what happens each time a page from GovTrack is requested by a user.  First the corresponding XML document is loaded from disk.  It is then passed through a series of XSL transformations.  And finally the result of the last transformation, which ends up as XHTML, is what is sent to the user.</p>
+
+		<figure source="pipeline.png" caption="The GovTrack Document Generation Pipeline"/>
+
+		<h3>Implementation</h3>
+
+		<p>I chose to implement GovTrack's document generation pipeline in Mono, the open-source implementation of Microsoft's .NET.  Using Mono over, say, Perl provides the advantages of a type-safe, object oriented framework, which makes creating a complex application all the more pleasant.  Mono's class library supports all of the functionality the pipeline needs, including handling XML documents, XSL transformations, cookies, caching, and databases.</p>
+		<p>Mono integrates into <a href="http://httpd.apache.org">Apache</a> through mod_mono, an Apache module.  When Apache receives a request that the module can handle, it passes off the request to mod_mono.  Normally this is the point where Mono processes an ASP.NET page, but Microsoft had the foresight to allow users to override the usual page serving behavior.  By adding a directive in the ASP.NET file web.config, a custom IHttpHandler can be specified to generate the response.  Here are the configurations to get an IHttpHandler to handle requests for all pages ending in .xpd:</p>
+
+		<code title="Apache httpd.conf (abridged)">
+MonoApplications "/:/home/govtrack/www"
+AddHandler mono .xpd
+DirectoryIndex index.xpd
+		</code>
+
+		<code title="web.config (the highlights)">
+&lt;configuration>
+    &lt;system.web>
+        &lt;httpHandlers>
+            &lt;add verb="*" path="*.xpd" type="XPD.HttpHandler, xpd" />
+        &lt;/httpHandlers>
+    &lt;/system.web>
+&lt;/configuration>
+		</code>
+
+		<p>In web.config, <i>XPD.HttpHandler, xpd</i> is the fully qualified name of the type that implements <a href="http://www.go-mono.com/docs/monodoc.ashx?link=T%3aSystem.Web.IHttpHandler">IHttpHandler</a>.  The assembly is named xpd and is located in the bin directory of the website.  The name of the type is HttpHandler in the XPD namespace.</p>
+		<p>When mod_mono receives a request for a .xpd page, it sends the request on to XPD.HttpHandler's ProcessRequest method, passing a System.Web.HttpContext object. Even though ASP.NET is overridden with the custom handler, the entire System.Web namespace is at my disposal, which is fortunate because using System.Web.Caching to keep the document generation pipeline objects in memory speeds up rendering time immensely.</p>
+		<p>The pipeline is formed by inspecting the XML processing instructions at the top of the .xpd file and running the stylesheets on the document in order.  The stylesheets can be located in other files -- I use master.xsl to do the global page layout -- or in the the same file, located by an <a href="http://www.w3.org/TR/xpath">XPath</a> expression.</p>
+
+		<code title="Example Processing Instructions in an .xpd File">
+&lt;?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+&lt;?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+		</code>
+
+		<h3>Dynamic content</h3>
+
+		<p>As good as this layered stylesheet system is, it isn't yet dynamic.  Every time a page is requested, the same stylesheets will output the same document.  GovTrack makes its pages dynamic through XSLT extension functions.  Extension functions allow the XSLT processor to call external functions and integrate the results of the functions into the output.  </p>
+		<p>In this example, the XSLT processor will call the ShouldShowDate extension function, and if it returns a number greater than ten, it outputs the date returned by the GetTodaysDate extension function.</p>
+
+		<code title="XSLT Extension Function Example">
+&lt;xsl:if test="mylibrary:ShouldShowDate() &gt; 10" xmlns:mylibrary="urn:govtrack:extfuncs">
+    Today is &lt;xsl:value-of select="mylibrary:GetTodaysDate()" />.
+&lt;/xsl:if>
+		</code>
+
+		<p>To make extension functions usable from within stylesheets processed by Mono's XSLT engine, create a class and put your extension functions in that class.  Then create a new <a href="http://www.go-mono.com/docs/monodoc.ashx?link=T%3aSystem.Xml.Xsl.XsltArgumentList">System.Xml.Xsl.XsltArgumentList</a> object.  Call AddExtensionObject, passing the namespace URI to associate with the extension functions in your class, and a new instance of your extension function class.  Then pass the XsltArgumentList to the Transform method of <a href="http://www.go-mono.com/docs/monodoc.ashx?link=T%3aSystem.Xml.Xsl.XslTransform">System.Xml.Xsl.XslTransform</a>.</p>
+
+		<code title="Using Extension Functions with Mono">
+class MyExtFunctions {
+    public double  ShouldShowDate() { return 50; }
+    public string GetTodaysDate() { return DateTime.Now.ToString(); }
+}
+. . .
+XsltArgumentList args = new  XsltArgumentList();
+args.AddExtensionObject("urn:govtrack:extfuncs", new MyExtFunctions());
+XmlReader output = xsltransform.Transform(input, args, null);
+		</code>
+		
+		<p>And this is just the beginning of how extension functions can be used.</p>		
+
+		<h3>Conclusions</h3>
+
+		<p>Web developers need functions too.  XSL transformations combined with the Mono framework provide a high-level system for creating a robust, easily maintaned, dynamic website.</p>
+
+		<p>This page is generated by the GovTrack document generation pipeline.
+		Check out the <a href="20041003.txt">source of this page</a> and
+		an <a href="layout.xsl.txt">intermediate stylesheet</a> that formats
+		all of the articles in this part of the website.  (Other stylesheets
+		are applied after to produce the final document.)</p>
+	
+	</Body>
+</Article>
+

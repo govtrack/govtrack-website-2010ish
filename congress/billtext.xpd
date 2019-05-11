@@ -1,0 +1,226 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page Width="Max">
+
+	<Title><PageTitle/></Title>
+
+	<AllowEmail Email="0"/>
+	<Param>bill</Param>
+	<HideAds/>
+
+	<IfNotMainVersion>
+    <Head>
+        <META name="ROBOTS" content="NOINDEX"/>
+    </Head>
+	</IfNotMainVersion>
+	
+	<Meta Name="description">Text of U.S. federal legislation on GovTrack.us</Meta>
+
+	<Head>
+        <link rel="stylesheet" type="text/css" href="billtext/billtext.css"/>
+        <IfDebug Test="">
+        <script type="text/javascript" src="billtext/bt.js"></script>
+        </IfDebug>
+        <IfDebug Test="1">
+        <script type="text/javascript" src="billtext/jquery-1.2.6.js"></script>
+        <script type="text/javascript" src="billtext/jquery.query-2.1.7.js"></script>
+        <script type="text/javascript" src="billtext/jquery.cluetip.js"></script>
+        <script type="text/javascript" src="billtext/jquery.cssRule.js"></script>
+        <script type="text/javascript" src="billtext/billtext.js"></script>
+        </IfDebug>
+        <JSMeta/>
+	</Head>
+
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a> &gt; <a href="legislation.xpd">Legislation</a> &gt;
+		<BillSessionYears/> (<BillSession/> Congress) &gt;
+		<BillNumber/>
+	</Breadcrumbs>
+
+	<Body-A>
+		
+		<div class="PageTitle" style="font-size: 180%;">
+			Text of <BillNumber2/>: <BillTitle/>
+		</div>
+    
+	</Body-A>
+	<Body-B>
+		<table style="width:100%;"><tr valign="top">
+        <td style="width:212px;">
+	   	   <Sidebar/>
+        </td>		
+        
+        <td>
+	        <p id="vtext"></p>
+		
+           <ShowBill/>
+		</td>
+        </tr></table>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		exclude-result-prefixes="http-context govtrack-util govtrack-bill govtrack-bills govtrack-reps"
+		>
+		
+		<xsl:variable name="bill" select="govtrack-bill:LoadBill()" />
+
+		<xsl:variable name="statuses" select="govtrack-bill:LoadBillAvailabeTextVersions()"/>
+
+		<xsl:template match="PageTitle">
+			<xsl:text>Read The Bill: </xsl:text>
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+			<xsl:if test="not(http-context:param('version')='')">
+				- <xsl:value-of select="$statuses[http-context:param('version') = code]/date"/>
+			</xsl:if>
+			<xsl:text> - GovTrack.us</xsl:text>
+		</xsl:template>
+
+		<xsl:template match="BillNumber">
+			<a href="bill.xpd?bill={http-context:param('bill')}">
+				<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+			</a>
+		</xsl:template>
+		<xsl:template match="BillTitle">
+			<xsl:value-of select="govtrack-util:Trunc(govtrack-bills:DisplayTitle($bill), 100)"/>
+		</xsl:template>
+
+		<xsl:template match="BillSession">
+			<xsl:value-of select="govtrack-util:Ordinate($bill/@session)"/>
+		</xsl:template>
+
+		<xsl:template match="BillSessionYears">
+			<xsl:value-of select="$bill/@session * 2 + 1787"/>
+			<xsl:text>-</xsl:text>
+			<xsl:value-of select="$bill/@session * 2 + 1787 + 1"/>
+		</xsl:template>
+
+		<xsl:template match="IfNotMainVersion">
+			<xsl:if test="not(http-context:param('version') = '')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="BillNumber2">
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+		</xsl:template>
+
+        <!--  turn the version xml into json -->
+        <xsl:template match="JSMeta">
+            <script type="text/javascript">
+                <xsl:text>$.btns.versions = {</xsl:text>
+                <xsl:for-each select="$statuses">
+                    <xsl:value-of select="code"/>
+                    <xsl:text>:{position:</xsl:text><xsl:value-of select="position()"/>
+                    <xsl:text>,format:"</xsl:text><xsl:value-of select="format"/>
+                    <xsl:text>",size:</xsl:text><xsl:value-of select="size"/>
+                    <xsl:text>,name:"</xsl:text><xsl:value-of select="name"/>
+                    <xsl:text>",description:"</xsl:text><xsl:value-of select="description"/>
+                    <xsl:text>",date:"</xsl:text><xsl:value-of select="date"/>
+                    <xsl:text>"}</xsl:text>
+                    <xsl:if test="position()!=last()"><xsl:text>,</xsl:text></xsl:if> <!-- required for ie6 -->
+                </xsl:for-each>
+                <xsl:text>};</xsl:text>
+
+                <xsl:text>$.btns.warning_message = '</xsl:text>
+                <p>This bill is very large, and loading it may cause your web browser to perform sluggishly, or even freeze. This is especially true for old and/or bad browsers. As an alternative you can download the <a id="warning_pdf">PDF</a> of the bill or read the <a id="warning_thomas">text</a> on THOMAS.</p>
+                <xsl:text>';</xsl:text>
+            </script>
+        </xsl:template>
+
+        <xsl:template match="Sidebar">
+            <xsl:variable name="version" select="http-context:param('version')"/>
+
+            <div id="sidebar" class="screenonly">
+
+            <form action="" onsubmit="return false;">
+            
+            <div id="version_group">
+            
+            <table style="margin-bottom: .5em">
+            <tr><td><img src="/media/back.gif" style="padding-right: .5em" width="17" alt=""/></td><td>
+			<a href="bill.xpd?bill={http-context:param('bill')}">Back to Bill Status</a>
+            </td></tr>
+            </table>
+            
+            <p><label for="version">Show this version:</label></p>
+            <select id="version">
+            <xsl:for-each select="$statuses">
+                <option value="{code}">
+                    <xsl:if test="($version = code) or ($version = '' and position()=1)">
+                        <xsl:attribute name="selected">selected</xsl:attribute>
+                    </xsl:if>
+                    <xsl:value-of select="date"/>: <xsl:value-of select="name"/>
+                </option>
+            </xsl:for-each>
+            </select>
+            
+            <!--  div and align necessary for consistent ie display -->
+            <div style="width: 100%;" id="extlinks"><table style="text-align: left;">
+            
+            <tr><td><img src="/media/pdf.gif" style="padding-right: .5em" width="17" alt=""/></td><td>
+            <a id="pdflink" href="">Download PDF</a>
+            </td></tr>
+
+            <tr><td><img src="/media/stock-panel-internet.gif" style="padding-right: .5em" width="17" alt=""/></td><td>
+            <a id="thomaslink" href="{govtrack-bill:GetThomasBillTextLink($bill/@session,$bill/@type,$bill/@number)}">Full Text on THOMAS</a>
+            </td></tr>
+
+            </table></div>
+            </div>
+            
+            <div id="comparetobox">
+            <!-- populated dynamically by javascript based on selected version -->
+            <div id="compareto_group">
+            <p><label for="compareto">Compare to this version:</label></p>
+            <select id="compareto">
+                <option value="none">None</option>
+            </select>
+            </div>
+            
+            <div id="view_group" style="margin-top: .5em">
+            <p>Show changes:</p>
+            <ul id="view">
+            <!--<li><input id="radnone" type="radio" name="chgroup" value="none" checked="checked"/>
+                <label for="radnone">None</label></li>-->
+            <li><input id="radside" type="radio" name="chgroup" value="side" checked="checked"/>
+                <label for="radside">Side-by-side</label></li>
+            <li><input id="radinline" type="radio" name="chgroup" value="inline"/>
+                <label for="radinline">Highlighted</label></li>
+            </ul>
+            </div>
+            </div>
+            
+            <div id="control_group">
+            <ul id="main_controller">
+            <li><a id="main_expander">Expand all sections</a></li>
+            <li><a id="main_collapser">Collapse all sections</a></li>
+            <li><a id="main_changesonly">Only show changes</a></li>
+            <li><a id="main_linker">Link to this view</a></li>
+            </ul>
+            </div>
+            
+            </form>
+            </div>            
+        </xsl:template>
+        
+        <xsl:template match="ShowBill">
+            <div id="billtext">
+            </div>
+        </xsl:template>
+
+        <xsl:template match="IfDebug">
+        	<xsl:if test="http-context:param('debug')=@Test">
+        		<xsl:apply-templates/>
+        	</xsl:if>
+        </xsl:template>
+
+	</Templates>
+   
+ </Page>

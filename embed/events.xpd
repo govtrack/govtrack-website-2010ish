@@ -1,0 +1,92 @@
+<?xml-stylesheet xpath="/*/Templates" type="text/xsl" ?>
+<?xml-stylesheet type="filter/javascript" ?>
+<?mime-type text/html ?>
+<div class="GovTrackEmbed" style="text-align: left">
+	<div class="GovTrackEmbedTitle" style="margin-bottom: .5em">
+	<description/>
+	</div>
+	
+	<div class="GovTrackEmbedTable">
+	<events/>
+	</div>
+	
+	<div class="GovTrackEmbedFooter" style="font-size: 80%; color: #666666; text-align: center">
+	<link/>
+	Powered by <a href="http://www.govtrack.us">GovTrack.us</a>
+	</div>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context = "HttpContext"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps="assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-events="assembly://GovTrackWeb/GovTrack.Web.Pages.Users.Events"
+		exclude-result-prefixes="http-context govtrack-util govtrack-reps govtrack-login govtrack-events"
+		>
+		
+		<xsl:variable name="monitors" select="govtrack-events:GetMonitors()"/>
+		<xsl:variable name="events" select="govtrack-events:GetEvents(30, 1, 0)"/>
+		
+		<xsl:template match="Templates">
+		</xsl:template>
+
+		<xsl:template match="description">
+			<xsl:if test="count($monitors) &lt; 3">
+			<xsl:for-each select="$monitors">
+				<xsl:variable name="m" select="govtrack-login:MonitorLink(.)"/>
+				<xsl:value-of select="$m/title"/>
+				<xsl:if test="not(position()=last())">, </xsl:if>
+			</xsl:for-each>
+			</xsl:if>
+			<xsl:if test="not(count($monitors) &lt; 3)">
+			Tracked Events in Congress
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="link">
+			<a href="http://www.govtrack.us/users/events.xpd?monitors={govtrack-util:UrlEncode(http-context:param('monitors'))}">
+				View All...
+			</a>
+		</xsl:template>
+
+		<xsl:template match="events">
+			<xsl:if test="count($events)=0">
+				<p>There are no recent events for this tracker.</p>
+			</xsl:if>
+		
+			<xsl:for-each select="$events">
+				<xsl:sort select="date" data-type="string" order="descending"/>
+				<xsl:if test="http-context:param('count') = '' or position() &lt;= http-context:param('count')">
+				<div style="padding-top: .3em; padding-bottom: .3em">
+					<div>
+						<a href="{link}">
+							<xsl:value-of select="govtrack-util:Trunc(title, 100)"/>
+						</a>
+					</div>
+					<div class="GovTrackEmbedDate">
+						<xsl:value-of select="govtrack-util:DTToDateString(date)"/>
+						-
+						<xsl:value-of select="typename"/>
+					</div>
+					<div>
+						<xsl:value-of select="summary"/>
+					</div>
+					<div style="padding-left: .5em;">
+						<xsl:for-each select="specifics/*[widget=1]">
+							<div style="margin-top: .25em; margin-bottom: .25em">
+								<xsl:if test="not(link='')"><a href="{link}" class="light"><xsl:value-of select="tag"/></a></xsl:if>
+								<xsl:if test="(link='')"><b><xsl:value-of select="tag"/></b></xsl:if>
+								<xsl:if test="count(text)">
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="text"/>
+								</xsl:if>
+							</div>
+						</xsl:for-each>
+					</div>
+				</div>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:template>
+	</Templates>
+</div>

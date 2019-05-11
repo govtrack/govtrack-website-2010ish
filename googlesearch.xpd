@@ -1,0 +1,40 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	xmlns:xspmenus="xspmenus"
+	HideSidebar="1"
+	BodyPadding="0">
+
+	<Title>GovTrack.us: Site Search</Title>
+	
+	<Body-A>
+
+<p>Below are the results of your general search on GovTrack.
+If you don't find what you're looking for, try:</p>
+<center><p><a href="congress/findyourreps.xpd">Find Members of Congress</a>
+|
+<a href="congress/billsearch.xpd">Search Bills &amp; Resolutions</a>
+</p></center>
+
+<div id="cse-search-results"></div>
+<script type="text/javascript">
+var googleSearchIframeName = "cse-search-results";
+var googleSearchFormName = "cse-search-box";
+var googleSearchFrameWidth = 900;
+var googleSearchDomain = "www.google.com";
+var googleSearchPath = "/cse";
+</script>
+<script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
+
+	</Body-A>
+	
+	<Templates       
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:httpcontext="HttpContext"
+		exclude-result-prefixes="httpcontext"
+		>
+		
+	</Templates>
+
+</Page>

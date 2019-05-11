@@ -1,0 +1,123 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<AllowEmail/>
+	<!--<NoCache/>-->
+	<Param>uri</Param>
+
+	<Title PrependSiteTitle="1">RDF Browser</Title>
+	
+	<Body>
+		<h1 class="PageTitle">RDF Browser</h1>
+		
+		<p style="font-weight: bold; font-size: 110%"><label/></p>
+		
+		<p>URI: <resource/></p>
+		
+		<relations/>
+	</Body>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:httpcontext="HttpContext"
+		xmlns:govtrack-rdf = "assembly://GovTrackWeb/GovTrack.Web.RDF"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util">
+
+		<xsl:template match="resource">
+			<xsl:value-of select="govtrack-rdf:CurrentResource()"/>
+		</xsl:template>
+
+		<xsl:template match="label">
+			<xsl:value-of select="govtrack-rdf:CurrentResourceLabel()"/>
+		</xsl:template>
+
+		<xsl:template match="relations">
+			<xsl:call-template name="showrelations">
+				<xsl:with-param name="root" select="govtrack-rdf:GetRelations(govtrack-rdf:CurrentResource())/*"/>
+			</xsl:call-template>
+		</xsl:template>
+		
+		<xsl:template name="showrelations">
+			<xsl:param name="root"/>
+			<xsl:param name="level" select="'1'"/>
+			
+			<table>
+			
+			<xsl:for-each select="$root">
+			<xsl:sort select="not(*[position()=1]/predicate/uri='http://www.w3.org/1999/02/22-rdf-syntax-ns#type')"/>
+			<xsl:sort select="not(*[position()=1]/predicate/uri='http://www.w3.org/1999/02/22-rdf-syntax-ns#value')"/>
+			<xsl:sort select="count(*) &gt; 50"/>
+			<xsl:sort select="*[position()=1]/predicate/label=*[position()=1]/predicate/uri"/>
+			<xsl:sort select="*[position()=1]/predicate/uri"/>
+			<xsl:sort select="*[position()=1]/direction"/>
+
+			<xsl:if test="$level=1"><tr height="5" bgcolor="#F5F5F5"><td colspan="2"></td></tr></xsl:if>
+			<tr valign="top">
+				<td>
+					<!--<nobr>-->
+						<a href="?uri={govtrack-util:UrlEncode(*[position()=1]/predicate/uri)}">
+							<xsl:variable name="label" select="*[position()=1]/predicate/label"/>
+							<nobr><xsl:value-of select="substring($label, 0, 25)"/></nobr>
+							<xsl:if test="string-length($label) &gt; 35">
+								<div> <xsl:value-of select="substring($label, 25)"/></div>
+							</xsl:if>
+						</a>
+						<xsl:if test="*[position()=1]/direction='reverse'"> of</xsl:if>
+					<!--</nobr>-->
+				</td>
+			<xsl:if test="(*[position()=1]/objecttype = 'overload-placeholder')">
+					<td>
+						<a href="?uri={govtrack-util:UrlEncode(httpcontext:param('uri'))}&amp;show={govtrack-util:UrlEncode(*[position()=1]/predicate/uri)}">
+							show all <xsl:value-of select="*[position()=1]/label"/> objects
+						</a>
+					</td>
+			</xsl:if>
+			<xsl:if test="not(*[position()=1]/objecttype = 'overload-placeholder')">
+				<td>
+				<div>
+				<xsl:if test="count(*) &gt; 10 and count(*[object/uri='anonymous'])=0">
+					<xsl:attribute name="style">height: 10em; width: 30em; overflow: auto</xsl:attribute>
+				</xsl:if>
+				<xsl:for-each select="*">
+				<xsl:sort select="objecttype"/>
+				<xsl:sort select="object/uri='anonymous'"/>
+				<xsl:sort select="literalvalue"/>
+				<xsl:sort select="object/label"/>
+				<div style="margin-bottom: 3px">
+					<xsl:if test="objecttype='literal'">
+						<xsl:value-of select="literalvalue"/>
+					</xsl:if>
+					<xsl:if test="objecttype='resource' and not(object/uri='anonymous')">
+						<a href="?uri={govtrack-util:UrlEncode(object/uri)}">
+							<xsl:value-of select="object/label"/>
+						</a>
+					</xsl:if>
+					<xsl:if test="object/uri='anonymous'">
+						<xsl:choose>
+						<xsl:when test="count(object/relations/*) = 1 and object/relations/*/*/predicate/uri = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value'">
+							<a href="?uri=http://www.w3.org/1999/02/22-rdf-syntax-ns#value">value</a> =&gt; 
+							<xsl:value-of select="object/relations/*/*/literalvalue"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<div style="border: 1px solid #AAAAAA">
+							<xsl:call-template name="showrelations">
+								<xsl:with-param name="root" select="object/relations/*"/>
+								<xsl:with-param name="level" select="$level+1"/>
+							</xsl:call-template>
+							</div>
+						</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
+				</div>
+				</xsl:for-each>
+				</div>
+				</td>
+			</xsl:if>
+			</tr>
+			</xsl:for-each>
+			</table>
+		</xsl:template>
+	</Templates>
+        	
+</Page>

@@ -1,0 +1,172 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1">
+	<NoCache/>
+
+	<Title PrependSiteTitle="1">Account Settings</Title>
+	<Meta Name="ROBOTS">NOINDEX</Meta>
+
+	<Sidebar>
+		<Section Name="Logged In">
+			<div>You are logged in as <b><LoginEmail/></b>. <a href="logout.xpd">Click here to log out</a>.</div>
+		</Section>
+		<Section Name="Privacy Information">
+			<p>No information collected about you will be shared with any third parties, ever,
+			and I'll do my best to keep any personal information you provide secure.</p>
+			<p>Keep in mind, however, that this website is just a personal pet project of
+			an everday citizen and I can only do my best.</p>
+		</Section>
+	</Sidebar>
+	
+	<Breadcrumbs><a href="/users">Track Congress</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1>Account Settings</h1>
+	
+		<IfNotLoggedIn>
+			Log in to access your account settings.
+			
+			<LoginForm/>
+		</IfNotLoggedIn>
+
+		<IfLoggedIn>
+				<p>You are logged in to an account on GovTrack under the email address <b><LoginEmail/></b>. (<a href="logout.xpd">Log out?</a>)</p>
+				
+				<p>Below you'll find your account and email settings. Elsewhere you can <a href="yourmonitors.xpd">view and edit your trackers</a>.</p>
+				
+				<autostatus/>
+		</IfLoggedIn>
+	</Body-A>
+	
+	<Body-B>
+		<IfLoggedIn>
+
+				<table><tr><td> <!-- don't wrap around sidebar -->
+				
+				<IfOpenId Value="0">
+					<h3>Login Information</h3>
+					<p>Change your email address and password to log in to this site with this form.</p>
+					<xspforms:form xmlns:xspforms="xspforms" id="login" code="GovTrack.Web.Pages.Users.Account, GovTrackWeb:EditAccount">
+						<xspforms:formreturn class="formerror"/>
+						<table>
+						<tr><td>Email Address:</td> <td><email/></td> </tr>
+						<tr><td>Password:</td> <td><password/> (leave blank to keep unchanged)</td> </tr>
+						</table>
+						<p style="font-style: italic">Please don't use an important password for this website!</p>
+						<p><xspforms:submit text="Update Settings"/></p>
+					</xspforms:form>
+					<p>If you ever forget your password, you can have it emailed to you.</p>
+
+					<h3>Use OpenID Instead?</h3>
+					<p>If you have an <a href="http://openid.net/">OpenID</a> identity URL, you can
+					associate it with your account:.</p>
+					<xspforms:form xmlns:xspforms="xspforms" id="addopenid" code="GovTrack.Web.Pages.Users.Account, GovTrackWeb:EditAccount">
+						<xspforms:formreturn class="formerror"/>
+						<table>
+						<tr><td><img src="/media/openid.gif" align="top" border="0"/> OpenID URL:</td> <td><openidurl/></td>
+						<td><xspforms:submit text="Associate OpenID URL"/></td>
+						</tr>
+						</table>
+					</xspforms:form>
+				</IfOpenId>
+
+				<IfOpenId Value="1">
+					<h3>Login Information</h3>
+					<p>You are using an <a href="http://www.openid.net">OpenID Identity URL</a> to log in to this site.
+					Change your email address or the identity URL associated with your GovTrack account with this form.</p>
+					<xspforms:form xmlns:xspforms="xspforms" id="login" code="GovTrack.Web.Pages.Users.Account, GovTrackWeb:EditAccount">
+						<xspforms:formreturn class="formerror"/>
+						<table>
+						<tr><td>Email Address:</td> <td><email/></td> </tr>
+						<tr><td><img src="/media/openid.gif" align="top" border="0"/> OpenID URL:</td> <td><openidurl/></td> </tr>
+						</table>
+						<p><xspforms:submit text="Update Settings"/></p>
+					</xspforms:form>
+					<p>If you find you cannot log in with OpenID, use the forgotten password page to
+					have a password sent to you instead so you can log in with your email address.</p>
+
+					<h3>Use Password Instead?</h3>
+					<p>To use a password to log in to this site instead of an OpenID URL, enter a password:</p>
+					<xspforms:form xmlns:xspforms="xspforms" id="removeopenid" code="GovTrack.Web.Pages.Users.Account, GovTrackWeb:EditAccount">
+						<xspforms:hidden name="clearopenid" value="1"/>
+						<xspforms:formreturn class="formerror"/>
+						<table>
+						<tr><td>New password:</td> <td><xspforms:text name="password"/></td>
+						<td><xspforms:submit text="Use Email-and-Password Login"/></td>
+						</tr> </table>
+					</xspforms:form>
+				</IfOpenId>
+
+				<h3>Email Settings</h3>
+					<xspforms:form xmlns:xspforms="xspforms" id="emailupdates" code="GovTrack.Web.Pages.Users.Account, GovTrackWeb:EditUpdates">
+						<xspforms:hidden name="tab" value="emailupdates"/>
+						<xspforms:formreturn class="formerror"/>
+						<p>GovTrack can send you regular emails about events that <a href="yourmonitors.xpd">you are tracking</a>. Emails are
+						sent only when there are new tracked events matching your trackers. How often do you want to receive updates?</p>
+						<emailupdatesfrequency/>
+						<p><massemail/> Allow GovTrack to send you <i>very rare</i> periodic announcements.  There's only been one such email in the last five years.</p>
+						<p><xspforms:submit text="Update Settings"/></p>
+
+						<p>If you've set the option above to get email 
+updates but aren't receiving them after a few days, and your <a 
+href="events.xpd">Tracked Events</a> page shows recent events, please 
+make sure the emails haven't been classified as junk or moved into a 
+spam folder.</p>
+
+					</xspforms:form>
+			</td></tr></table>
+		</IfLoggedIn>
+		
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:xspforms="xspforms"
+		exclude-result-prefixes="govtrack-login xspforms"
+		pre-process-checkloggedin="GovTrack.Web.Pages.Users.RedirectIfNotLoggedIn, GovTrackWeb">
+
+		<xsl:template match="email">
+			<xspforms:text name="email" default="{govtrack-login:GetLoginEmail()}"/>
+		</xsl:template>
+
+		<xsl:template match="password">
+			<xspforms:password name="password"/>
+		</xsl:template>
+
+		<xsl:template match="IfOpenId">
+			<xsl:if test="govtrack-login:GetLoginField('openidurl') = (@Value='1')">
+				<xsl:apply-templates select="node()"/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="openidurl">
+			<xspforms:text name="openidurl" default="{govtrack-login:GetLoginField('openidurl')}"/>
+		</xsl:template>
+
+		<xsl:template match="emailupdatesfrequency">
+			<xspforms:select name="frequency" size="1" default="{govtrack-login:GetLoginField('emailupdates')}">
+				<xspforms:option value="0">Don't Send Me Updates</xspforms:option>
+				<xspforms:option value="1">Send Me Daily Updates</xspforms:option>
+				<xspforms:option value="2">Send Me Weekly Updates</xspforms:option>
+			</xspforms:select>
+		</xsl:template>
+
+		<xsl:template match="massemail">
+			<xspforms:checkbox name="allowmassemail" value="ON">
+				<xsl:if test="govtrack-login:GetLoginField('massemail') = '1'">
+					<xsl:attribute name="default">checked</xsl:attribute>
+				</xsl:if>
+			</xspforms:checkbox>
+		</xsl:template>
+
+		<xsl:template match="autostatus">
+			<xsl:if test="not(govtrack-login:GetLoginField('autostatus')='')">
+				<p class="formerror"><xsl:value-of select="govtrack-login:GetLoginField('autostatus')"/></p>
+			</xsl:if>
+		</xsl:template>
+
+	</Templates>
+
+</Page>

@@ -1,0 +1,51 @@
+<?xml-stylesheet type="text/xsl" xpath="Page/Templates"?>
+<?xml-stylesheet type="text/xsl" href="../style/master.xsl"?>
+<?xml-stylesheet type="text/xsl" href="embed-tools.xsl"?>
+<Page HideAds="1">
+	<Title>GovTrack: Embed A Bill's Status In Your Web Page</Title>
+
+   	<Body-A>
+		<h1>Embed A Bill's Status In Your Web Page</h1>
+
+	<p>The widget below shows the current status of a bill in Congress and updates automatically.
+	You can put this widget on your website if you can paste HTML code into a webpage.
+	Customize the look of your widget, and then copy-and-paste the code below into your site.
+	For other website tools, see the <a href=".">widgets page</a>.</p>
+	</Body-A>
+	<Body-B>
+
+<embed-config>
+<option name="Width" default="350px" values="250px,350px,450px,100%" type="select" var="widgetwidth"/>
+<option name="Text Color" default="black" values="black,gray,blue,red,green,yellow,white" type="select" var="textcolor"/>
+<option name="Title Color" default="black" values="black,gray,blue,red,green,yellow,white" type="select" var="titlecolor"/>
+<option name="Highlight Color" default="AntiqueWhite" values="AliceBlue,AntiqueWhite,black,gray,blue,red,green,yellow,white" type="select" var="highlightcolor"/>
+<option name="Text Size" default="85%" values="50%,60%,70%,80%,85%,90%,95%,100%" type="select" var="fontsize"/>
+<option name="Border Size" default="1" values="0,1,2" type="select" var="borderweight"/>
+<option name="Border Color" default="black" values="black,gray,blue,red,green,yellow,white" type="select" var="bordercolor"/>
+<option name="Background Color" default="white" values="black,gray,blue,red,green,yellow,white" type="select" var="bgcolor"/>
+<option var="padding" default="0"/>
+<script>
+	if (borderweight != 0) padding = 5; else padding = 0;
+</script>
+<code>
+&lt;style>
+	.GovTrackEmbed { font-size: $fontsize$; color: $textcolor$; border: $borderweight$px solid $bordercolor$; background-color: $bgcolor$; padding: $padding$px; width: $widgetwidth$; font-family: Georgia, Free Serif, Nimbus Roman No9 L, Times New Roman; }
+	.GovTrackEmbedTable { font-size: $fontsize$; color: $textcolor$ }
+	.GovTrackEmbedTitle { font-weight: bold; font-size: 110%; color: $titlecolor$; text-align: center; font-family: Gentium, Palatino, New York, Georgia, Free Serif, Nimbus Roman No9 L, Times New Roman; }
+	.GovTrackEmbedHighlight { background-color: $highlightcolor$ }
+	.GovTrackEmbedFooter { font-size: 90% }
+	.GovTrackEmbedDate { font-size: 90%; }
+	.GovTrackEmbed a { text-decoration: none }
+&lt;/style>
+&lt;script src="http://<hostname/>/embed/bill.xpd?bill=<param name="bill"/>" type="text/javascript"&gt;&lt;/script&gt;
+</code>
+</embed-config>
+	
+</Body-B>
+
+<Templates xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        xmlns:http-context = "HttpContext">
+</Templates>
+
+</Page>
+

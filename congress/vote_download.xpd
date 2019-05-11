@@ -1,0 +1,52 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?mime-type text/csv?>
+<?attachment-filename vote.csv?>
+<?text-output?>
+<Page># <RollNumber/>
+# ID,STATE,DISTRICT,VOTE,NAME
+<ShowVote/>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext = "HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-vote = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Vote"
+		exclude-result-prefixes = "HttpContext govtrack-util govtrack-bills govtrack-reps govtrack-vote"
+		>
+		
+		<xsl:variable name="roll" select="govtrack-bills:LoadRollParse(HttpContext:param('vote'))"/>
+
+		<xsl:template match="RollNumber"><xsl:value-of select="govtrack-vote:ChamberNameShort($roll/@where)"/> Vote #<xsl:value-of select="$roll/@roll"/><xsl:text xml:space="preserve"> </xsl:text><xsl:value-of select="govtrack-util:DTToDateString($roll/@datetime)"/> - <xsl:value-of select="$roll/question"/></xsl:template>
+
+		<xsl:template match="ShowVote">
+			<xsl:variable name="votes" select="$roll/voter"/>
+			<xsl:value-of select="govtrack-vote:CachePersonData($votes/@id, $roll/@datetime)"/>
+			
+			<xsl:variable name="sort" select="HttpContext:param('sort')"/>
+
+			<xsl:for-each select="$votes">
+				<xsl:sort select="govtrack-vote:PersonInfo(@id,'vote-repname')"/>
+
+				<xsl:value-of select="@id"/>
+				<xsl:text>,</xsl:text>
+				<xsl:value-of select="@state"/>
+				<xsl:text>,</xsl:text>
+				<xsl:if test="count(@district)=1"><xsl:value-of select="@district"/></xsl:if>
+				<xsl:text>,</xsl:text>
+				<xsl:if test="@vote='+'">Aye</xsl:if>
+				<xsl:if test="@vote='-'">Nay</xsl:if>
+				<xsl:if test="@vote='0'">No Vote</xsl:if>
+				<xsl:if test="@vote='P'">Present</xsl:if>
+				<xsl:text>,</xsl:text>
+				<xsl:if test="not(@VP='1')">"<xsl:value-of select="govtrack-vote:PersonInfo(@id,'vote-repname')"/>"</xsl:if>
+				<xsl:if test="@VP='1'">Vice President (tie-breaker)</xsl:if>
+				<xsl:text xml:space="preserve">
+</xsl:text>
+			</xsl:for-each>
+		</xsl:template>
+
+	</Templates>
+</Page>
+

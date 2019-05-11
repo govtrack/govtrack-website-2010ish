@@ -1,0 +1,38 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1">Scraper Code</Title>
+	
+	<Body-A>
+		<Breadcrumbs><a href="/about.xpd">About GovTrack</a> &gt; <a href="/developers">Developers</a></Breadcrumbs>
+
+		<h1>Scraper Code</h1>
+		
+
+		<p>The "back-end" or "scraper code" is a collection of Perl scripts that access government websites to create and update the legislative database <a href="data.xpd">source data</a>.</p>
+
+		<p>The scripts are in the process of being made publicly available.</p>
+		
+		<p>The source code of the back-end are licensed under the GNU AGPL. In short, you may <i>only</i> make modifications to the code if you make your modifications publicly available. I am <b>very</b> serious about these terms. Again, you can download and use, but you cannot enhance the code without sharing your enhancements.</p>
+		
+		<p>You can check out some of the back-end files with Subversion:</p>
+		<pre class="code">svn co svn://occams.info/govtrack/gather/us</pre>
+		
+		<p>If you checked out the files into the <tt>us</tt> directory,
+		the scripts expect that there is a <tt>data</tt> directory along
+		side the <tt>us</tt> directory. It's the same data directory
+		as referenced above.</p>
+		
+		<p>You will need a whole bunch of Perl modules to run the scripts.
+		The best way to figure out which is to look at the <tt>use</tt>
+		directives in the scripts, or to just run them and see what's missing.</p>
+		
+		<p>Some scripts have some dependencies on files that I haven't made
+		available yet.</p>
+
+		<p>And I haven't yet written any documentation on how to use the scripts. Sorry!</p>
+
+	</Body-A>
+	
+ </Page>

@@ -1,0 +1,202 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1">RDF and SPARQL Endpoint</Title>
+	
+	<Head>
+		<style>
+			pre { margin-left: 2em }
+		</style>
+	</Head>
+
+	<Breadcrumbs><a href="/about.xpd">About GovTrack</a> &gt; <a href="/developers">Developers</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1>RDF and SPARQL Endpoint</h1>
+		
+		<p>Most of the data that powers this site is archived in RDF, 
+		the data format of the Semantic Web.  It's around 25 million 
+		triples, covering about 15 years of legislative information. 
+		The <a href="/share/vocabs.xpd">vocabularies</a> used in the data 
+		include FOAF, vCard, and several schemas I created. The RDF data
+		is a dump of the <a href="data.xpd">source XML data</a>.</p>
+
+		<p>There are a few ways that you can access the data.
+		The first is by <a href="/data/rdf/">downloading the RDF files</a>,
+		which are in a mix of XML and N3 formats.
+		You can query the data store using SPARQL, as described below.
+		The entities in the data set are published as
+		Linked Data, so if you find a URI you can plug it into your
+		browser and trace through the data that way. Some starting points
+		are on the SPARQL page. There are also <tt>&lt;link&gt;</tt> tags
+		on many pages that indicate the RDF URI for the resource being described.</p>
+
+		<p>The RDF bulk download files and SPARQL endpoint are updated nightly.
+		Your mileage may vary with the SPARQL endpoint. It's mostly for
+		demonstration purposes.</p>
+
+		<h3>SPARQL Endpoint</h3>
+
+<p>The SPARQL endpoint is a combined endpoint for various RDF data
+I play with. It answers queries about 1 billion triples, mostly about
+U.S. Census data (see <a href="http://www.rdfabout.com">rdfabout.com</a>),
+but also the GovTrack data.</p>
+
+<p>The SPARQL engine's base URL is <tt>http://www.rdfabout.com/sparql</tt>,
+following (or trying to follow) the SPARQL Protocol spec.  The SPARQL
+engine is <a href="http://sparql.sf.net">Ryan Levering's engine for SESAME</a>,
+plus <a href="http://razor.occams.info/code/semweb">my SemWeb library for C#</a>.
+The data store is persisted in MySQL.  Responses are limited to 1000 rows
+in the hopes that having this public won't break anything.</p>
+
+<p>Enter a SPARQL query below:</p>
+<form method="post" action="http://www.rdfabout.com/sparql">
+	<textarea rows="8" cols="80" name="query">PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT * WHERE {
+  &lt;http://www.rdfabout.com/rdf/usgov/congress/109/bills/h867&gt; ?p ?o
+}</textarea>
+	<p><input type="submit" value="Run Query"/>
+
+	Display As:
+	<select size="1" name="outputMimeType"><option value="text/xml">SPARQL XML</option><option value="text/html">HTML Table</option><option value="text/csv">CSV</option></select>
+	</p>
+</form>
+
+<h3>Notable Entities</h3>
+<p>Here are some notable URIs in the data:</p>
+<ul style="text-align: left">
+	<li><a href="http://www.rdfabout.com/rdf/usgov/congress/people/M000303">Sen. John McCain</a>: &lt;http://www.rdfabout.com/rdf/usgov/congress/people/M000303&gt;</li>
+	<li><a href="http://www.rdfabout.com/rdf/usgov/congress/109/bills/h867">H.R. 867</a> (a bill in congress): &lt;http://www.rdfabout.com/rdf/usgov/congress/109/bills/h867&gt;</li>
+</ul>
+
+<h3>Useful Namespaces</h3>
+<pre>
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dc:  &lt;http://purl.org/dc/elements/1.1/>
+PREFIX dcterms:  &lt;http://purl.org/dc/terms/>
+PREFIX xsd:     &lt;http://www.w3.org/2001/XMLSchema#&gt;
+PREFIX foaf:  &lt;http://xmlns.com/foaf/0.1/>
+PREFIX time: &lt;http://pervasive.semanticweb.org/ont/2004/06/time#&gt;
+PREFIX vcard: &lt;http://www.w3.org/2001/vcard-rdf/3.0#&gt;
+PREFIX geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;
+
+PREFIX usgov: &lt;http://www.rdfabout.com/rdf/schema/usgovt/&gt;
+PREFIX pol: &lt;http://www.rdfabout.com/rdf/schema/politico/&gt;
+PREFIX vote: &lt;http://www.rdfabout.com/rdf/schema/vote/&gt;
+PREFIX bill: &lt;http://www.rdfabout.com/rdf/schema/usbill/&gt;
+PREFIX sec: &lt;http://www.rdfabout.com/rdf/schema/us/sec/&gt;
+PREFIX seccik: &lt;tag:govshare.info,2005:data/us/sec/&gt;
+PREFIX census: &lt;http://www.rdfabout.com/rdf/schema/census/&gt;
+PREFIX census2: &lt;http://www.rdfabout.com/rdf/schema/census/details/&gt;
+</pre>
+
+<h3>Example Queries</h3>
+<p>Try out these examples:</p>
+
+<p>What bills has John McCain sponsored:</p>
+<pre>
+PREFIX people: &lt;http://www.rdfabout.com/rdf/usgov/congress/people/&gt;
+PREFIX bill: &lt;http://www.rdfabout.com/rdf/schema/usbill/&gt;
+PREFIX dc:  &lt;http://purl.org/dc/elements/1.1/>
+SELECT * WHERE { [] dc:title ?billtitle; bill:sponsor people:M000303; bill:congress "109" . }
+</pre>
+
+<p>What's the population of the state represented by every current senator:</p>
+<pre wrap="hard">
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dc:  &lt;http://purl.org/dc/elements/1.1/>
+PREFIX foaf:  &lt;http://xmlns.com/foaf/0.1/>
+PREFIX usgov: &lt;http://www.rdfabout.com/rdf/schema/usgovt/&gt;
+PREFIX pol: &lt;http://www.rdfabout.com/rdf/schema/politico/&gt;
+PREFIX census: &lt;http://www.rdfabout.com/rdf/schema/census/&gt;
+PREFIX time: &lt;http://pervasive.semanticweb.org/ont/2004/06/time#&gt;
+PREFIX xsd:     &lt;http://www.w3.org/2001/XMLSchema#&gt;
+SELECT ?name ?statename ?population WHERE {
+	?person foaf:name ?name ;
+		pol:hasRole [ time:to [ time:at ?enddate ] ;
+			pol:forOffice [ pol:represents ?state ] ] .
+	?state rdf:type usgov:State; dc:title ?statename;
+		census:population ?population .
+	FILTER(?enddate = "2006-12-31"^^xsd:date || ?enddate = "2008-12-31"^^xsd:date || ?enddate = "2010-12-31"^^xsd:date) .
+}
+ORDER BY ?population
+</pre>
+
+<p>Get a table of how senators voted on all of the Senate bills in 2009-2010:</p>
+<pre>
+PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#>
+PREFIX bill: &lt;http://www.rdfabout.com/rdf/schema/usbill/>
+PREFIX vote: &lt;http://www.rdfabout.com/rdf/schema/vote/>
+
+SELECT ?bill ?voter ?option  WHERE {
+  ?bill a bill:SenateBill .
+  ?bill bill:congress "111" ;
+    bill:hadAction [
+      a bill:VoteAction ;
+      bill:vote [
+        vote:hasOption [
+          vote:votedBy ?voter ;
+          rdfs:label ?option ;
+        ]
+      ] ;
+   ] .
+}</pre>
+
+<p>Find pairs of House and Senate bills that have the same title (which
+is actually fairly common):</p>
+<pre>
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX bill: &lt;http://www.rdfabout.com/rdf/schema/usbill/&gt;
+
+SELECT ?title ?hbill ?sbill WHERE {
+    ?hbill rdf:type bill:HouseBill ; bill:congress "109" .
+    ?sbill rdf:type bill:SenateBill ; bill:congress "109" .
+    ?hbill bill:hasTitle [ rdf:value ?title ] .
+    ?sbill bill:hasTitle [ rdf:value ?title ] .
+}
+</pre>
+
+<p>Get a table to correlate the population and median income of the state represented
+by a senator and his/her vote on the economic stimulus bill:</p>
+<pre wrap="hard">
+PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#>
+#PREFIX dc:  &lt;http://purl.org/dc/elements/1.1/>
+#PREFIX foaf:  &lt;http://xmlns.com/foaf/0.1/>
+PREFIX vote: &lt;http://www.rdfabout.com/rdf/schema/vote/>
+PREFIX pol: &lt;http://www.rdfabout.com/rdf/schema/politico/>
+PREFIX census: &lt;http://www.rdfabout.com/rdf/schema/census/>
+PREFIX census2: &lt;tag:govshare.info,2005:rdf/census/details/samp/>
+PREFIX time: &lt;http://pervasive.semanticweb.org/ont/2004/06/time#>
+PREFIX xsd:     &lt;http://www.w3.org/2001/XMLSchema#>
+SELECT ?option ?population ?medianincome WHERE {
+  &lt;http://www.rdfabout.com/rdf/usgov/congress/111/senate/votes/2009/61>
+      vote:hasOption [
+        vote:votedBy ?person ;
+        rdfs:label ?option ;
+      ] .
+   
+  #?person foaf:name ?name .
+  ?person pol:hasRole [
+      time:to [ time:at ?enddate ] ;
+      pol:forOffice [ pol:represents ?region ] ] .
+  #?region dc:title ?regionname .
+  ?region census:population ?population .
+
+  ?region census:details [
+    census2:population15YearsAndOverWithIncomeIn1999 [
+      census2:medianIncomeIn1999 ?medianincome
+    ]
+  ] .
+
+  FILTER(?enddate >= "2010-12-31"^^xsd:date) .
+
+}
+ORDER BY ?option
+</pre>
+
+	</Body-A>
+	
+ </Page>

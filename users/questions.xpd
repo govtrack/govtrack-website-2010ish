@@ -1,0 +1,226 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title>GovTrack.us Community Q&amp;A</Title>
+	
+	<Meta Name="description">Community question-and-answer dialogs about U.S. federal legislation.</Meta>
+	
+	<Param>topic</Param>
+	
+	<Sidebar Float="Right">
+		<monitor/>
+	</Sidebar>
+	
+	<Body-A>
+		<PageTitle2/>
+		<NoTopic>
+		<p>Welcome to GovTrack's unique community-driven 
+		question and answer system. Bills are getting so long and 
+		complicated that we need to help each other out if we are going 
+		to make heads or tails of the major policy debates.</p>
+		
+		<p>Here visitors to the site like you can pose questions about 
+		any bill in Congress, and if you know answers to other questions 
+		or are willing to do some research you can do a good civic deed 
+		by helping others out with an answer. <b>All questions and answers 
+		are anonymous submissions from visitors like you, moderated by 
+		the website administrator.</b></p>
+		
+		<h3>Ask a question or submit an answer...</h3>
+
+		<p>To get started, start by <a href="/congress/legislation.xpd">finding
+		the bill you have a question about</a>. There is a Q&amp;A box on the
+		page for every bill.</p>
+		</NoTopic>
+	</Body-A>
+	<Body-B>
+		<NoTopic>
+		<h3>Recent questions...</h3>
+		
+		<Questions/>
+		</NoTopic>
+		
+		<HasTopic>
+		<p>Here visitors to the site like you can pose questions about the
+		topic above,
+		and if you know answers to other questions you can
+		do a good civic deed by helping others out with an answer. All questions
+		and answers are anonymous submissions from visitors like you, moderated
+		by the website administrator.</p>
+		
+		<p>If you have a question, read through the questions already
+		asked below. If your question has not already been asked, you can
+		submit a new question at the bottom.</p>
+		<!--<a href="javascript:DHTML_ShowHide('questionsubmit', null); getObj('questionsubmitq').focus()">submit a new question</a>.</p>-->
+		
+		<center><p><b><Topic/></b></p></center>
+		
+		<Questions/>
+		
+		<Submit/>
+		</HasTopic>
+	</Body-B>
+	
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:xspmenus="xspmenus"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-login = "assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-comments = "assembly://GovTrackWeb/GovTrack.Web.Comments"
+		exclude-result-prefixes="http-context govtrack-util"
+		>
+		
+		<xsl:variable name="topic" select="http-context:param('topic')"/>
+		
+		<xsl:template match="monitor">
+			<xsl:if test="not($topic='')">
+			<xsl:variable name="topicname" select="govtrack-login:MonitorLink($topic)/title"/>
+			<Section Name="Q&amp;A on This Topic">
+			<monitor-subscribe
+				title="Community Q&amp;A about {$topicname}"
+				desc="tracker"
+				type="questions"
+				term="{$topic}">
+				<events>questions and answers on <xsl:value-of select="$topicname"/></events>
+			</monitor-subscribe>
+			</Section>
+			</xsl:if>
+			
+			<Section Name="Q&amp;A on All Topics">
+			<monitor-subscribe
+				title="Community Q&amp;A"
+				desc="tracker"
+				type="misc"
+				term="questions">
+				<events>questions and answers from the GovTrack community on all topics</events>
+			</monitor-subscribe>
+			</Section>
+		</xsl:template>
+		
+		<xsl:template match="PageTitle">
+			<xsl:if test="not($topic='')">
+				- <xsl:value-of select="govtrack-login:MonitorLink($topic)/title"/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="PageTitle2">
+			<xsl:if test="($topic='')">
+				<h1>
+					Community Question and Answer
+				</h1>
+			</xsl:if>
+			<xsl:if test="not($topic='')">
+				<!--<div class="PreTitle"><a href="questions.xpd">Community Q&amp;A</a></div>-->
+				<h1>
+				 Q&amp;A on <xsl:value-of select="govtrack-login:MonitorLink($topic)/title"/>
+				</h1>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="Topic">
+			<xsl:if test="$topic=''">
+				all topics
+			</xsl:if>
+			<xsl:if test="not($topic='')">
+				<a href="{govtrack-login:MonitorLink($topic)/href}"><xsl:value-of select="govtrack-login:MonitorLink($topic)/title"/></a>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="NoTopic">
+			<xsl:if test="$topic=''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="HasTopic">
+			<xsl:if test="not($topic='')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="Submit">
+			<!-- <div id="questionsubmit" style="display: none; padding: .5em; border: thin outset black; margin: 1em 3em 1em 3em; background-color: #FAFAFF"> -->
+			<table><tr><td> <!-- wrap around sidebar -->	
+			<div id="questionsubmit" style="padding: .5em; border: thin outset black; margin: 1em 3em 1em 0em; background-color: #FAFAFF">
+				<p style="margin-top: 0px"><b>Ask A Question</b></p>
+				<p><i>Tips:</i> Be clear and precise. Don't ask about the status of this bill or when it will be voted on (other users are not likely to know).
+				Don't ask a loaded question either: It will be rejected.</p>
+				<div>Enter your question:</div>
+				<div><input id="questionsubmitq" size="50"/>
+				<input type="button" value="Submit Question" onclick="q=getObj('questionsubmitq'); if (q.value!='') {{ DHTML_ShowHide('questionsubmit', false); AjaxElement('questionsubmitresponse', 'Submitting question for approval...', '/users/ajax_submit_question.xpd?topic=' + '{$topic}' + '&amp;question=' + escape(q.value))}}"/></div>
+				<p style="margin-bottom: 0px">After submitting your question it will be reviewed, and if approved will appear on this page.</p>
+			</div>
+			<div id="questionsubmitresponse" style="font-style: italic"></div>
+			</td></tr></table>
+		</xsl:template>		
+		
+		<xsl:template match="Questions">
+			<xsl:variable name="qs" select="govtrack-comments:GetQuestions($topic)"/>
+			
+			<xsl:if test="count($qs)=0">
+			<p>No questions have been asked on this topic yet.</p>
+			</xsl:if>
+			
+			<table border="0" cellpadding="5" cellspacing="0" width="550">
+			<xsl:for-each select="$qs">
+				<xsl:variable name="as" select="govtrack-comments:GetAnswers(id)"/>
+				<xsl:if test="$topic=''">
+					<tr valign="top"><xsl:if test="position() mod 2 = 1"><xsl:attribute name="bgcolor">#EFEFEF</xsl:attribute></xsl:if>
+					<td colspan="2" style="padding-top: .5em; font-weight: bold">
+						<xsl:variable name="m" select="govtrack-login:MonitorLink(topic)"/>
+						<a href="{$m/href}"><xsl:value-of select="$m/title"/></a>
+					</td>
+					</tr>
+				</xsl:if>
+				<tr valign="top"><xsl:if test="position() mod 2 = 1"><xsl:attribute name="bgcolor">#EFEFEF</xsl:attribute></xsl:if>
+				<td><a name="qa{id}"/><nobr><xsl:value-of select="date"/></nobr></td>
+				<td>
+				<div>
+					<xsl:value-of select="text"/> -
+					<xsl:if test="count($as) = 0">
+						<nobr><a href="javascript:DHTML_ShowHide('answers{position()}', null);">Answer This Question</a></nobr>
+					</xsl:if>
+					<xsl:if test="count($as) &gt; 0">
+						<a href="javascript:DHTML_ShowHide('answers{position()}', null);"><nobr>Show <xsl:value-of select="count($as)"/> Answer<xsl:if test="count($as) &gt; 1">s</xsl:if></nobr></a>
+					</xsl:if>
+				</div>
+				<div>
+					<div id="answers{position()}" style="display: none">
+						<xsl:for-each select="$as">
+							<div style="margin-top: 1em">
+								<xsl:variable name="date" select="date"/>
+								<xsl:variable name="num" select="position()"/>
+								<xsl:for-each select="govtrack-util:Split(text, '&#x0A;')">
+									<p>
+									<xsl:if test="position()=1"><b>A<xsl:value-of select="$num"/>: </b></xsl:if>
+									<xsl:value-of select="."/>
+									<xsl:if test="position()=last()"><span style="color: #666666"> [Answer submitted on <xsl:value-of select="$date"/>]</span></xsl:if></p>
+								</xsl:for-each>
+							</div>
+						</xsl:for-each>
+
+					<div id="questionanswer{position()}" style="padding: .5em; border: thin outset black; margin: 1em 3em 1em 0em; background-color: #FAFAFF">
+						<p style="font-weight: bold; margin-top: 0px;">
+							<xsl:if test="count($as)=0">Answer This Question!</xsl:if>
+							<xsl:if test="count($as)&gt;0">Add Another Answer:</xsl:if>
+						</p>
+
+						<p><i>Tips:</i> Be clear. No one-word answers and don't use abbreviations that readers may not be familiar with. Reference the text of the bill or other articles when possible. Don't be inflammatory- it will be edited out!</p>
+						<div><textarea id="questionanswer{position()}q" rows="4" style="width: 100%" wrap="virtual"/></div>
+						<div><input type="button" value="Submit Answer" onclick="q=getObj('questionanswer{position()}q'); if (q.value!='') {{ DHTML_ShowHide('questionanswer{position()}', false); AjaxElement('questionsubmitresponse{position()}', 'Submitting answer for approval...', '/users/ajax_submit_answer.xpd?question={id}&amp;answer=' + escape(q.value))}}"/></div>
+					</div>
+					<p id="questionsubmitresponse{position()}" style="font-style: italic"></p>
+					</div>
+				</div>
+				</td>
+				</tr>
+			</xsl:for-each>
+			</table>
+		</xsl:template>
+			
+	</Templates>
+ 
+ </Page>

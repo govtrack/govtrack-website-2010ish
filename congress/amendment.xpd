@@ -1,0 +1,167 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1"><AmendmentNumber/> to <BillNumber/> -- <Session/> Congress</Title>
+
+	<AllowEmail/>
+	<Param>session</Param>
+	<Param>amdt</Param>
+
+	<Breadcrumbs>
+		<a href="/congress">Congress</a>
+		&gt; <a href="legislation.xpd">Legislation</a>
+		&gt; <Session/> Congress
+	</Breadcrumbs>
+	
+	<Body-A>
+		<h1>
+			<AmendmentNumber/>: <AmendmentTitle/>
+		</h1>
+
+		<FullTitle/>
+
+		<p>An amendment to <BillLink><BillNumber/>: <BillTitle/></BillLink>.</p>
+		
+		<ShowInfo1/>
+	</Body-A>
+	
+	<Body-B>
+		<h3>Amendment Details</h3>
+	
+		<ShowInfo2/>
+		
+		<p>For more information, see the the official record on <ThomasLink>THOMAS for <AmendmentNumber/></ThomasLink>.</p>
+
+		<ShowText/>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		>
+		
+		<xsl:variable name="amd" select="govtrack-bills:LoadAmendment(http-context:param('session'), http-context:param('amdt'))" />
+		<xsl:variable name="bill" select="govtrack-bills:LoadBill2($amd/@session, $amd/amends/@type, $amd/amends/@number)" />
+		<xsl:variable name="text" select="govtrack-bills:LoadAmendmentText(http-context:param('session'), http-context:param('amdt'))" />
+
+		<xsl:variable name="thomaslinkchars">
+			<xsl:if test="$amd/@chamber = 's'">SP</xsl:if>
+			<xsl:if test="$amd/@chamber = 'h'">HZ</xsl:if>
+		</xsl:variable>
+
+		<xsl:template match="BillNumber">
+			<xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>
+		</xsl:template>
+
+		<xsl:template match="AmendmentNumber">
+			<xsl:if test="$amd/@chamber = 'h'">H.Amdt. </xsl:if>
+			<xsl:if test="$amd/@chamber = 's'">S.Amdt. </xsl:if>
+			<xsl:value-of select="$amd/@number"/>
+		</xsl:template>
+
+		<xsl:template match="BillTitle">
+			<xsl:value-of select="govtrack-util:Trunc(govtrack-bills:DisplayTitle($bill), 100)"/>
+		</xsl:template>
+
+		<xsl:template match="AmendmentTitle">
+			<xsl:value-of select="govtrack-util:Trunc($amd/description, 70)"/>
+		</xsl:template>
+
+		<xsl:template match="FullTitle">
+			<xsl:if test="not($amd/description = govtrack-util:Trunc($amd/description, 70))">
+				<p><xsl:value-of select="$amd/description"/></p>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="Session">
+			<xsl:value-of select="govtrack-util:Ordinate($bill/@session)"/>
+		</xsl:template>
+
+		<xsl:template match="BillLink">
+			<a href="{govtrack-bills:BillLink($bill)}"><xsl:apply-templates/></a>
+		</xsl:template>
+	
+		<xsl:template match="ThomasLink">
+			<a href="http://thomas.loc.gov/cgi-bin/bdquery/z?d{$bill/@session}:{$thomaslinkchars}{$amd/@number}:">
+				<xsl:apply-templates/>
+			</a>
+		</xsl:template>
+
+		<xsl:template match="ShowInfo1">
+			<p><strong>Offered: </strong> <xsl:value-of select="govtrack-util:DTToDateString($amd/offered/@datetime)"/></p>
+
+			<p><strong>Sponsor: </strong>
+					<xsl:if test="$amd/sponsor/@id">
+						<a href="{govtrack-reps:RepLink($amd/sponsor/@id)}">
+							<xsl:value-of select="govtrack-reps:FormatPersonName($amd/sponsor/@id, $amd/offered/@datetime, '')"/>
+						</a>
+					</xsl:if>
+					<xsl:if test="$amd/sponsor/@committee">
+						<xsl:value-of select="$amd/sponsor/@committee"/> Committee
+					</xsl:if>
+				</p>
+		</xsl:template>
+		
+		<xsl:template match="ShowInfo2">
+			<xsl:if test="not($amd/description = $amd/purpose)">
+				<p><xsl:value-of select="$amd/purpose"/></p>
+			</xsl:if>
+
+			<xsl:for-each select="$amd/actions/vote[@how='roll']">
+				<div style="float: right">
+					<a href="{govtrack-bills:VoteLink($amd/@chamber, govtrack-util:DTToYearString(@datetime), @roll)}">
+						<img src="{govtrack-bills:GetVoteImgGeo($amd/@chamber, govtrack-util:DTToYearString(@datetime), number(@roll), 1 )}" style="border: 1px solid black"/>
+					</a>
+				</div>
+			</xsl:for-each>
+
+			<table width="500">
+			
+			<!--<tr>
+				<td><nobr>Status of <xsl:value-of select="govtrack-bills:DisplayNumber($bill)"/>:</nobr></td>
+				<td><xsl:value-of select="govtrack-bills:GetStatusSource($bill)"/></td>
+			</tr>-->
+			
+			<tr valign="top">
+				<td>Actions:</td>
+				<td>
+					<xsl:if test="count($amd/actions/*)=0">
+						No action has been taken on this proposed amendment.
+					</xsl:if>
+					<xsl:for-each select="$amd/actions/*">
+						<div style="margin-bottom: .5em"><xsl:value-of select="govtrack-util:DTToDateString(@datetime)"/>:
+						<xsl:value-of select="." />
+						<xsl:if test="name(.) = 'vote' and @how='roll'">
+							[<a href="{govtrack-bills:VoteLink($amd/@chamber, govtrack-util:DTToYearString(@datetime), @roll)}">Vote Details</a>]
+						</xsl:if>
+						</div>
+					</xsl:for-each>
+				</td>
+			</tr>
+			</table>
+		</xsl:template>
+
+		<xsl:template match="ShowText">
+			<h3>Text of amendment</h3>
+
+			<xsl:if test="$text[1] = ''"><p>No text for this amendment is available on GovTrack.
+			See <a href="http://thomas.loc.gov/cgi-bin/bdquery/z?d{$bill/@session}:{$thomaslinkchars}{$amd/@number}:">THOMAS</a>
+			for more information.
+			</p></xsl:if>
+
+			<xsl:for-each select="$text">
+				<p>
+					<xsl:value-of select="."/>
+				</p>
+			</xsl:for-each>
+		</xsl:template>
+
+	</Templates>
+   
+ </Page>

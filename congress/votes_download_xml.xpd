@@ -1,0 +1,63 @@
+<?xml-stylesheet xpath="votes-download/Templates" type="text/xsl" ?>
+<?mime-type text/xml?>
+<votes-download>
+	<title><PageTitle/> - <Header/></title>
+	<votes>
+<ShowVotes/>
+	</votes>
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bill = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Bill"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-person = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Person"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-login = "assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-vote = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Vote"
+		exclude-result-prefixes="http-context govtrack-util govtrack-bill govtrack-bills govtrack-reps govtrack-person govtrack-subjects govtrack-login govtrack-vote"
+		>
+		
+		<xsl:variable name="votes" select="govtrack-vote:GetVotes()"/>
+
+		<xsl:template match="PageTitle">
+			<xsl:if test="http-context:param('person')=''">
+				Congressional Roll Call Votes Database
+			</xsl:if>
+			<xsl:if test="not(http-context:param('person')='')">
+				<xsl:value-of select="govtrack-reps:FormatPersonName(http-context:param('person'), 'now', '')"/>'s Voting Record
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="Header">
+				<xsl:if test="http-context:param('chamber')=''">All</xsl:if>
+				<xsl:if test="http-context:param('chamber')='Senate'">Senate</xsl:if>
+				<xsl:if test="http-context:param('chamber')='House'">House</xsl:if>
+				<xsl:text> votes</xsl:text>
+				
+				<xsl:if test="http-context:param('year')=''"> (this year)</xsl:if>
+				<xsl:if test="not(http-context:param('year')='')"> in <xsl:value-of select="http-context:param('year')"/></xsl:if>
+				
+				<xsl:if test="not(http-context:param('subject')='')"> related to "<xsl:value-of select="http-context:param('subject')"/>"</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="ShowVotes">
+			<xsl:for-each select="$votes">
+				<xsl:if test="http-context:param('person') = '' or not(vote = '')">
+				<vote year="{substring(id,2,4)}" chamber="{substring(id,1,1)}" roll="{substring-after(id, '-')}">
+					<date><xsl:value-of select="date"/></date>
+					<xsl:if test="not(http-context:param('person') = '')">
+						<position><xsl:value-of select="vote"/></position> <xsl:comment>values are + (aye), - (nay), 0 (absent), P (present), X (other)</xsl:comment>
+					</xsl:if>
+					<description><xsl:value-of select="govtrack-bills:GetTransformedVoteDescription(description, title)"/></description>
+					<result><xsl:value-of select="result"/></result>
+					<link>http://www.govtrack.us/congress/vote.xpd?vote=<xsl:value-of select="id"/></link>
+				</vote>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:template>
+
+	</Templates>
+   
+</votes-download>

@@ -1,0 +1,223 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/menus.xslt" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideSidebar="1"
+	xmlns:xspmenus="xspmenus">
+
+	<Title PrependSiteTitle="1">Congressional Record</Title>
+	
+	<Body>
+		<div class="PreTitle">
+			<a href="/congress/">Congress</a>
+			<IfSearchingOrDate>
+				&gt; <a href="recordindex.xpd">Congressional Record</a>
+			</IfSearchingOrDate>
+		</div>
+
+		<h1 class="PageTitle">The Congressional Record<DateWhere/></h1>
+
+		<div class="welcome">
+		<p>The Congressional Record is the official journal of
+		Congress's daily proceedings. Often a transcript
+		of the debates on the House and Senate floors, the Congressional
+		Record can be significantly modified by Members of Congress after the fact.</p>
+
+		<p>GovTrack provides a unique hyperlinked version of the Congressional Record,
+		adding links to the members of Congress and legislation
+		appearing in the record. GovTrack does not have a complete copy of the Congressional record,
+		and at the moment you can only browse the record for the
+		current session of Congress.  For the complete record
+		and further searching options, use <a href="http://thomas.loc.gov">THOMAS</a>.</p>
+		</div>
+
+		<table border="0" cellpadding="10" cellspacing="0">
+		<tr valign="top">
+		
+		<td>
+		<IfNotBrowsing>
+			<Results/>
+		</IfNotBrowsing>
+		
+			<IfNotSearchingNoDate>
+			<h3>Browse the Congressional Record</h3>
+			<xspmenus:tabstrip class="maintabstrip" id="year" tabwidth="15%" method="dhtml">
+				<DateList year="2009"/>
+				<DateList year="2008"/>
+				<DateList year="2007"/>
+				<DateList year="2006"/>
+				<DateList year="2005"/>
+				<DateList year="2004"/>
+			</xspmenus:tabstrip>
+			</IfNotSearchingNoDate>
+		</td>
+		
+		<IfNotBrowsing>
+		<td style="padding: 2em">
+		<div class="box" style="width: 38em">
+		<div class="boxtitle">Search the Congressional Record</div>
+
+		<xspforms:form xmlns:xspforms="xspforms" id="billsearch" method="get">
+		<p>Search Query: <xspforms:text name="q" defaultfromquery="1"/>
+			<xspforms:select name="session">
+				<xspforms:option value="110">110th Congress (2007-08)</xspforms:option>
+				<xspforms:option value="109">109th Congress (2005-06)</xspforms:option>
+				<xspforms:option value="108">108th Congress (2003-04)</xspforms:option>
+			</xspforms:select>
+		</p>
+		
+		<p>You may use AND, OR, NOT, and quotation marks for phrases.</p>
+		
+		<p>Limit Search:
+			<xspforms:select name="type" autopostback="yes">
+				<xspforms:option value="section">Normal Search</xspforms:option>
+				<xspforms:option value="speaker">Paragraph Search</xspforms:option>
+			</xspforms:select>
+			<xspforms:select name="chamber" autopostback="yes">
+				<xspforms:option value="">Either Chamber</xspforms:option>
+				<xspforms:option value="h">House Debates</xspforms:option>
+				<xspforms:option value="s">Senate Debates</xspforms:option>
+			</xspforms:select>
+		</p>
+		
+		<p><xspforms:submit text="Search"/></p>
+		</xspforms:form>
+
+		</div>
+
+		</td>
+		</IfNotBrowsing>
+		
+		</tr>
+		</table>
+
+		<IfNotSearchingHasDate>
+			<ItemList/>
+		</IfNotSearchingHasDate>
+	</Body>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext = "HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-record = "assembly://GovTrackWeb/GovTrack.Web.Record"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-search = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.CRSearch"
+		xmlns:xspforms="xspforms"
+		exclude-result-prefixes="govtrack-util govtrack-search HttpContext govtrack-subjects xspforms govtrack-record govtrack-bills govtrack-reps">
+		>
+		
+		<xsl:template match="IfNotBrowsing">
+			<xsl:if test="HttpContext:param('date')=''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="IfNotSearchingNoDate">
+			<xsl:if test="HttpContext:param('PostFormID')='' and HttpContext:param('date')=''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="IfNotSearchingHasDate">
+			<xsl:if test="HttpContext:param('PostFormID')='' and not(HttpContext:param('date')='')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+		<xsl:template match="IfSearchingOrDate">
+			<xsl:if test="not(HttpContext:param('PostFormID')='') or not(HttpContext:param('date')='')">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="DateWhere[HttpContext:param('date')='']">
+		</xsl:template>
+
+		<xsl:template match="DateWhere[not(HttpContext:param('date')='')]">
+			<xsl:text>: </xsl:text>
+			<xsl:value-of select="substring(HttpContext:param('date'), 5, 2)"/>
+			<xsl:text>/</xsl:text>
+			<xsl:value-of select="substring(HttpContext:param('date'), 7, 2)"/>
+			<xsl:text>/</xsl:text>
+			<xsl:value-of select="substring(HttpContext:param('date'), 1, 4)"/>
+			in the
+			<xsl:if test="HttpContext:param('where')='s'">Senate</xsl:if>
+			<xsl:if test="HttpContext:param('where')='h'">House</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="DateList">
+			<xsl:variable name="items" select="govtrack-record:GetRecordDays(@year)"/>
+
+			<xspmenus:tab id="{@year}"><xsl:value-of select="@year"/></xspmenus:tab>
+			<xspmenus:body tab="{@year}">
+			
+			<xsl:for-each select="$items">
+				<div>
+					<xsl:value-of select="datestr"/>
+					<xsl:text> - </xsl:text>
+					<xsl:if test="s">
+						<a href="?date={date}&amp;where=s">Senate</a>
+					</xsl:if>
+					<xsl:if test="s and h"> | </xsl:if>
+					<xsl:if test="h">
+						<a href="?date={date}&amp;where=h">House</a>
+					</xsl:if>
+				</div>
+			</xsl:for-each>
+			
+			</xspmenus:body>
+		</xsl:template>
+		
+		<xsl:template match="ItemList">
+			<xsl:variable name="items" select="govtrack-record:GetRecordDayDocuments()"/>
+	
+			<ol>
+			<xsl:for-each select="$items">
+				<li>
+					<a href="record.xpd?id={session}-{where}{date}-{ord}">
+						<xsl:value-of select="title"/>
+					</a>
+				</li>
+			</xsl:for-each>
+			</ol>
+		</xsl:template>
+
+
+		<xsl:template match="Results">
+			<xsl:variable name="results" select="govtrack-search:Search()"/>
+		
+			<xsl:if test="not(HttpContext:param('q')='')">
+				<p style="font-weight: bold">
+					<xsl:value-of select="count($results/*)"/> excerpt(s) matched your search
+					<i><xsl:value-of select="$results/@query"/></i>.
+				</p>
+			</xsl:if>
+			
+			<xsl:for-each select="$results/*">
+				<p style="margin-top: 0px; margin-bottom: 1em">
+					<!--<a href="{govtrack-bills:BillLink(.)}">-->
+					<div>
+						<xsl:if test="@where='s'">Senate</xsl:if>
+						<xsl:if test="@where='h'">House</xsl:if>
+						Debate - 
+						<xsl:value-of select="govtrack-util:DTToDateString(@datetime)"/>
+					</div>
+					<div style="font-weight: bold; border-bottom: 1px solid black">
+						<a href="record.xpd?id={@id}">
+						<xsl:if test="not(@speaker='')">
+							<xsl:value-of select="govtrack-reps:FormatPersonName(@speaker, @datetime, '')"/>
+							-
+						</xsl:if>
+						<xsl:value-of select="@title"/>
+						</a>
+					</div>
+					
+					<xsl:value-of select="@excerpt"/>
+					<!--</a>-->
+				</p>
+			</xsl:for-each>
+		</xsl:template>
+
+	</Templates>
+   
+ </Page>

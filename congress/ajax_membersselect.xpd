@@ -1,0 +1,29 @@
+<?xml-stylesheet xpath="output/Templates" type="text/xsl" ?>
+
+<output>
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		exclude-result-prefixes="http-context govtrack-util govtrack-reps httpcontext">
+		<xsl:template match="output">
+			<xsl:variable name="selected" select="http-context:param('selected')"/>
+			<xsl:variable name="type" select="http-context:param('type')"/>
+			<xsl:variable name="reps" select="govtrack-reps:FindBySession(http-context:param('session'))"/>
+			<xsl:variable name="baddefault" select="not(http-context:param('selected')='') and count($reps[id=$selected])=0"/>
+			<select>
+			<xsl:if test="$baddefault">
+				<option value="{$selected}" selected="1"><xsl:value-of select="govtrack-reps:FormatPersonName($selected, http-context:param('session'), '')"/></option>
+			</xsl:if>
+			<xsl:for-each select="$reps">
+				<xsl:sort select="sortname"/>
+				<xsl:if test="$type='' or (type='rep' and $type='House') or (type='sen' and $type='Senate')">
+					<option value="{id}"><xsl:if test="id=$selected"><xsl:attribute name="selected">1</xsl:attribute></xsl:if><xsl:value-of select="name"/> - <xsl:value-of select="state"/><xsl:if test="district &gt; 0"> - <xsl:value-of select="district"/></xsl:if></option>
+				</xsl:if>
+			</xsl:for-each>
+			</select>
+		</xsl:template>
+	</Templates>
+</output>
+

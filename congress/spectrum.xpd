@@ -1,0 +1,91 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideSidebar="1" HideAds="1">
+	<Title PrependSiteTitle="1">Political Spectrum &amp; Legislative Leadership</Title>
+	
+	<Head>
+		<!-- http://dynamicdrive.com/dynamicindex4/imagepanner.htm -->
+		<style type="text/css">
+			/*Default CSS for pan containers*/
+			.pancontainer{
+			position:relative; /*keep this intact*/
+			overflow:hidden; /*keep this intact*/
+			width:300px;
+			height:300px;
+			/*border:1px solid black;*/
+			}
+		</style>
+		
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+		
+		<script type="text/javascript" src="/scripts/imagepanner.js">
+		/***********************************************
+		* Simple Image Panner and Zoomer- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+		* This notice MUST stay intact for legal use
+		* Visit Dynamic Drive at http://www.dynamicdrive.com/ for this script and 100s more
+		***********************************************/
+		</script>
+	</Head>
+
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a>
+		&gt; <a href="findyourreps.xpd">Members of Congress</a>
+		&gt; <a href="repstats.xpd">Statistics</a>
+	</Breadcrumbs>
+	
+	<Body-A>
+		<h1>Political Spectrum &amp; Legislative Leadership</h1>
+
+		<p>The political spectrum and legislative leadership image is generated through a
+		statistical analysis of the cosponsorship of bills in Congress. The images plot
+		senators and congressmen on two dimensions: the left-right axis is a rough gauge
+		of ideology, the up-down axis is a gauge of leadership with those at the top most likely to garner the cosponsorship of others. See below the images for more.</p>
+	</Body-A>
+	
+	<Body-B>
+		<center>
+		<div style="margin-bottom: 2em">
+			<div class="pancontainer" data-orient="center" data-canzoom="yes" style="width:700px; height:500px;">
+			<img src="/data/us/112/stats/sponsorshipanalysis_s_large.png" title="Political Spectrum &amp; Legislative Leadership --- Senate" style="width: 700px; height: 500px"/>
+			</div>
+		</div>
+		
+		<div style="margin-bottom: 2em">
+			<div class="pancontainer" data-orient="center" data-canzoom="yes" style="width:700px; height:500px;">
+			<img src="/data/us/112/stats/sponsorshipanalysis_h_large.png" title="Political Spectrum &amp; Legislative Leadership --- House" style="width: 700px; height: 500px"/>
+			</div>
+		</div>
+		</center> 
+
+		<p>These images are meant to be informative of the internal make-up of Congress, but as with any statistical analysis the reduction of the Real World to a few numbers is going to miss out on the complexities of life.</p>
+		
+		<p>GovTrack first published a political spectrum diagram in 2004. A new methodology has been used since 2011, along with new legislative leadership scores. An explanation of the computation of these two statistics is given below.</p>
+
+		<h3>Political Spectrum Ideology Scoring</h3>
+		
+		<p>The statistical analysis used to compute ideology is, believe it or not, not based on issue group rating, GovTrack's opinion, or any other editorial source. Instead, it is a numerical statistic computed based on mere patterns of how Members of Congress cosponsor bills. The short of it is that Members of Congress that cosponsor similarly are placed next to each other on the left-right axis. Members of Congress that cosponsor different sets of bills are placed at different ends of the axis.</p>
+		
+		<p>This statistical process doesn't say what this axis <i>means</i>. It might be liberal-conservative, city-country, or north-south for all it cared. But if you look at the results, and especially the fact that it automagically puts the Dems on one side and the GOP on the other, hopefully you will agree that it is showing something roughly close to ideology.</p>
+		
+		<p>For the math folks reading, the underlying statistical analysis is called principle components analysis, using singular value decomposition over a term-document matrix. The terms and documents are both Members of Congress, with each cell being the square root of the number of times the Member represented by the column cosponsored a bill sponsored by the Member represented by the row. The political spectrum is taken from the second principle dimension.</p>
+
+		<p>Other people (mainly people who know more about this than I
+		do) have done similar analyses.  See 
+		<a href="http://pooleandrosenthal.com/recentpolitics.htm">Analyses of Recent American Politics,
+		Keith T. Poole</a>
+		and
+		<a href="http://www.stat.columbia.edu/~jakulin/Politics/index.htm">Data Mining in Politics,
+		Aleks Jakulin</a>.</p>
+		
+		<h3>Legislative Leadership</h3>
+		
+		<p>The up-down axis for legislative leadership is computed in a similarly editorially-blind manner. As with the political spectrum computation it is based on patterns of cosponsorship. Roughly speaking, each time a Member of Congress cosponsors another Member of Congress's bill, the first Member of Congress gives the second Member of Congress some leadership points . . . in proportion to how many leadership points the first Member of Congress has. It is basically the same way Google ranks pages in their search results.</p>
+		
+		<p>We can be a little more assured that this analysis actually reflects some aspect of reality. It is in a sense measuring the give-and-take relationships that Members of Congress have with each other, or at least the part of those relationships exposed through bill cosponsorship. One interesting point is that while, at the time of writing, the highest leadership score in the Senate is "correctly" given to the Senate Majority Leader, the Speaker of the House has a relatively low leadership score. This is easily explained by the fact that the Speaker tends not to introduce legislation herself, and it reinforces the fact that reality cannot be boiled down to single statistics.</p>
+		
+		<p>Again for the math junkies like myself, the method here is literally the Google PageRank algorithm, as described in <a href="http://www.amazon.com/Numerical-Algorithms-Personalized-Self-organizing-Information/dp/0691145032">Numerical Algorithms for Personalized Search in Self-organizing Information Networks</a> by Sep Kamvar. The transition probabilities a<sub>ij</sub> in the Markov matrix are the probabilities that when Member of Congress <i>i</i> cosponsors a bill, that it will be a bill of Member of Congress <i>j</i>. Interestingly, this legislative leadership score is highly correlated with the first principle dimension of the PCA analysis above, giving some insight into what that principle direction can be understood as.</p>
+
+	</Body-B>
+
+</Page>

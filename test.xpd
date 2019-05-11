@@ -1,0 +1,87 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page HideAds="1">
+
+	<Title>Test</Title>
+	
+	<Head>
+	</Head>
+	
+	<Body-A>
+		<h1>Test</h1>
+		
+		<p>Test test test.</p>
+	</Body-A>
+	
+	<Body-B>
+	<p>Launched in 2004 as a hobby of <a href="http://razor.occams.info">Joshua Tauberer</a>, 
+	GovTrack.us was the first website worldwide whose primary goal was to provide free comprehensive 
+	legislative tracking for everyday citizens and to embrace Web 2.0 and open data for government 
+	information. GovTrack.us was a 2006 <a 
+	href="http://webbyawards.com/webbys/current.php?season=10#webby_entry_politics">Webby Award 
+	nominee</a> and has been covered in <a href="http://www.govtrack.us/articles/20050126nyt.xpd">The 
+	New York Times</a> and <a href="http://www.govtrack.us/articles/20060301wp.xpd">The Washington 
+	Post</a>.</p>
+	
+	<p>You'll find here the <a href="/congress/bill.xpd?bill=h110-6331">status of U.S. federal 
+	legislation</a>, <a href="/congress/vote.xpd?vote=h2008-469">voting records</a> for the Senate 
+	and House of Representatives, information on <a href="/congress/person.xpd?id=400365">Members of 
+	Congress</a>, <a href="/congress/findyourreps.xpd">district maps</a>, as well as congressional 
+	committees and the Congressional Record.</p>
+	
+	<h4>How it works</h4>
+	
+	<p>The information shown on this site is assembled in an automated way
+	from official government websites (primarily from the website <a href="http://thomas.loc.gov/">THOMAS</a>,
+	the official website for the status of legislation run by the Library of Congress).
+	The process of gathering the information is entirely automatic and Congress
+	isn't always very happy to share, so you may find occasional errors here, but we
+	take errors very seriously and work hard to correct them.</p>
+	
+	<p>The status and text of legislation is usually delayed by about 24 hours 
+	and roll call votes usually appear on the site within an hour because we can only
+	get information as fast as the official sites put it online.</p>
+	
+	<p>Our database also extends into the past. You can search and browse bills going back to the
+	103rd Congress (1993-94), though the text of legislation goes back only as far as the 106th
+	Congress (1999-2000). Roll call votes are available back to the start of our nation!.</p>
+	
+	<h4>More about the site</h4>
+		
+		<p>This site was created and is run by <a href="http://razor.occams.info">Joshua Tauberer</a>
+		and became a project of <a href="http://www.civicimpulse.com">Civic Impulse, LLC</a> when the company was formed in September 2009.
+		Steve Pearson currently moderates the bill Q&amp;A system.
+		GovTrack isn't affiliated with the government or any other group and our only ongoing
+		funding comes from advertising.
+		</p>
+		
+		<p>To send me a note, email me at <contactemailaddress/>.
+		Please don't email me to contact your Member of Congress or to do research for you, though!
+		Also, please don't cite me personally for information you find on this site as the
+		information is derived entirely from other databases. I generally don't do research by hand or exercise any editorial effect over what you see here.</p>
+		
+		<p>Starting in July 2008, several others have contributed to the development of this site.
+		<a href="http://plaza.ufl.edu/publius/">Daniel Gabriele</a> did design work.
+		Kevin Henry developed the interactivity on the new bill text display (supported by a <a href="http://www.sunlightfoundation.com">Sunlight Foundation</a> grant).
+		Thanks to Mike Drescher for collecting some images of Members of Congress. Ben Rellick designed
+		some updated logos.</p>
+			
+		<p>Also...</p>
+		
+		<ul>
+		<li><a href="faq.xpd#logo">About the all-seeing-eye logo</a></li>
+		</ul>
+		
+		<p>GovTrack supports <a href="opengov.xpd">open government and open knowledge</a>.</p>
+	
+	
+	<h3>Link to us!</h3>
+	
+	<p>Here's a button image you could use to link to GovTrack:</p>
+	
+	<img src="/media/linklogo.png"/>
+
+	</Body-B>
+
+</Page>

@@ -1,0 +1,83 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title>How To Use Govtrack</Title>
+	
+	<Body-A>
+		<h1 class="PageTitle">Using GovTrack</h1>
+		
+		<p>GovTrack is both a research tool as well as your own personalized
+		Congress-tracker.  Read on for more about how to use this site,
+		and see the <a href="about.xpd">About GovTrack</a> page for the
+		motivation behind the site and how the site gets its information.</p>
+		
+		<h3>A Research Tool</h3>
+		
+		<p>As a research tool, GovTrack provides you with the current status
+		and text of legislation in Congress.  You can browse bills by
+		<a href="congress/subjects.xpd">subject</a> or
+		<a href="congress/subjects.xpd?type=committee">committee</a>,
+		or you can <a href="congress/billsearch.xpd">search</a> by bill
+		number of keywords.  Bills link to voting records, status of
+		amendments, and references to them in the Congressional Record.</p>
+		
+		<p>GovTrack also has the entire content of the Congressional Record,
+		the debate on the House and Senate floors, which you can
+		<a href="congress/recordindex.xpd">browse</a> or
+		<a href="congress/crsearch.xpd">search</a>.</p>
+		
+		<p>You can also find bills by sponsor, or the Congressional Record
+		speeches for particular congressmen, by
+		<a href="congress/replookup.xpd">searching for a congressman</a>.</p>
+		
+		<h3>Tracking Congress</h3>
+		
+		<p>GovTrack can track the aspects of Congress that interest you.
+		On this site, you can choose which aspects of Congress you want
+		to "monitor."  You can monitor particular congressmen, legislation, subject
+		areas, and committees.  The <a href="users/events.xpd">Tracked Events</a>
+		page will show all recent events in Congress matching your monitors.</p>
+
+		<div style="float: right"><img src="/media/monitorbox.png" alt="Sample Monitor Box"/></div>
+					
+		<p>To add a new monitor, find the page for the <a href="../congress/replookup.xpd">person</a>,
+		<a href="../congress/billsearch.xpd">bill</a>, <a href="../congress/subjects.xpd">subject term</a>
+		or <a href="../congress/subjects.xpd?type=committee">committee</a>
+		that you want to monitor. Then find the Monitor box on the page.
+		An example is shown to the right.</p>
+					
+		<p>Click the <i>Monitor</i> button to subscribe to events that
+		match the page that you are on.</p>
+		
+		<p>There are three ways to view the events that match
+		your chosen monitors.</p>
+		
+		<ul>
+		
+		<li>The <a href="events.xpd">Tracked Events</a> page will list
+		all recent matching events for all of your monitors, updated
+		daily.  The page is found in the Your Settings menu above.</li>
+		
+		<li>The Tracked Events page also has an
+		<a href="http://www.whatisrss.com/">"XML" RDF/RSS 1.0</a> link which you can subscribe to with a
+		newsreader, like you would with RSS feeds from news sites or blogs.</li>
+		
+		<li>If you <a href="users/register.xpd">register</a> (it's free), you can
+		have GovTrack send you these events by email daily or weekly.  After registering,
+		be sure to turn on email updates from the
+		<a href="users/yourmonitors.xpd">Your Monitors</a> page, which is on the
+		Your Settings menu above.</li>
+		
+		</ul>
+		
+		<p>When you are not registered, your monitors are stored
+		in a "cookie" in your computer, which means that if you
+		go to another computer or if you clear your cookies,
+		you will no longer see the monitors you chose.  If you
+		register, you'll avoid this problem.</p>		
+			
+	</Body-A>
+ </Page>
+

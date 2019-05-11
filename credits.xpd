@@ -1,0 +1,99 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title>GovTrack Credits</Title>
+	
+	<Breadcrumbs><a href="about.xpd">About GovTrack</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="PageTitle">Credits</h1>
+		
+		<p>So many acknowledgements are due!</p>
+		
+		<h4>Intellectual Acknowledgements</h4>
+
+<p>Other sites that have inspired various things you see here. GovTrack was initially inspired by <a 
+href="http://votesmart.org/index.htm">Project Vote Smart</a>, <a 
+href="http://www.opensecrets.org">OpenSecrets</a> and the commercial <a 
+href="http://capitoladvantage.com/capwiz/">CapWiz</a>.</p>
+
+<p>Ideas for several
+components of the site have been derived from elsewhere: <a 
+href="http://www.richmondsunlight.com/">RichmondSunlight</a> for how the status of
+legislation is displayed on bill pages, and <a 
+href="http://www.washingtonwatch.com/">WashingtonWatch</a> for showing
+costs-per-taxpayer of legislation, and <a href="http://www.opencongress.org">OpenCongress</a>
+for the crowd-sourcing of related legislation. The Leader-Follower scores are based on an idea by Joseph Barillari (one of my college classmates).
+I'm sure I have drawn ideas from many other places as well.</p>
+
+<p>(Interestingly, some credit was due to the government's
+Orwellian but fortunately dead-before-it-started Total Information Awareness project,
+which inspired the short-lived MIT media lab project Government Information Awareness,
+which in turn provided the initial database of legislators used here.)</p>
+
+<h4>Financial Acknowledgements</h4>
+
+<p>Though the site is primarily self-funded through the advertising (<a href="ads.xpd">more
+on the advertising</a>), and through the contributions in time of those who have
+worked on the site, a small part of the development of the site has been externally funded.</p>
+
+<p>The interactivity on the bill text pages was developed by Kevin Henry supported by
+a grant from the <a href="http://www.sunlightfoundation.com">Sunlight Foundation</a>.
+Thanks, Sunlight!</p>
+
+<h4>Informational Acknowledgements</h4>
+		
+		<p>Data on the site comes from these official (government) sources:</p>
+		
+		<ul>
+			<li>The Library of Congress and the Congressional Research Service via <a href="http://thomas.loc.gov">THOMAS</a>
+				for the status legislation, subject terms of bills, and bill summaries, and upcoming House committee meetings.</li>
+			<li>The <a href="http://www.house.gov">House of Representatives</a>
+				and the <a href="http://www.senate.gov">Senate</a> for information on Members of Congress, committee membership, voting records,
+				and <a href="http://www.senate.gov/pagelayout/committees/b_three_sections_with_teasers/committee_hearings.htm">upcoming committee meetings</a>.</li>
+			<li>The <a href="http://www.gpo.gov">Government Printing Office</a> for photos of members of congress and the text of legislation.</li>
+			<li>The <a href="http://www.omb.gov/">Office of Management and Budget (OMB)</a> (executive branch) and <a href="http://www.cbo.gov/">Congressional Budget Office (CBO)</a>
+			(legislative branch) for reports related to bills.</li>
+			<li>The <a href="http://bioguide.congress.gov">Congressional Biographical Directory</a> and the independent <a href="http://web.mit.edu/17.251/www/data_page.html">Congressional Committees, Historical Standing Committees data set by Garrison Nelson and Charles Stewart</a> for biographical and historical information on members of Congress, including congressional district assignments.</li>
+			<li>The <a href="http://www.census.gov">Census Bureau</a> for geographic data on congressional district and municipal boundaries.</li>
+		</ul>
+		
+		<p>And these independent sources:</p>
+		
+		<ul>
+			<li>For roll call vote data and some district numbers from the 1st to 100th Congresses: Rosenthal,  Howard  L.,  and  Keith  T.  Poole. <a href="http://voteview.ucsd.edu/dwnl.htm">United States Congressional Roll Call Voting Records, 1789-1990</a>. Pittsburgh, PA:  Keith T. Poole, Carnegie  Mellon  University, Graduate School of Industrial Administration, 1991.</li>
+			<li>For political party affiliation for Members of Congress from 1789 through about year 2000, Martis's "The Historical Atlas of Political Parties in the United States Congress" via Keith Poole's roll call votes data set.</li>
+			<li><a href="http://www.vote-smart.org">Project Vote Smart</a> for their bill highlights.</li>
+			<!--<li><a href="http://www.congresspedia.org">Congresspedia</a> for their bill pages, out of which I show excerpts.</li>-->
+			<li><a href="http://public.resource.org">public.resource.org</a> and <a href="http://www.watchdog.net">watchdog.net</a> for the ZIP+4-to-congressional-district database.</li>
+			<li>The <a href="http://www.law.cornell.edu/">Cornell University Legal Information Institute</a> for the text of the United States Code in the "law in context" pop-ups in bill text.</li>
+			<li>I've supplemented some biographical information on Members of Congress from the <a href="http://services.sunlightlabs.com/api/">Sunlight Labs API</a>.</li>
+		</ul>
+		
+		<h4>Software Acknowledgements</h4>
+		
+		<p>GovTrack wouldn't be fiscally possible without the many
+		open source projects that have developed software powering this
+		site, including especially:</p>
+
+		<img src="media/mono-powered.png" style="float: right"/>
+
+		<ul>
+		<li><a href="http://www.mono-project.com">Mono</a>, the open-source .NET</li>
+		<li>The <a href="http://www.boutell.com/gd/">GD drawing library</a> for various images</li>
+		<li><a href="http://www.dotlucene.net/">DotLucene</a> (Jakarta Lucene ported to C#) for searching bills and the congressional record</li>
+		<li><a href="http://tedlab.mit.edu/~dr/SVDLIBC/">Doug Rhode's SVD C Library</a> to perform the mathematical analysis for the political spectrum</li>
+		<li><a href="http://www.santafe.edu/~mgastner/">Michael Gastner's <tt>cartogram</tt> program</a> for creating cartogram maps of voting records.</li>
+		<li><a href="http://www.brandspankingnew.net/specials/ajax_autosuggest/ajax_autosuggest_autocomplete.html">Autosuggest / Autocomplete with Ajax v. 2.0</a></li>
+		</ul>
+		
+		<p>Thanks to all of the people that made these open source tools available.</p>
+		
+		<p>The server powering this site is located at <a href="http://www.rimuhosting.com/">Rimuhosting</a>.
+		(I don't get any special treatment from them, but they have been very good so I thought a link
+		would be nice!)</p>
+	</Body-A>
+ </Page>
+

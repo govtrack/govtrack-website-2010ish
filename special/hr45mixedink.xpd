@@ -1,0 +1,187 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page
+	xmlns:xspforms="xspforms">
+
+	<Title>The H.R. 45 MixedInk Group Letter Experiment</Title>
+	
+	<Head>
+	
+<script>
+function submitInfo() {
+	var re = new RegExp("^\\d+$");
+	if (getObj("submitform").cd.value != "") {
+	if (!re.exec(getObj("submitform").cd.value)) {
+		alert("You must enter your congressional district number. Use \"0\" if your state is a single at-large district. Otherwise enter just the number.");
+		return;
+	}
+	}
+	
+	getObj("submitbutton").disabled = true;
+	AjaxElement("submitinfo", "Adding signature...",
+		"http://www.govtrack.us/perl/petition_sign.cgi?"
+		+ makeFormQueryString(getObj("submitform")),
+		showSignatories );
+}
+function showSignatories() {
+	AjaxElement("signatories", null,
+		"http://www.govtrack.us/perl/petition_list.cgi?topic=hr45oppose");
+}
+</script>
+	</Head>
+	
+	<Body>
+		<h1 class="PageTitle">The H.R. 45 MixedInk Group Letter Experiment</h1>
+
+<table cols="2">
+<tr valign="top">
+<td width="40%">
+
+<p style="margin-top: 0px">From March 8 to April 20, 2009 we ran a unique experiment to see if constituent communication with Congress could be more efficient by aggregating voices.
+During this time, 451 of you used the <a href="http://mixedink.com/GovTrackUs/111Hr45Against">MixedInk.com</a> writing tool to write, edit, and rate letters opposing <a href="http://www.govtrack.us/congress/bill.xpd?bill=h111-45">H.R. 45</a>, a gun control bill. Over 214 drafts were considered! To the right is the top-rated letter at the end of the process (combining the efforts of the MixedInk users Haldeane, Dswierc, BSW2724, and Miroslav).
+which GovTrack's Josh Tauberer and MixedInk's David Stern delivered to the offices of several Members of Congress in person on May 21, 2009.</p>
+
+<p>After the letter writing component, we collected signatures here
+so that the letter carried some weight for each congressional district.
+3,559 people signed their name and address. We gave the names and addresses
+of the signatories in each district to the offices we visited.</p>
+
+<p>For more on the delivery of the letter, see <a href="http://www.govtrack.us/blog/2009/05/22/delivering-the-hr-45-group-letter/">this blog post</a>.</p>
+
+<p>(Note: GovTrack doesn't endorse the content of this letter. We were just
+facilitating an experiment in communicating with Congress.)</p>
+
+<!--
+<p style="font-weight: bold">But there's one more step!</p>
+
+<h4>Sign the Letter</h4>
+
+<p>Members of Congress like to know who they're being contacted by.
+They want to know that they are responding to the needs of <i>their</i>
+constituents. So we need you to sign on to the letter so we can
+tell the congressmen who is writing.</p>
+
+<p>Fill out this form to sign on, and get more people to sign on
+if you can!</p>
+
+<p>There's no need to fill out the form unless you <b>fill it
+out completely</b>. Members of Congress want to see your
+full name and address.</p>
+
+<form id="submitform">
+<input type="hidden" name="topic" value="hr45oppose"/>
+
+<div style="margin-top: 1em">Your Name (Full Name):</div>
+<div><input type="text" size="20" name="name"/></div>
+
+<div style="margin-top: 1em">Address Line 1:</div>
+<div><input type="text" size="20" name="address1"/></div>
+
+<table style="margin-top: 1em">
+<tr><td>City:</td> <td>State:</td> <td>ZIP code:</td></tr>
+<tr>
+<td><input type="text" size="12" name="city"/></td>
+<td><input type="text" size="2" maxlength="2" name="state"/></td>
+<td><input type="text" size="10" maxlength="10" name="zip"/></td>
+</tr></table>
+
+<div style="margin-top: 1em">Congressional District Number: (If you don't know <a href="/congress/findyourreps.xpd">find out here</a>. If you live in an at-large district, enter 0.)</div>
+<div><input type="text" size="5" name="cd" maxlength="2"/></div>
+
+<div style="margin-top: 1em">Did you participate in writing the letter?</div>
+<table>
+<tr><td valign="top" style="padding-left: 1em; padding-right: 1em"><input type="radio" name="participation" value="none" checked="1"/></td>
+<td>No, I'm just here to sign.</td></tr>
+
+<tr><td valign="top" style="padding-left: 1em; padding-right: 1em"><input type="radio" name="participation" value="rate"/></td>
+<td>Yes, I rated a few letters, but I didn't write any text.</td></tr>
+
+<tr><td valign="top" style="padding-left: 1em; padding-right: 1em"><input type="radio" name="participation" value="write"/></td>
+<td>Yes, I wrote or edited some letters.</td></tr>
+
+</table>
+
+<div style="margin-top: 1em">We'll include everything above on the final letter delivered directly to Members of Congress. What can we share about you in the signature list below?</div>
+<table>
+<tr><td valign="top" style="padding-left: 1em; padding-right: 1em"><input type="radio" name="privacy" value="private"/></td>
+<td>Don't show me publicly in this list at all.</td></tr>
+
+<tr><td valign="top" style="padding-left: 1em; padding-right: 1em"><input type="radio" name="privacy" value="partial" checked="1"/></td>
+<td>Show my name, state and congressional district only.</td></tr>
+
+<tr><td valign="top" style="padding-left: 1em; padding-right: 1em"><input type="radio" name="privacy" value="none"/></td>
+<td>Show my name, city, state, and district here.</td></tr>
+</table>
+
+Okay, to add your signature don't forget to click submit!
+
+<p><input type="button" onclick="submitInfo()" value="Submit" id="submitbutton"/></p>
+
+</form>
+
+<div id="submitinfo">
+</div>
+-->
+
+<div id="signatories">
+</div>
+
+<!--<script>showSignatories()</script>-->
+
+</td>
+<td style="padding-left: 1em">
+<div style="border: thin inset blue; padding: 1em; background-color: #FAFAFF">
+<p style="letter-spacing: .5px; line-height: 140%">The following is a group letter, <i>not</i> a petition. It was <b>written
+collaboratively by 454 individuals</b> over the course of six weeks.
+This is the result of a first-of-its-kind experiment in modernizing
+constituent communication with Congress run by the nonpartisan website GovTrack.us
+using the letter writing tool MixedInk.com. For more about the letter writing process,
+see below the letter.</p>
+<hr/>
+<p>Dear Representatives,</p>
+<p>WE THE PEOPLE DO NOT SUPPORT H.R.45, the Firearm Licensing bill (2009).</p>
+<p>WE are tired of our rights being denigrated and destroyed.</p>
+<p>Our vote for any such bill is NO! Further, any politician who votes for this bill or any bill of this type will be noted, and voted against when they come up for re-election.</p>
+<p>There are currently over 20,000 existing gun laws on the books and most of them do nothing to stop or curtail criminals. Reducing restictions to lawful gun ownership, however, have proven to do just that. Statistics are clear. Where ever lawful gun ownership flourishes, crime rates, by whatever measure, are reduced. In states with lawful handgun carry laws, crime rates are lower. The rate of crimes committed by lawful owners of firearms is a very small percentage of the overall rate of crimes committed with firearms and those numbers are undeniable. The federally required NICS is an excellent tool in determining the eligibility of an individual to legally purchase a handgun or rifle. In the city of Kennesaw, Ga., just outside of Atlanta, it is required by law that every home have a gun. After that law was passed in 1982, the crime rate immediately dropped by 89% and has remained among the lowest in the state ever since. Instance after instance shows that high legal gun ownership relates to lower crime, and places that make it hard to own guns or ban them altogether relates to a higher crime rate. Look at many of the larger, supposedly progressive cities and states in the northeastern U.S. Many have some of the highest rates of gun crime there are simply because the criminals know there is little chance of being confronted by a law abiding gun owner.</p>
+<p>Stop criminalizing the lawful and law abiding gun owners. The studies by Department of Justice themselves show that these such weapons are used in a statistically insignificant portion of crime. And when they are used, their use would not have been prevented by the legislation.</p>
+<p>History and statistics both prove that such bills are destructive to the citizenry. If this bills' purpose is to truly "protect the public against the unreasonable risk of injury and death" then the Congress should realize that the only threats to the public are from a criminal element that this bill (unlike others that already exist and are not enforced) will not address, and from the government itself. We would like to think it would not happen here, but as the government is getting larger, and the people weaker, we should always consider history.</p>
+<p>* In 1929, the Soviet Union established gun control. From 1929 to 1953, about 20 million dissidents, unable to defend themselves were rounded up and exterminated. This doesn't include the 30 million "Uncle Joe" starved to death in the Ukraine.</p>
+<p>* In 1911, Turkey established gun control. From 1915 to 1917, 1.5 million Armenians, unable to defend themselves, were rounded up and exterminated.</p>
+<p>* Germany established gun control in 1928. In 1938, the Nazis extended that control to ban the possession of military style weapons and to outlaw the sale of any weapons without government approval. (This sounds a lot like some of the current gun control efforts being pushed for in our country today.) From 1939 to 1945, the Gestapo &amp; SS killed millions of people unable to defend themselves.</p>
+<p>* China established gun control in 1935. From 1948 to 1952, 20 million political dissidents, unable to defend themselves, were rounded up &amp; exterminated.</p>
+<p>* Guatamala established gun control in 1964. From 1964 to 1981, 100,000 Mayan Indians, unable to defend themselves, were rounded up &amp; exterminated.</p>
+<p>* Uganda established gun control in 1970. From 1971 to 1979, 300,000 Christians, unable to defend themselves, were rounded up &amp; exterminated. The total dead are said to be 2-3 million.</p>
+<p>* Cambodia established gun control in 1956. From 1975 to 1977, 1-2 million "educated" people unable to defend themselves, were rounded up and exterminated.</p>
+<p>* Defenseless people rounded up &amp; exterminated in the 20th Century because of gun control: 56 million at a bare minimum.</p>
+<p>* During W.W. II the Japanese decided not to invade America because they knew most Americans were ARMED.</p>
+<p>Note: Admiral Yamamoto, who crafted the attack on Pearl Harbor, had attended Harvard University from 1919 to 1921 and was a Naval Attache to the U.S. from 1925-28. Most of our Navy was destroyed at Pearl Harbor, and our Army had been deprived of funding and was ill prepared to defend the country. It was reported that when asked why Japan did not follow up the Pearl Harbor attack with an invasion of the U.S. Mainland, his reply was that he had lived in the U.S. and knew that almost all households had guns.</p>
+<p>* Gun owners in Australia were forced by new law to surrender 640,381 personal firearms to be destroyed by their own government, a program costing Australia taxpayers more than $500 million dollars. The first year results: Australia-wide, homicides went up 3.2 percent; Australia-wide, assaults went up 8.6 percent; Australia-wide, armed robberies went up 44 percent (yes, 44 percent). While figures over the previous 25 years showed a steady DECREASE in armed robbery with firearms, that changed drastically upward in the first year after gun confiscation... since criminals now are guaranteed that their prey is unarmed; There has also been a dramatic increase in break-ins and assaults on the Elderly. Australian politicians are at a loss to explain how public safety has decreased, after such monumental effort &amp; expense was expended in successfully ridding Australian society of guns. The Australian experience and the other historical facts above prove it.</p>
+<p>With guns.... We are "citizens".</p>
+<p>Without Them.... We are "subjects".</p>
+<p>WE THE PEOPLE do not give our government the right to track our every movement and location, registration of our personal property, track commerce of our personal propery, keep our personal identification information (or property {whether firearms or ammunition} or possessions) in a federal or state database, the federal government to run laws in our state or local municipalities, or confiscate our firearms for any reason. We are not criminals, and WE THE PEOPLE do not give the government the right to treat us as such.</p>
+<p>The undersigned.</p>
+<hr/>
+<p style="letter-spacing: .5px; line-height: 140%">
+From March 8 to April 20 of this year the independent, nonpartisan 
+legislative tracking website GovTrack.us ran a unique experiment to see
+if constituent communication with Congress could be more efficient
+by aggregating voices, but in a more thoughtful way than a simple petition.
+During this time, visitors to the site who opposed H.R. 45 came together
+to draft a letter to Congress collaboratively.
+Using the democratic, collaborative writing tools at MixedInk.com,
+454 individuals wrote, edited, and rated letters. Some 214
+drafts were considered, but this is the top-rated one at the end of the process.
+For more information on this letter and the experiment, please see http://www.govtrack.us/special/hr45mixedink.xpd.</p>
+<p style="letter-spacing: .5px; line-height: 140%">GovTrack doesn't endorse the content of this letter. We're just
+facilitating an experiment in communicating with Congress.</p>
+<p style="letter-spacing: .5px; line-height: 140%">About GovTrack.us:
+GovTrack.us is a tool to help the public research and track the activities in the U.S. Congress, promoting government transparency and civic education through novel uses of technology. The site includes the status of U.S. federal legislation and voting records and is a (totally free) tracking service, with personalized feeds and email updates, widgets, and other tools.
+An independent, non-partisan, non-commercial, and open-source website launched in 2004, GovTrack.us was the first website whose primary goal was to provide comprehensive legislative tracking for everyday citizens and was the first congressional transparency website to embrace Web 2.0 and principles of open data.</p>
+<p style="letter-spacing: .5px; line-height: 140%">About MixedInk.com: MixedInk provides web-based collaborative writing software that enables government agencies, advocacy groups, publishers, companies, and schools to manage large volumes of stakeholder input, harness their communities' collective wisdom, and engage their constituencies in meaningful conversation. MixedInk's democratic software empowers very large groups of people to speak with a collective voice by weaving their ideas and opinions together into a single text. The platform is free to use at MixedInk.com and to embed directly within any website. The company also offers a white-label enterprise service for seamless integration with existing sites.</p>
+</div>
+</td>
+</tr>
+</table>			
+
+	</Body>
+</Page>

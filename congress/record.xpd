@@ -1,0 +1,226 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1"><RecordTitle1/></Title>
+
+	<Sidebar>
+		<Section Name="What's this?" Icon="/media/help.gif">
+
+<p>The Congressional Record is the official journal of 
+Congress's daily proceedings.</p>
+
+<p>Though often a transcript of the debates on the 
+House and Senate floors, like C-SPAN transcripts, the Congressional Record can be significantly 
+modified by Members of Congress after the fact. Entries in the Congressional
+Record can reflect the edited, prepared versions of statements actually
+made on the floor, and on very rare occasions can contain seeming entire debates
+between Members of Congress that never took place.</p>
+
+			<p>Only floor proceedings are a part of the Record, and so committee meetings
+			are not available this way.</p>
+		</Section>
+		<Section Name="Primary Source" Icon="/media/info.gif">
+			<p>This excerpt from the Congressional Record comes from <ThomasLink/>.</p>
+		</Section>
+	</Sidebar>
+	
+	<Body-A>
+		<div class="PreTitle"><a href="/congress/">Congress</a> &gt; <a href="recordindex.xpd">Congressional Record</a> &gt; <Breadcrumb/></div>
+		<div class="PageTitle">
+			<RecordTitle2/>
+		</div>
+
+		<div style="text-align: center">
+		<p>The United States <Chamber/></p>
+		<p><Date/> <br/> Section <Ordinal/></p>
+		</div>
+	</Body-A>
+	<Body-B>
+		
+		<h3>In This Section...</h3>
+		<ListSpeakers/>
+
+		<h3>Record Text</h3>
+		<RecordText/>
+	</Body-B>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext = "HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-record = "assembly://GovTrackWeb/GovTrack.Web.Record"
+		exclude-result-prefixes = "HttpContext govtrack-util govtrack-bills govtrack-reps govtrack-record"
+		>
+		
+		<xsl:variable name="id" select="HttpContext:param('id')"/>
+		<xsl:variable name="person" select="HttpContext:param('person')"/>
+		
+		<xsl:variable name="session" select="govtrack-record:SessionOfRecord($id)"/>
+		<xsl:variable name="chamber" select="govtrack-record:ChamberOfRecord($id)"/>
+		<xsl:variable name="date" select="govtrack-record:DateOfRecord($id)"/>
+		<xsl:variable name="ordinal" select="govtrack-record:OrdinalOfRecord($id)"/>
+
+		<xsl:variable name="record" select="govtrack-record:LoadRecord($id)"/>
+		
+		<xsl:template match="RecordTitle1">
+			<xsl:value-of select="govtrack-record:ChamberNameShort($record/@where)"/>
+			Record:
+			<xsl:value-of select="govtrack-util:Trunc($record/@title, 50)"/>
+			(<xsl:value-of select="$id"/>)
+		</xsl:template>
+
+		<xsl:template match="RecordTitle2">
+			<xsl:value-of select="$record/@title"/>
+		</xsl:template>
+
+		<xsl:template match="Chamber">
+			<xsl:value-of select="govtrack-record:ChamberNameLong($record/@where)"/>
+		</xsl:template>
+		<xsl:template match="Date">
+			<xsl:value-of select="govtrack-util:DTToDateString($record/@datetime)"/>
+		</xsl:template>
+		<xsl:template match="Ordinal">
+			<xsl:value-of select="$record/@ordinal"/>
+		</xsl:template>
+
+		<xsl:template match="ThomasLink">
+			<a href="http://thomas.loc.gov/cgi-bin/query/B?r{$session}:@FIELD(FLD003+{$chamber})+@FIELD(DDATE+{$date})">THOMAS (section <xsl:value-of select="$ordinal"/>)</a>
+		</xsl:template>
+		<xsl:template match="Breadcrumb">
+			<a href="recordindex.xpd?date={$date}&amp;where={$chamber}">
+				<xsl:value-of select="govtrack-util:DTToDateString($record/@datetime)"/>
+			</a>
+		</xsl:template>
+
+		<xsl:template match="ListSpeakers">
+			<xsl:if test="not($person='')">
+			<p>You are filtering your view of the Congressional Record on the following Member of Congress:
+			(<a href="?id={$id}">view all</a>)</p>
+			</xsl:if>
+
+			<table>
+			<xsl:for-each select="$record/speaking[string-length(.) &gt; 1000]">
+			<xsl:if test="$person='' or @speaker=$person">
+				<tr valign="top">
+				<td>
+					<xsl:if test="govtrack-reps:HasImage(@speaker)">
+						<img src="/data/photos/{@speaker}-50px.jpeg" style="border: 1px solid #000055;"/>
+					</xsl:if>
+				</td>
+				<td>
+					<xsl:variable name="gid" select="generate-id()"/>
+					<i><a href="#s{$gid}">
+						<xsl:value-of select="govtrack-reps:FormatPersonName(@speaker, $record/@datetime, 'lastnamestate')"/>
+					</a>: </i>
+					<xsl:variable name="text">
+						<xsl:for-each select="paragraph" xml:space="preserve">
+							<xsl:value-of select="."/>
+						</xsl:for-each>
+					</xsl:variable>
+					<xsl:value-of select="govtrack-util:Trunc($text, 170)"/>
+					<a href="#s{$gid}">
+						<img src="/media/stock_jump-to-16.gif" border="0" width="16" height="16" title="Read the rest" style="margin-left: 5px"/>
+					</a>
+				</td>
+				</tr>
+			</xsl:if>
+			</xsl:for-each>
+			</table>
+		</xsl:template>
+		
+		<xsl:template match="RecordOutlineNewNotWorking">
+			<xsl:for-each select="$record/speaking/@speaker">
+				<xsl:variable name="s" select="."/>
+				<xsl:for-each select="$record/speaking[@speaker=$s]">
+				</xsl:for-each>
+			</xsl:for-each>
+		</xsl:template>
+
+		<xsl:template match="chair">
+			<p><b>Chair: </b> <xsl:apply-templates/></p>
+		</xsl:template>
+
+		<xsl:template match="narrative">
+			<p><i><xsl:apply-templates/></i></p>
+		</xsl:template>
+		
+		<xsl:template match="ellipsis">
+			<p><i>... ... ...</i></p>
+		</xsl:template>
+
+		<xsl:template match="topic">
+			<h3><xsl:value-of select="@name"/></h3>
+		</xsl:template>
+
+		<xsl:template match="spoken">
+			<p>
+				[?] <xsl:value-of select="@title"/>
+				<xsl:value-of select="@name"/>:
+				<xsl:value-of select="."/>
+			</p>
+		</xsl:template>
+
+		<xsl:template match="speaking|speaking-unknown-id">
+			<a name="s{generate-id()}"/>
+		
+			<xsl:for-each select="paragraph">
+				<p style="margin-left: 1em">
+					<xsl:if test="position()=1">
+						<xsl:attribute name="style">margin-left: 1em; text-indent: -1em</xsl:attribute>
+						<b>
+						<xsl:if test="name(parent::node())='speaking'">
+							<a href="{govtrack-reps:RepLink(parent::speaking/@speaker)}">
+								<xsl:value-of select="govtrack-reps:FormatPersonName(string(parent::speaking/@speaker), $record/@when, '')"/>
+							</a>:
+							<xsl:if test="govtrack-reps:HasImage(parent::speaking/@speaker) and string-length(parent::speaking) &gt; 100">
+								<img src="/data/photos/{parent::speaking/@speaker}-50px.jpeg" style="border: 1px solid #000055; float: left; margin-right: 1em; margin-bottom: .5em; margin-top: .25em"/>
+							</xsl:if>
+						</xsl:if>
+						<xsl:if test="name(parent::node())='speaking-unknown-id'">
+							<xsl:if test="parent::node()/@title" xml:space="preserve"><xsl:value-of select="parent::node()/@title"/> </xsl:if>
+							<xsl:value-of select="parent::node()/@name"/>
+							<xsl:if test="not(parent::node()/@of='')"> (of <xsl:value-of select="parent::node()/@of"/>)</xsl:if>:
+						</xsl:if>
+						</b>
+					</xsl:if>
+					<xsl:apply-templates/>
+					<xsl:if test="position()=last()">
+						<div style="clear: left"/>
+					</xsl:if>
+				</p>
+			</xsl:for-each>
+		</xsl:template>
+
+		<xsl:template match="bill">
+			<xsl:variable name="n" select="HttpContext:counter()"/>
+		
+			<!--<xsl:if test="govtrack-bills:BillExists($session, @type, @number)">
+			<xsl:variable name="b" select="govtrack-bills:LoadBill2($session, @type, @number)" />
+			<div style="position: absolute; width: 300px; display: none" id="b{$n}">
+				<Box Color="yellow">
+				<div style="margin-bottom: .5em">
+					<a href="{govtrack-bills:BillLink($b)}"><xsl:value-of select="govtrack-bills:DisplayString($b, 100)"/></a>
+				</div>
+				<div>Last Action: <xsl:value-of select="$b/actions/*[position()=last()]"/></div>
+				<div>Status: <xsl:value-of select="govtrack-bills:GetStatusSource($b)"/></div>
+				</Box>
+			</div>
+			</xsl:if>-->
+			<!-- onmouseover="DHTML_ShowHide('b{$n}', 1);" onmouseout="DHTML_ShowHide('b{$n}', 0);"-->
+
+			<a xml:space="preserve"
+				style="font-weight: bold" href="{govtrack-bills:BillLink3($session, @type, @number)}"><xsl:value-of select="govtrack-bills:BillTypeToDisplayString(@type)"/> <xsl:value-of select="@number"/></a>
+
+		</xsl:template>
+
+		<xsl:template match="RecordText">
+			<xsl:apply-templates select="$record/*"/>
+		</xsl:template>
+
+	</Templates>
+   
+ </Page>

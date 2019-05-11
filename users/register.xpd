@@ -1,0 +1,74 @@
+<?xml-stylesheet href="../style/menus.xslt" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page
+	xmlns:xspforms="xspforms"
+	xmlns:xspmenus="xspmenus">
+
+	<Title PrependSiteTitle="1">Create An Account</Title>
+
+	<Sidebar>
+		<Section Name="Already Registered?">
+			<LoginForm redirect="yourmonitors.xpd"/>
+		</Section>
+	</Sidebar>
+	
+	<Body-A>
+		<h1>Sign Up: Save Trackers or Get Email Updates</h1>
+	
+			<p>When you create an account on GovTrack, you can have your tracked events
+			sent to you by email daily or weekly, and your trackers will be stored
+			at GovTrack, rather than in your browser's cookies, which may
+			expire on you!</p>
+			
+			<h3>Sign In With Your Account Elsewhere</h3>
+			
+			<p>You don't need to create a new GovTrack username and
+			password if you have an account at a supported website
+			like Google, Yahoo, AOL, or any service that provides
+			you with an OpenID. We call this the "third-party
+			sign-in".</p>
+			
+			<ul style="margin-left: 2em">
+			<li>
+			<a class="rpxnow" onclick="return false;"
+			   href="https://govtrack-us.rpxnow.com/openid/v2/signin?token_url=...">
+			   Sign-in with Google, Yahoo, AOL, or OpenID...</a>
+			</li>
+			</ul>
+			
+			<h3>Create a Username/Password</h3>
+			     
+			<p>If you don't have an account at another supported site you can create
+			a GovTrack username/password. Fill out this form.</p>
+
+					<xspforms:form id="register1" code="GovTrack.Web.Pages.Users.Register, GovTrackWeb:DoRegistration">
+
+					<xspforms:hidden name="logintype" value="regular"/>
+					<xspforms:pass-param name="address"/>
+
+					<xspforms:formreturn class="formerror"/>
+
+					<table>			
+					<tr>
+						<td>Email Address:</td>
+						<td><xspforms:text name="email"/></td>
+					</tr>			
+					<tr>
+						<td>Password:</td>
+						<td><xspforms:password name="password"/></td>
+						<td style="font-size: 85%">(letters and digits only; 4 to 12 characters long)</td>
+					</tr>
+					</table>
+
+					<xspforms:submit text="Continue..."/>
+					</xspforms:form>
+
+			<p>Please don't use an important password for this website!
+			The personal data collected by this website is kept fairly
+			secure, but I'm only human.</p>
+
+
+	</Body-A>
+
+ </Page>

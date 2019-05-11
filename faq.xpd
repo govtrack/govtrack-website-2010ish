@@ -1,0 +1,54 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title PrependSiteTitle="1">Frequently Asked Questions (And Their Answers)</Title>
+
+	<Breadcrumbs><a href="about.xpd">About GovTrack</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1>Frequently Asked Questions (And Their Answers)</h1>
+
+<p>Here are some frequently asked questions about GovTrack, and their answers.</p>
+
+<a name="ideometer"/>
+<h3>How do you classify members of Congress as 
+far-left/right, moderate, or rank-and-file?</h3>
+<p>These labels come from the <a 
+href="/congress/spectrum.xpd">Political Spectrum</a> statistical 
+analysis that we have carried out. The statistical analysis puts members of Congress on a scale 
+based on patterns of bill sponsorship, and is blind to party 
+affiliation and the content of bills. From there, I have somewhat
+arbitrarily divided the image into regions to label as
+far-left/right, moderate, and rank-and-file, separately for the House and
+Senate and based on party. For each party, the most extreme 23% of
+members of Congress are labeled far-left or -right. The most centrist 30% (i.e.
+those closest to the other party) are labeled moderate. The remaining
+47% are labeled as rank-and-file.</p>
+
+<a name="logo"/>
+<h3>What's the logo about? Is it a Masonic symbol?</h3>
+<p>GovTrack's logo is the eye on the back of the dollar bill. The
+standard explanation of the eye on the dollar is that it is God
+overseeing a great nation. GovTrack flips this around: The eye is
+YOU, keeping a close watch over Congress. While we're told that
+this is a Masonic or occult symbol that we ought to distance ourselves
+from, we think our perversion of the logo as a symbol of government
+oversight is just fine.</p>
+
+<a name="accountability"/>
+<h3>Why not have constituents vote on bills?</h3>
+<p>I get asked every few months why not extend GovTrack or build a new
+website where constituents could vote on bills and then we can see
+how often our elected representatives stray from the will of the people.
+There are a number of reasons why I think polling constituents on legislative actions is a bad idea
+if not done right.</p>
+<p>First, it is exceedingly difficult to get a representative sample online, not only because different populations have different access to the Internet (which is a serious concern of course), but even more so because different segments of the population will choose to visit the site. It seems generally true that it is the most polarized people that will care enough to participate in polls, and you don't always get any sort of balance either. On some issues you will find that while there are people on both sides of the issue, only one side proactively pushes their position on any given website. I don't know why that is. Probably there is some degree of chance involved.</p>
+<p>Second, you have to have some faith that the constituents can make informed judgments about legislative actions. It's not that constituents are dumb, but that legislative actions are often exceedingly complex, either because of legalese or parliamentary procedure, or, generally, because the world is really complicated and in order to evaluate legislation you really do need to have some expertise. Members of Congress probably don't know what's going on either, but it's not going to be any better to put the decision making in the hands of a group that equally doesn't know what's going on.</p>
+<p>Third, there are also a lot of legislative actions that Members of Congress make, and actions that occur very rapidly. Citizens will probably not have the stamina or spare time to devote to keeping up with all of the decisions that have to be made. This is, after all, why we elect representatives in the first place.</p>
+<p>My objections are if you take the idea to the extreme. There is a lot of middle ground. Polling is certainly an important part of accountability, and getting constituents engaged enough on legislative matter is equally important. But I think it's actually a good thing that we give our elected representatives some freedom. I don't think anyone really wants a direct democracy, after all.</p>
+
+	</Body-A>
+	
+ </Page>

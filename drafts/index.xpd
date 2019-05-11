@@ -1,0 +1,54 @@
+<?xml-stylesheet xpath="Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title>Congressional Drafts at GovTrack.us</Title>
+
+	<Sidebar>
+	<Section Name="How To Upload">
+		<p>If you are a House or Senate staff member, you can
+		upload draft documents directly via email. Just send
+		the PDF or Word document as an attachment to our
+		special upload address. You will get a link to the document sent back to you by email
+		a few seconds later which you can share with your
+		colleagues.</p>
+		<p>Put the document's title in the subject line. You can
+		optionally also put a description of the document
+		as the first paragraph in your email.</p>
+		<p>Ask for the upload email address by sending us a note at
+		<contactemailaddress/>.</p>
+	</Section>
+	</Sidebar>
+	
+	<Body>
+		<h1 class="PageTitle">Congressional Draft Documents</h1>
+		
+		<p>GovTrack is now collecting draft documents, such as
+		drafts of bills before they are assigned a number,
+		committee amendments, and other similar legislative
+		documents.</p>
+
+		<dl>
+		<DocList/>
+		</dl>
+	</Body>
+
+	<Templates             
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:httpcontext="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-drafts = "assembly://GovTrackWeb/GovTrack.Web.Drafts"
+		exclude-result-prefixes="httpcontext govtrack-util govtrack-drafts"
+		>
+		
+		<xsl:template match="DocList">
+			<xsl:for-each select="govtrack-drafts:Docs()">
+				<dt><a href="file/{code}"><xsl:value-of select="title"/></a></dt>
+				<dd>Submitted <xsl:value-of select="submitdate"/>.
+				<xsl:value-of select="description"/></dd>
+			</xsl:for-each>
+		</xsl:template>
+	</Templates>
+</Page>

@@ -1,0 +1,53 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page
+	>
+
+	<Title>GovTrack Tools</Title>
+	
+	<Breadcrumbs><a href="about.xpd">About GovTrack</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="PageTitle">Tracking and Sharing Tools</h1>
+		
+		<p>Here are some other ways you can track Congress,
+		share your views on bills, and enhance your webpage
+		with congressional information.</p>
+		
+		<div style="margin: 1em; float: right">
+			<a href="http://www.govtrack.us/blog/2010/06/15/govtrack-on-the-go/ "><img src="http://assets.sunlightlabs.com/blog/android/legislator-thumb.png" border="0"/></a>
+		</div>
+		
+		<h3>Mobile Applications</h3>
+				
+		<p><a href="http://www.govtrack.us/blog/2010/06/15/govtrack-on-the-go/ ">Congress</a> app for Android phones by the Sunlight Foundation.</p>
+		
+		<p><a href="http://mikebluestein.wordpress.com/2010/01/16/congress111-iphone-application-screenshots/">Congress111</a> app for the iPhone, by Mike Bluestein, has a variety of information on Members of Congress, based in part on GovTrack's database.</p>
+		
+		<p><a href="http://www.realtimecongress.org/">Real Time Congress</a> for the iPhone, by Sunlight Foundation, taps into a variety of Congress-related feeds, including GovTrack Insider articles. It uses some data from GovTrack's database.</p>
+		
+		<h3>Facebook Applications</h3>
+		
+		<p><a href="http://lawsilike.appspot.com/">Laws I Like</a>, by Chris Poliquin, lets you search for bills, vote on them, and then
+		post your votes to your profile to tell your friends what they should get
+		their Members of Congress to support or oppose. You can also see what bills
+		your friends have voted on.</p>
+		
+		<p><a href="http://apps.facebook.com/representedby/">RepresentedBy</a>, by <a href="http://wubbahed.com">Will Turnage</a>,
+		lets you post to your profile a box with who represents you in Congress, shows the latest
+		bills and news related to them. You can also challenge your friends to
+		see if they know their Members of Congress.</p>
+		
+		<p>These Facebook apps weren't created by GovTrack but rely on
+		the <a href="/developers">open database</a> of congressional
+		information we put together here at GovTrack.</p>
+		
+		<h3>Tools For Your Webpage</h3>
+		
+		<p>We've got several ways you can embed congressional information
+		as widgets on your webpage: tracked events, bill status, and
+		district maps. For more, see the <a href="/embed">widgets page</a>.</p>
+		
+	</Body-A>
+ </Page>
+

@@ -1,0 +1,609 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page HideSidebar="1">
+
+	<Title PrependSiteTitle="1"><VoteTitle/></Title>
+	<Meta Name="robots">nofollow</Meta>
+	<Meta Name="description">A vote in the U.S. Congress.</Meta>
+	<AllowEmail/>
+	<Param>vote</Param>
+	<Download/>
+
+	<Breadcrumbs><a href="/congress/">Congress</a> &gt; <a href="votes.xpd">Roll Call Votes</a> &gt; <VoteTitle Pre="1"/></Breadcrumbs>
+	
+	<Body-A>
+		<h1>
+			<VoteTitle/>
+		</h1>
+		
+		<Note/>
+		
+		<ShowVote1/>
+	</Body-A>
+		
+	<Body-B>
+		<ShowVote2/>
+	</Body-B>
+
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext = "HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+		xmlns:govtrack-vote = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.Vote"
+		xmlns:govtrack-comments = "assembly://GovTrackWeb/GovTrack.Web.Comments"
+		exclude-result-prefixes = "HttpContext govtrack-util govtrack-bills govtrack-reps govtrack-vote govtrack-comments"
+		>
+		
+		<xsl:variable name="roll" select="govtrack-bills:LoadRollParse(HttpContext:param('vote'))"/>
+
+		<xsl:variable name="is_motion_to_proceed" select="not(substring-after($roll/question, 'On the Cloture Motion (Motion to Invoke Cloture on the Motion to Proceed to Consider') = '')"/>
+
+		<xsl:variable name="refbill">
+			<xsl:choose>
+			<xsl:when test="count($roll/bill) &gt; 0 and govtrack-bills:BillExists($roll/bill/@session, $roll/bill/@type, $roll/bill/@number)">
+				<xsl:copy-of select="govtrack-bills:LoadBill2($roll/bill/@session, $roll/bill/@type, $roll/bill/@number)"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<empty/>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="refamd">
+			<xsl:choose>
+			<xsl:when test="count($roll/amendment) = 0">
+				<empty/>
+			</xsl:when>
+			<xsl:when test="$roll/amendment/@ref = 'regular'">
+				<xsl:if test="govtrack-bills:AmendmentExists($roll/amendment/@session, $roll/amendment/@number)">
+					<xsl:copy-of select="govtrack-bills:LoadAmendment($roll/amendment/@session, $roll/amendment/@number)"/>
+				</xsl:if>
+			</xsl:when>
+			<xsl:when test="$roll/amendment/@ref = 'bill-serial' and name($refbill) = 'bill'">
+				<xsl:variable name="number1" select="0+$roll/amendment/@number"/>
+				<xsl:for-each select="$refbill/amendments/amendment/@number">
+					<xsl:if test="position() = $number1 and govtrack-bills:AmendmentExists($refbill/@session, .)">
+						<xsl:copy-of select="govtrack-bills:LoadAmendment($refbill/@session, .)"/>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<empty/>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<xsl:template name="RollNumber">
+			<xsl:value-of select="govtrack-vote:ChamberNameShort($roll/@where)"/> Vote
+			#<xsl:value-of select="$roll/@roll"/>
+			(<xsl:value-of select="govtrack-util:DTToDateString($roll/@datetime)"/>)
+		</xsl:template>
+		<xsl:template name="RollSession">
+			<xsl:value-of select="govtrack-util:Ordinate($roll/@session)"/>
+			<xsl:text> Congress</xsl:text>
+		</xsl:template>
+
+		<xsl:template match="Download">
+			<Download Type="CSV">vote_download.xpd?vote=<xsl:value-of select="HttpContext:param('vote')"/></Download>
+			<Download Type="XML">/data/us/<xsl:value-of select="$roll/@session"/>/rolls/<xsl:value-of select="HttpContext:param('vote')"/>.xml</Download>
+			<RDFA about="http://www.rdfabout.com/rdf/usgov/congress/{$roll/@session}/{$roll/@where}/votes/{$roll/@year}-{$roll/@roll}"/>
+		</xsl:template>
+
+		<xsl:template match="VoteTitle">
+			<xsl:choose>
+			<xsl:when test="count($roll/bill) &gt; 0 and (govtrack-vote:IsVoteTypeOnPassage($roll/type) or $is_motion_to_proceed)">
+				<xsl:choose>
+				<xsl:when test="not(@Pre='1') and name($refbill) = 'bill'">
+					<xsl:if test="$roll/@where='house'">House </xsl:if>
+					<xsl:if test="$roll/@where='senate'">Senate </xsl:if>
+					<xsl:choose>
+					<xsl:when test="$roll/type = 'On the Conference Report' or $roll/type = 'On Agreeing to the Conference Report'">
+						Vote on Conference Report: 
+					</xsl:when>
+					<xsl:when test="$is_motion_to_proceed">
+						Vote on Cloture to Motion to Proceed: 
+					</xsl:when>
+					<xsl:otherwise>
+						Vote On Passage: 
+					</xsl:otherwise>
+					</xsl:choose>
+					<xsl:value-of select="govtrack-bills:DisplayString($refbill, 75)"/>
+				</xsl:when>
+				<xsl:when test="not(@Pre='1')">
+					<xsl:value-of select="$roll/question"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="RollSession"/>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="count($roll/bill) &gt; 0 and (
+				$roll/type = 'Passage, Objections of the President Not Withstanding'
+				or $roll/type = 'Passage, Objections of the President Notwithstanding'
+				)">
+				<xsl:choose>
+				<xsl:when test="not(@Pre='1') and name($refbill) = 'bill'">
+					Veto Override:
+					<xsl:value-of select="govtrack-bills:DisplayString($refbill, 100)"/>
+				</xsl:when>
+				<xsl:when test="not(@Pre='1')">
+					<xsl:value-of select="$roll/question"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="RollSession"/>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="count($roll/amendment) &gt; 0 and (
+				$roll/type = 'On the Amendment'
+				or $roll/type = 'On Agreeing to the Amendment'
+				)">
+				<xsl:if test="@Pre='1'">
+					<xsl:call-template name="RollNumber"/>
+				</xsl:if>
+				<xsl:if test="not(@Pre='1')">
+					<xsl:if test="name($refamd)='amendment'">
+						<xsl:if test="$refamd/@chamber='s'">S.Amdt. </xsl:if>
+						<xsl:if test="$refamd/@chamber='h'">H.Amdt. </xsl:if>
+						<xsl:value-of select="$refamd/@number"/>:
+						<xsl:value-of select="govtrack-util:Trunc($refamd/description, 50)"/>
+						to
+						<xsl:value-of select="govtrack-bills:DisplayString(govtrack-bills:LoadBill2($refamd/@session, $refamd/amends/@type, $refamd/amends/@number), 50)"/>
+						(Vote On Amendment)
+					</xsl:if>
+					<xsl:if test="not(name($refamd)='amendment')">
+						<xsl:value-of select="$roll/question"/>
+					</xsl:if>
+				</xsl:if>
+			</xsl:when>
+			<xsl:when test="$roll/type = 'On the Nomination'">
+				<xsl:if test="@Pre='1'">
+					<xsl:call-template name="RollSession"/>:
+					<xsl:call-template name="RollNumber"/>
+				</xsl:if>
+				<xsl:if test="not(@Pre='1')">
+					Confirming <xsl:value-of select="substring-before(substring-after($roll/question, '(Confirmation '), ')')"/>
+				</xsl:if>
+			</xsl:when>
+			<xsl:when test="$roll/type = 'On the Cloture Motion'">
+				<xsl:if test="@Pre='1'">
+					<xsl:call-template name="RollSession"/>:
+					<xsl:call-template name="RollNumber"/>
+				</xsl:if>
+				<xsl:if test="not(@Pre='1')">
+					Cloture vote <xsl:value-of select="substring-before(substring-after($roll/question, '(Motion to Invoke Cloture '), ')')"/>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="not(@Pre='1')">
+					<xsl:call-template name="RollNumber"/>
+				</xsl:if>
+				<xsl:if test="@Pre='1'">
+					<xsl:call-template name="RollSession"/>
+				</xsl:if>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="Note">
+			<xsl:variable name="note" select="govtrack-comments:GetPageNote(concat('vote:', HttpContext:param('vote')))"/>
+			<xsl:if test="not($note='')">
+				<p style="color: blue; margin-bottom: 1em"><xsl:copy-of select="$note"/></p>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template name="officialrecord">
+			<xsl:choose>
+			<xsl:when test="$roll/@source = 'keithpoole'"><a href="http://voteview.com/">data from Professor Keith Poole</a></xsl:when>
+			<xsl:when test="$roll/@where = 'senate'"><a href="http://www.senate.gov/legislative/LIS/roll_call_lists/roll_call_vote_cfm.cfm?congress={$roll/@session}&amp;session={govtrack-util:SubSession12FromDT($roll/@datetime)}&amp;vote={govtrack-util:Pad($roll/@roll, 5)}">primary source: senate.gov</a></xsl:when>
+			<xsl:when test="$roll/@where = 'house'"><a href="http://clerk.house.gov/evs/{$roll/@year}/roll{govtrack-util:Pad($roll/@roll, 3)}.xml">primary source: house.gov</a></xsl:when>
+			</xsl:choose>
+		</xsl:template>
+
+		<xsl:template match="ShowVote1">
+			<xsl:choose>
+			<xsl:when test="count($roll/bill) &gt; 0 and (govtrack-vote:IsVoteTypeOnPassage($roll/type) or $is_motion_to_proceed)">
+			</xsl:when>
+			<xsl:when test="count($roll/bill) &gt; 0 and (
+				$roll/type = 'Passage, Objections of the President Not Withstanding'
+				)">
+			</xsl:when>
+			<xsl:when test="count($roll/amendment) &gt; 0 and (
+				$roll/type = 'On the Amendment'
+				or $roll/type = 'On Agreeing to the Amendment'
+				)">
+			</xsl:when>
+			<xsl:when test="$roll/type = 'On the Nomination'">
+			</xsl:when>
+			<xsl:when test="$roll/type = 'On the Cloture Motion'">
+				<p><b>Purpose:</b> Cloture votes are used in the Senate to end debate and move to a final up-or-down vote on the matter.
+				The Senate cannot move forward until cloture is agreed to.
+				Voting against cloture is essentially a filibuster. Because it takes 3/5<sup>ths</sup> of senators to achieve cloture,
+				it is used as a tool by those against the matter to avoid the final simple-majority vote.
+				<xsl:if test="$roll/@year &gt;= 2009">
+				Read more at <a href="http://filibusted.us/votes/s{$roll/@year}-{$roll/@roll}">Filibusted.us</a>.
+				</xsl:if>
+				</p>
+			</xsl:when>
+			<xsl:when test="$roll/type = 'On Motion to Recommit with Instructions'">
+				<div style="margin-bottom: 1em; margin-right: 2em; font-style: italic" class="welcome">
+					<xsl:value-of select="$roll/question"/>
+				</div>
+				<p><b>Purpose:</b> The motion to recommit is a final opportunity to revise a bill before passage by sending it back to committee with instructions on
+				how to revise the bill. The motion can be used both constructively and to kill a bill.
+				When used constructively, the committee can actually report the bill back to the House floor
+				immediately after the motion, resulting in no delay in the consideration of the bill.
+				But the motion is also the opposition’s last chance to kill a bill before
+				it moves to a final up-or-down vote in the House. When used to kill a bill, a vote in favor of the motion
+				is a vote to kill or delay the bill.</p>
+			</xsl:when>
+			<xsl:otherwise>
+				<div style="margin-bottom: 1em; margin-right: 2em; font-style: italic" class="welcome">
+					<xsl:value-of select="$roll/question"/>
+				</div>
+			</xsl:otherwise>
+			</xsl:choose>
+			
+			<!--<h3>Overview</h3>-->
+
+			<table>
+			<tr><td><b>Number:</b></td>
+			<td><xsl:value-of select="govtrack-vote:ChamberNameShort($roll/@where)"/> Vote
+				#<xsl:value-of select="$roll/@roll"/> in <xsl:value-of select="$roll/@year"/>
+				<span style="font-size: 8pt;"> [<xsl:call-template name="officialrecord"/>]</span>
+				</td></tr>
+			<tr><td><b>Date:</b></td> <td><xsl:value-of select="govtrack-util:DTToDateTimeString($roll/@datetime)"/></td></tr>
+			<tr><td><b>Result: </b></td> <td><xsl:value-of select="$roll/result"/></td></tr>
+
+			<xsl:variable name="is_related">
+				<xsl:choose>
+				<xsl:when test="govtrack-vote:IsVoteTypeOnPassage($roll/type)">
+				</xsl:when>
+				<xsl:when test="count($roll/amendment) &gt; 0 and (
+					$roll/type = 'On the Amendment'
+					or $roll/type = 'On Agreeing to the Amendment'
+					)">
+				</xsl:when>
+				<xsl:otherwise>
+					Related
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+			<xsl:if test="count($roll/bill) &gt; 0 and (count($roll/amendment) = 0)">
+				<xsl:if test="name($refbill) = 'bill'">
+					<tr valign="top"><td><b><xsl:value-of select="$is_related"/> Bill:</b></td>
+					<td>
+						<span style="padding-right: .5em"><MonitorButton name="The Bill" monitor="bill:{$roll/bill/@type}{$roll/bill/@session}-{$roll/bill/@number}"/></span>
+						<a href="bill.xpd?bill={$roll/bill/@type}{$roll/bill/@session}-{$roll/bill/@number}">
+							<xsl:value-of select="govtrack-bills:DisplayString($refbill, 100)"/>
+						</a>
+					</td></tr>
+				</xsl:if>
+				<xsl:if test="not(name($refbill) = 'bill')">
+					<tr><td colspan="2">Bill status is not yet available on GovTrack.</td></tr>
+				</xsl:if>
+			</xsl:if>
+			<xsl:if test="count($roll/amendment) &gt; 0">
+				<xsl:if test="name($refamd)='amendment'">
+				<tr valign="top"><td><b><xsl:value-of select="$is_related"/> Amendment:</b></td> <td>
+					<a href="amendment.xpd?session={$refamd/@session}&amp;amdt={$refamd/@chamber}{$refamd/@number}">
+						<xsl:if test="$refamd/@chamber='s'">S.Amdt. </xsl:if>
+						<xsl:if test="$refamd/@chamber='h'">H.Amdt. </xsl:if>
+						<xsl:value-of select="$refamd/@number"/>:
+						<xsl:value-of select="govtrack-util:Trunc($refamd/description, 300)"/></a>
+						<div>amending
+					<span style="padding-right: .5em"><MonitorButton name="The Bill" monitor="bill:{$refamd/amends/@type}{$refamd/@session}-{$refamd/amends/@number}"/></span>
+					<a href="bill.xpd?bill={$refamd/amends/@type}{$refamd/@session}-{$refamd/amends/@number}">
+						<xsl:value-of select="govtrack-bills:DisplayString(govtrack-bills:LoadBill2($refamd/@session, $refamd/amends/@type, $refamd/amends/@number), 100)"/>
+					</a></div>
+				</td></tr>
+				</xsl:if>
+				<xsl:if test="not(name($refamd)='amendment') and name($refbill) = 'bill'">
+				<tr valign="top"><td><b><xsl:value-of select="$is_related"/> Amendment:</b></td> <td>Amendment (details not available) to
+					<a href="bill.xpd?bill={$refbill/@type}{$refbill/@session}-{$refbill/@number}">
+						<xsl:value-of select="govtrack-bills:DisplayString($refbill, 100)"/>
+					</a>
+				</td></tr>
+				</xsl:if>
+				<xsl:if test="not(name($refamd)='amendment') and not(name($refbill) = 'bill')">
+					<tr><td colspan="2">The amendment that is the subject of this vote is not yet available on GovTrack.</td></tr>
+				</xsl:if>
+			</xsl:if>
+			</table>
+
+			<xsl:if test="$roll/type = 'On the Motion to Table'">
+				<p>The Motion to Table is used to kill a legislative matter.  An Aye vote in favor of the motion
+				is a vote against the bill or amendment.</p>
+			</xsl:if>
+			<xsl:if test="$is_motion_to_proceed">
+				<p>This is a vote on Cloture to a Motion to Proceed.  Cloture at this junction tests whether members of Congress are ready to end debate and
+				proceed to a vote.  Failure to achieve cloture usually indicate a bill's future is dim.
+				A vote in favor of cloture is in favor of voting on the legislation itself.  A vote against is a vote to stall the bill.</p>
+			</xsl:if>
+		</xsl:template>
+		
+		<xsl:template match="ShowVote2">
+			<h3>Vote Overview</h3>
+		
+			<xsl:variable name="votes" select="$roll/voter"/>
+			<xsl:value-of select="govtrack-vote:CachePersonData($votes/@id, $roll/@datetime)"/>
+			
+			<xsl:variable name="parties"><parties><party>Democrat</party><party>Republican</party><party>Independent</party></parties></xsl:variable>
+
+			<xsl:variable name="total" select="count($roll/voter)"/>
+			<xsl:variable name="totvot">
+				<xsl:choose>
+				<!-- Senate quorum calls are also like the below, but how are they called? -->
+				<xsl:when test="$roll/type = 'On the Cloture Motion'"> <!-- of all Senators duly sworn -->
+					<xsl:value-of select="count($roll/voter[not(@VP='1')])"/>
+				</xsl:when>
+				<xsl:when test="not(substring-after($roll/question, 'On the Motion (Motion to Waive Rule XXVIII')='')"> <!-- good thing no XXVIII_ rule -->
+					<xsl:value-of select="count($roll/voter[not(@VP='1')])"/>
+				</xsl:when>
+				<xsl:when test="not(substring-after($roll/question, 'On the Motion (Motion to Waive Rule XLIV')='')"> <!-- good thing no XLIV_ rule -->
+					<xsl:value-of select="count($roll/voter[not(@VP='1')])"/>
+				</xsl:when>
+				<xsl:otherwise> <!-- of all Senators present and voting, and likewise for House votes -->
+					<xsl:value-of select="count($roll/voter[not(@vote='0')])"/>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+			<table style="margin: 1em 0em 1em 0em; font-size: 95%">
+			<tr>
+				<th/>
+				<th colspan="3">Totals</th>
+				<xsl:for-each select="$parties//party">
+					<th style="padding: 3px; font-size: 90%"><xsl:value-of select="."/>s</th>
+				</xsl:for-each>
+				<td rowspan="5" style="padding-left: 25px">
+					<center style="font-size: 80%">All Votes</center>
+					<img src="http://chart.apis.google.com/chart?cht=p3&amp;chs=250x100&amp;chd=t:{count($votes[@vote='-']) div count($votes) * 100},{count($votes[@vote='+']) div count($votes) * 100},{count($votes[@vote='0']) div count($votes) * 100 + count($votes[@vote='P']) div count($votes) * 100}&amp;chl=Nay|Aye|No Vote&amp;chco=CC0000,0000CC,00AAAA&amp;chf=bg,s,00000000" width="250" height="100"/>
+				</td>
+			</tr>
+
+			<xsl:variable name="req">
+				<xsl:choose>
+				<xsl:when test="$roll/required='1/2'">0.5</xsl:when>
+				<xsl:when test="$roll/required='2/3'">0.6666</xsl:when>
+				<xsl:when test="$roll/required='3/5'">0.6</xsl:when>
+				<xsl:otherwise>UNKNOWN</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+			<xsl:if test="count($roll/option[@key='+']) = 1 and not($req='UNKNOWN')">
+			<tr>
+				<td/> <td/> <td/>
+				<td>
+					<div style="margin-left: {(number($req)*$totvot div $total * 100) - 1.5}px; padding-left: .5em; border-left: 3px solid #444477; font-size: 8pt; margin-bottom: -10px">
+						Needed To Win
+					</div>
+				</td>
+			</tr>
+			</xsl:if>
+			<xsl:for-each select="$roll/option">
+				<xsl:variable name="v" select="@key"/>
+				<xsl:variable name="clr">
+					<xsl:choose>
+					<xsl:when test="$v='+'">#0000CC</xsl:when>
+					<xsl:when test="$v='-'">#CC0000</xsl:when>
+					<xsl:when test="$v='0'">#00AAAA</xsl:when>
+					<xsl:when test="$v='P'">#00AAAA</xsl:when>
+					<xsl:otherwise>#AAAA00</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+
+				<tr>
+				<td style="text-align: right; padding-right: 1em"><nobr><b><xsl:value-of select="."/>:</b></nobr></td>
+
+				<xsl:variable name="cnt" select="count($votes[@vote=$v])"/>
+
+				<td><xsl:value-of select="$cnt"/></td>
+				<td>(<xsl:value-of select="round($cnt div $total * 100)"/>%)</td>
+				<td style="padding-right: 2em">
+					<xsl:choose>
+					<xsl:when test="$v='+' and not($req='UNKNOWN')">
+						<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+						<xsl:if test="($cnt div $totvot) &lt;= number($req)">
+							<td><div style="height: 1em; width: {$cnt div $total * 100}px; background-color: {$clr};"/></td>
+							<td><div style="height: 1em; width: {(number($req)*$totvot - $cnt) div $total * 100}px; background-color: #EEEEFF; border-right: 3px solid #444477"/></td>
+							<!--<td><div style="height: 1em; width: {($total - number($req)*$totvot) div $total * 100}px; background-color: #EEEEFF;"/></td>-->
+						</xsl:if>
+						<xsl:if test="($cnt div $totvot) &gt; number($req)">
+							<td><div style="height: 1em; width: {(number($req)*$totvot div $total) * 100}px; background-color: {$clr}; border-right: 1px solid #444477;"/></td>
+							<td><div style="height: 1em; width: {($cnt - number($req)*$totvot) div $total * 100}px; background-color: {$clr};"/></td>
+							<!--<td><div style="height: 1em; width: {($total - $cnt) div $total * 100}px; background-color: #EEEEFF;"/></td>-->
+						</xsl:if>
+						</tr>
+						</table>
+					</xsl:when>
+					<xsl:otherwise>
+						<div style="height: 1em; width: {$cnt div $total * 100}px; background-color: {$clr};"/>
+					</xsl:otherwise>
+					</xsl:choose>
+				</td>
+
+				<xsl:for-each select="$parties//party">
+					<xsl:variable name="p" select="string(.)"/>
+					<td style="text-align: center; font-size: 90%">
+						<xsl:value-of select="count($votes[@vote=$v and not(@id='') and govtrack-vote:PersonInfo(@id,'vote-repparty')=$p])"/>
+					</td>
+				</xsl:for-each>
+				</tr>
+			</xsl:for-each>
+			<tr><td colspan="1" valign="top" style="text-align: right; padding-right: 1em"><b>Required: </b></td>
+				<td colspan="3" valign="top">
+				<xsl:if test="not($roll/required='1/2')"><xsl:value-of select="$roll/required"/></xsl:if>
+				<xsl:if test="$roll/required='1/2'">Simple Majority</xsl:if>
+				of <xsl:value-of select="$totvot"/> votes
+				<xsl:if test="$roll/required='1/2'"> (=<xsl:value-of select="floor($totvot div 2) + 1"/> votes)</xsl:if>
+				<xsl:if test="$roll/required='2/3'"> (=<xsl:value-of select="ceiling($totvot * 2 div 3)"/> votes)</xsl:if>
+				<xsl:if test="$roll/required='3/5'"> (=<xsl:value-of select="ceiling($totvot * 3 div 5)"/> votes)</xsl:if>
+				<div style="margin-top: 1em; font-size: 85%; color: #666666">(Vacancies in Congress will affect vote totals.)</div>
+				</td>
+				
+				<xsl:for-each select="$parties//party">
+					<xsl:variable name="p" select="."/>
+					<xsl:variable name="pvotes" select="$votes[govtrack-vote:PersonInfo(@id,'vote-repparty')=$p]"/>
+					<td><center><img src="http://chart.apis.google.com/chart?cht=p&amp;chs=50x50&amp;chd=t:{count($pvotes[@vote='-']) div count($pvotes) * 100},{count($pvotes[@vote='+']) div count($pvotes) * 100},{count($pvotes[@vote='0']) div count($pvotes) * 100 + count($pvotes[@vote='P']) div count($pvotes) * 100}&amp;chco=CC0000,0000CC,00AAAA&amp;chf=bg,s,00000000"/></center></td>
+				</xsl:for-each>
+			</tr>
+			</table>
+
+			<xsl:if test="count($roll/voter[@id='0' and not(@VP='1')]) &gt; 0">
+				<p>Please note that there is a slight glitch in this voting record.
+				GovTrack could not identify all of the voters from the original source data.
+				Some voters are listed as 'Unknown Person', and the Party Breakdown table
+				may be inaccurate.</p>
+			</xsl:if>
+
+			<xsl:variable name="npvotes" select="$votes[govtrack-vote:PersonInfo(@id,'vote-repparty')='Unknown']"/>
+			<xsl:if test="count($npvotes) &gt; 0">
+				<p>Please note that there is a slight glitch in this voting record.
+				GovTrack does not know the party affiliation of some historical
+				Members of Congress, and as a result the party totals above are
+				not correct.</p>
+			</xsl:if>
+			
+			<p style="margin-top: 0px; font-size: 75%">More information: <a href="http://www.govtrack.us/blog/2009/11/18/aye-versus-yea-whats-the-difference/">Aye versus Yea Explained</a></p>
+		
+			<h3>Vote Details</h3>
+			
+			<xsl:call-template name="maps"/>
+
+			<table cellpadding="0" style="font-size: 95%">
+				<tr>
+				<th width="75" style="text-align: center">Vote
+					<div class="collink">
+					[<a href="{HttpContext:request()}?vote={HttpContext:param('vote')}&amp;sort=vote">Sort</a>]</div>
+					</th>
+				<th width="50">
+					<xsl:if test="$roll/@where='house'">District</xsl:if>
+					<xsl:if test="$roll/@where='senate'">State</xsl:if>
+					<div class="collink">
+					[<a href="{HttpContext:request()}?vote={HttpContext:param('vote')}&amp;sort=district">Sort</a>]</div>
+					</th>
+				<th>Representative
+					<div class="collink">
+					[<a href="{HttpContext:request()}?vote={HttpContext:param('vote')}&amp;sort=name">Sort by Name</a>]
+					[<a href="{HttpContext:request()}?vote={HttpContext:param('vote')}&amp;sort=party">Sort by Party</a>]</div>
+					</th>
+				</tr>
+				
+				<xsl:variable name="sort" select="HttpContext:param('sort')"/>
+
+				<xsl:choose>
+				<xsl:when test="$sort='vote'">
+					<xsl:for-each select="$votes">
+						<xsl:sort select="@vote"/>
+						<xsl:sort select="govtrack-vote:PersonInfo(@id,'vote-repname')"/>
+						<xsl:apply-templates select="."/>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:when test="$sort='district' or $sort = ''">
+					<xsl:if test="count($votes[@VP=1]) &gt; 0">
+						<tr><td colspan="3"><b>Vice Presidential Tie Breaker</b></td></tr>
+						<xsl:apply-templates select="$votes[@VP=1]"/>
+					</xsl:if>
+
+					<xsl:for-each select="govtrack-util:StateNames()">
+						<xsl:sort select="."/>
+						<xsl:variable name="state" select="."/>
+						<xsl:variable name="abbr" select="govtrack-util:GetStateAbbr($state)"/>
+
+						<xsl:variable name="myvoters" select="$votes[@state=$abbr]"/>
+
+						<xsl:if test="count($myvoters) &gt; 0">
+						<tr><td colspan="2" style="padding-top: .5em; padding-left: .5em; font-style: italic"><xsl:value-of select="$state"/></td></tr>
+						<xsl:for-each select="$myvoters">
+							<xsl:sort select="@district" data-type="number"/>
+							<xsl:sort select="govtrack-vote:PersonInfo(@id,'vote-repname')"/>
+							<xsl:apply-templates select="."/>
+						</xsl:for-each>
+						</xsl:if>
+					</xsl:for-each>
+
+					<xsl:if test="count($votes[@id=0]) &gt; 0">
+						<tr><td colspan="3"><b>Unknown Voters</b></td></tr>
+						<xsl:apply-templates select="$votes[@id=0]"/>
+					</xsl:if>
+				</xsl:when>
+				<xsl:when test="$sort='party'">
+					<xsl:for-each select="$votes">
+						<xsl:sort select="govtrack-vote:PersonInfo(@id,'vote-repparty')"/>
+						<xsl:sort select="govtrack-vote:PersonInfo(@id,'vote-repname')"/>
+						<xsl:apply-templates select="."/>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:when test="$sort='name'">
+					<xsl:for-each select="$votes">
+						<xsl:sort select="govtrack-vote:PersonInfo(@id,'vote-repname')"/>
+						<xsl:apply-templates select="."/>
+					</xsl:for-each>
+				</xsl:when>
+				</xsl:choose>
+			</table>
+		</xsl:template>
+		
+		<xsl:template match="voter">
+			<tr style="font-size: 90%">
+				<xsl:attribute name="class">
+					<xsl:if test="@vote='+'">VoteAye</xsl:if>
+					<xsl:if test="@vote='-'">VoteNay</xsl:if>
+					<xsl:if test="@vote='0'">VoteNone</xsl:if>
+					<xsl:if test="@vote='P'">VoteNone</xsl:if>
+				</xsl:attribute>
+			
+			<td style="text-align: center">
+				<xsl:value-of select="@value"/>
+			</td>
+			<td>
+				<xsl:if test="not(@state='')"> <!-- missing info -->
+					<xsl:value-of select="@state"/>
+					<xsl:if test="count(@district)=1 and not(@district=-1)">-<xsl:value-of select="@district"/></xsl:if>
+				</xsl:if>
+			</td>
+			<td>
+				<xsl:if test="not(@id=0)">
+					<a href="{govtrack-reps:RepLink(@id)}" style="color: inherit">
+						<xsl:value-of select="govtrack-vote:PersonInfo(@id,'vote-repname')"/>
+					</a>
+				</xsl:if>
+				<xsl:if test="@id=0">
+					Unknown Person
+				</xsl:if>
+				<xsl:if test="@VP='1'">Vice President (tie-breaker)</xsl:if>
+			</td>
+			</tr>
+		</xsl:template>
+
+		<xsl:template name="maps">
+			<div style="float: right; width: 410px">
+			<xsl:if test="$roll/@session &gt;= 109">
+				<center style="margin: .75em; font-weight: bold">
+					Cartogram
+				</center>
+				<div><img src="{govtrack-bills:GetVoteImgCarto($roll/@where, $roll/@year, $roll/@roll, 0)}"/></div>
+
+				<center style="margin: 2em .75em .75em .75em; font-weight: bold">Standard Projection</center>
+				<div><img src="{govtrack-bills:GetVoteImgGeo($roll/@where, $roll/@year, $roll/@roll, 0)}"/></div>
+
+				<div style="font-size: 90%">
+				<xsl:if test="$roll/@where = 'senate'"><p>Horizontal bars indicate the two senators from a state voted differently.</p></xsl:if>
+
+				<p>Cartograms give an equal area in an image to an equal number of votes by distorting
+				the image.  Senate vote cartograms
+				are shown with each state stretched or shrunk so that the states each take up an equal area because each state has two votes.
+				For House votes, it is each congressional district which is stretched or shrunk.</p>
+				</div>
+			</xsl:if>
+			</div>
+		</xsl:template>
+
+	</Templates>
+</Page>
+

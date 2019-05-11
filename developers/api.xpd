@@ -1,0 +1,80 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+
+	<Title PrependSiteTitle="1">APIs</Title>
+	
+	<Breadcrumbs><a href="/about.xpd">About GovTrack</a> &gt; <a href="/developers">Developers</a></Breadcrumbs>
+	
+	<Body-A>
+
+		<h1 class="PageTitle">APIs: Special Access to Source Data</h1>
+		
+		<p>APIs are URLs on GovTrack that serve XML rather than HTML. They are intended to be called by applications to retrieve data 
+		dynamically. There's no API key. Pretty much do whatever you want with these APIs, but
+		don't overload my server by calling them too much.</p>
+		
+		<p>If you use the APIs regularly, you might want to join the
+		<a href="http://groups.yahoo.com/group/govtrack/">GovTrack mail list</a>
+		to be aware of any API changes.</p>
+		
+		<p>Also note the <a href="license.xpd">license terms</a>, which are
+		pretty permissive for noncommercial projects. Commercial projects
+		can request a license agreement, which may or may not require a fee.
+		See the license terms page for details.</p>
+		
+		<h3>Source Data API</h3>
+		
+		<p>The APIs below are only half of the way to retreive GovTrack data. The <i>preferred way</i> is via
+		the <a href="data.xpd">source data</a>, which are static XML files that you can access via
+		HTTP or rsync. Everything you see on GovTrack is in one of the static XML files.
+		Described below are special API methods that cover some additional needs, but check out
+		the <a href="data.xpd">source data</a> first.</p>
+		
+		<h3>DEPRECATED - Bill Search API</h3>
+
+		<p>Get the results of a bill search in XML
+		using the bill search API. See <a href="/congress/billsearch_api.xpd?q=iraq+war">this
+		example</a>. The query string parameters mimic those on the <a href="/congress/billsearch.xpd?q=iraq+war">bill search page</a>.</p>
+
+		<h3>DEPRECATED - Member of Congress API</h3>
+
+		<p>Get some information about a Member of Congress in XML
+		using the MoC API. See <a href="/congress/person_api.xpd?id=300058">this
+		example</a>. You can also pass a "session" parameter to get sponsored and cosponsored bills from
+		the current or a previous Congresses, i.e. <a href="/congress/person_api.xpd?id=300058&amp;session=109">this example with bills</a>.
+		(There's no other documentation other than the example, and
+		there are no other query string options. On Nov 14, 2008, the API now requires the session parameter to get the list of bills.)</p>
+
+		<h3>DEPRECATED - Vote Database API</h3>
+
+		<p>Get voting records in XML. To get an overall list,
+		use the roll call votes API: <a href="http://www.govtrack.us/congress/votes_download_xml.xpd?year=2009">example</a> or use the master <a href="http://www.govtrack.us/data/us/111/votes.all.index.xml">vote index file</a> in the source data. To get the voting record of a single Member of Congress, use the voting record API (<a href="http://www.govtrack.us/congress/votes_download_xml.xpd?year=2009&amp;person=300022">example</a>),
+		or scan the complete roll vote XML files in the source data.</p>
+		
+		<h3>Congressional District Look-up API</h3>
+		
+		<p>Look up a congressional district by ZIP code (ZIP or ZIP+4) latitude/longitude, or
+		by street address (which uses <a href="http://geocoder.us/">geocoder.us</a> underlyingly). It'll also tell you
+		the GovTrack IDs for the senators and representatives for the district (as of Nov 14, 2008). Here are four examples:
+			<a href="http://www.govtrack.us/perl/district-lookup.cgi?zipcode=11803">by 5-digit ZIP code</a> (which happens to yield multiple matches but can also return a single match as with the rest of the examples),
+			<a href="http://www.govtrack.us/perl/district-lookup.cgi?zipcode=19104-6106">by 9-digit ZIP code</a>,
+			<a href="http://www.govtrack.us/perl/district-lookup.cgi?address=3600+Chestnut+Street,+Philadelphia PA 19104">by address</a>, and
+			<a href="http://www.govtrack.us/perl/district-lookup.cgi?lat=39.954663&amp;long=-75.194467">by latitude/longitude</a>.
+			Try fake zip codes, addresses, etc. to see what the results look like if no match is found.
+			ZIP+4 lookups is based on USPS data purchased by <a href="http://public.resource.org">Public.Resource.Org</a>.
+			I have compactified the ZIP+4 database <a href="http://www.govtrack.us/data/us/gis/zip4dist-prefix.txt.gz">here</a> so that
+			if all ZIP+4 codes starting with "XYZ" map to the same district, then there is
+			a single entry in the file for "XYZ". (The information in the API and file is current as of Summer 2008.)
+			</p>
+
+		<h3>Google Maps Overlays</h3>
+
+		<p>This isn't an API but it's worth noting here. The Google Maps overlays used <a href="/congress/findyourreps.xpd">here</a>
+		can be used on your own Google Maps API mash-ups. See <a href="/embed/googlemaps.xpd">these
+		instructions</a>.</p>
+
+
+	</Body-A>
+	
+ </Page>

@@ -1,0 +1,135 @@
+div#sidebar { position: fixed; width: 190px; 
+              font-family: Verdana, arial, helvetica, sans-serif; font-size: 12px; }
+
+div#version_group, div#comparetobox, div#control_group {
+	border: 1px solid black; padding: 6px 6px 6px 6px;
+	margin-top: 0.75em;
+}
+
+div#version_group table { margin-top: 0.3em; }
+
+div#sidebar p { margin: 0 0 0.5em 0; padding: 0; }
+div#sidebar select { width: 98%; margin-top: 0.3em; font-family: Verdana, arial, helvetica, sans-serif; font-size: 11px; }
+
+div#sidebar a, div#billtext a { text-decoration: none; }
+div#sidebar a:hover, div#billtext a:hover { text-decoration: underline; }
+
+div#sidebar #view { list-style: none; margin: 0; padding: 0; }
+div#sidebar #view li { vertical-align: middle; margin: 0.1em; padding: 0; }
+
+div#sidebar #main_controller { list-style: none; margin: 0; padding: 0; }
+div#sidebar #main_controller li { margin: 0.1em; padding: 0; cursor: pointer; }
+
+
+
+div#billtext { font-family: Verdana, arial, helvetica, sans-serif; font-size: 12px; margin: 0; padding: 2em;
+               background-color: rgb(250,250,250); border: 2px solid rgb(230,230,230); min-height:380px; }
+
+div#billtext div#warning p { font-size: 120%; margin: 2em; }
+div#billtext div#warning a { cursor: pointer; }
+
+div#billtext img#spinner { display: block; margin: 165px auto 175px auto; }
+
+div#billtext p { margin: 0; padding: 0.1em; }
+
+div#billtext div.section { padding: 0.4em 0.4em 0.4em 0.4em; margin: 0; clear: both; }
+div#billtext div.section_hover { background-color: rgb(251,245,176); }
+
+div#sidetext { background: transparent url(images/divider.gif) repeat-y center 0; }
+div#sidetext div.section_hover { background: rgb(251,245,176) url(images/divider.gif) repeat-y center 0; }
+
+div#billtext div.chooser { font-weight: normal; 
+                           float: right; margin: -0.4em -0.4em 0.4em 0.4em; padding: 1px; visibility: hidden; }
+div#billtext div.chooser_hover { visibility: visible; }
+
+div#billtext div.chooser * { width: 16px; height: 16px; cursor: pointer; display: inline-block; }
+div#billtext div.chooser span.expanded { background-image: url(images/expanded.png); } 
+div#billtext div.chooser span.contracted { background-image: url(images/contracted.png); } 
+div#billtext div.chooser a.extractor { background-image: url(images/extract.png); } 
+div#billtext div.chooser a.linker { background-image: url(images/link.png); } 
+div#billtext div.chooser *:hover { background-position: 0 16px; }
+
+div#billtext a.toclink { cursor: pointer; }
+
+div#billtext div.section_linked { border: 2px dashed rgb(227,218,110); }
+
+div#billtext div.side_old { float:left; width: 44%; }
+div#billtext div.side_new { float:right; width: 44%; }
+
+/* required for compatibility with both IE8 and IE7.
+   see http://blogs.msdn.com/ie/archive/2008/09/08/microsoft-css-vendor-extensions.aspx */
+div#billtext div.collapsed { -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+                             filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+                             opacity: 0.5; }
+
+/* can be divs or spans */
+/* div#billtext .changed-to { background-color: #FFFFFF; border: 1px solid #BBBB99; } */
+div#billtext .removed { background-color: #FFE0E0; border: 1px solid #EEDDEE; }
+div#billtext .inserted { background-color: #EEFFFF; border: 1px solid #DDDDEE; }
+div#billtext .inline-removed { text-decoration: line-through }
+
+/* shouldn't conflict with .inserted, etc. */
+div#billtext p.quote { padding-left: 15px; background-image: url(images/quote.png); background-repeat: no-repeat; }
+
+p#vtext { font-family: Verdana, arial, helvetica, sans-serif; font-size: 12px; margin: 0; padding: .5em;
+               background-color: rgb(250,250,250); border: 2px solid rgb(230,230,230); }
+
+/* cluetip entries, copied from jquery.cluetip.css */
+#cluetip-waitimage {
+  width: 43px;
+  height: 11px;
+  position: absolute;
+  background-image: url(images/wait.gif);
+}
+.cluetip-arrows {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: -11px;
+  height: 22px;
+  width: 11px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+#cluetip-extra {
+  display: none;
+}
+.cluetip-jtip {
+  background-color: transparent;
+}
+.cluetip-jtip #cluetip-outer {
+  border: 2px solid #ccc;
+  position: relative;
+  background-color: #fff;
+}
+.cluetip-jtip #cluetip-inner {
+  padding: 0 5px 5px;
+  display: inline-block;
+  font-size: 12px;
+}
+.clue-right-jtip .cluetip-arrows {
+  background-image: url(images/arrowleft.gif);
+}
+.clue-left-jtip .cluetip-arrows {
+  background-image: url(images/arrowright.gif);
+  left: 100%;
+  margin-right: -11px;
+}
+.clue-top-jtip .cluetip-arrows {
+  background-image: url(images/arrowdown.gif);
+  top: 100%;
+  left: 50%;
+  margin-left: -11px;
+  height: 11px;
+  width: 22px;  
+}  
+.clue-bottom-jtip .cluetip-arrows {
+  background-image: url(images/arrowup.gif);
+  top: -11px;
+  left: 50%;
+  margin-left: -11px;
+  height: 11px;
+  width: 22px;
+}
+
+

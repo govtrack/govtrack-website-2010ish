@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<title>upload-styles.cgi API Form</title>
+	</head>
+	<body>
+	
+		<h1>WMS API: upload-styles</h1>
+		
+		<p>The <tt>upload-styles.cgi</tt> API access method is used
+		to assign visual presentation styling to geographic
+		features in a particular layer. This form facilitates
+		manual calling of this API method, although the API can
+		be called automatedly through an HTTP POST interface.</p>
+		
+		<p>Fill out the form below:</p>
+		
+		<form action="upload-styles.cgi" method="post">
+			<p>API Key: <input name="key" value="test"/> (Your password to modify the layer named next.)</p>
+			<p>Layer: <input name="layer" value="test"/> (This is the name of the layer to modify.)</p>
+			<p>Dataset: <input name="dataset" value="test"/> (Optional; the name of the dataset from which the region identifiers are drawn.)</p>
+			<p>Styles table:</p>
+			<p><textarea name="styles" cols="100" rows="12">region1 bordercolor:255,0,0 borderweight:1
+region2 bordercolor:0,0,255 borderweight:2 fillcolor:0,255,0 radius:5 label:ABC
+http://www.rdfabout.com/rdf/usgov/us/states@http://www.rdfabout.com/rdf/usgov/geo/us/ny bordercolor:255,0,0 borderweight:2</textarea></p>
+			<p><input type="submit" value="Upload"/></p>
+		</form>
+		
+		<p>When you click submit, the layer you specified will be
+		updated. If you modify the test layer, you can see the
+		results <a href="example_testlayer.html">here</a>. You
+		may need to reload the page with a cleared cache to
+		see changes (Ctrl+Shift+R in Firefox).</p>
+	
+	</body>
+</html>

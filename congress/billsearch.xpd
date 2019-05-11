@@ -1,0 +1,279 @@
+<?xml-stylesheet xpath="/Page/Templates" type="text/xsl" ?>
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page xmlns:xspforms="xspforms" HideAds="1">
+
+	<Title PrependSiteTitle="1">Search Legislation in Congress</Title>
+	
+	<Breadcrumbs>
+		<a href="/congress/">Congress</a> &gt; <a href="legislation.xpd">Legislation</a>
+	</Breadcrumbs>
+	
+	<Body-A>
+		<h1>Search Legislation in Congress</h1>
+		<p>Use this page to find bills and resolutions in the U.S. Congress going back to 1993.
+		You can also browse <a href="subjects.xpd">by subject area</a>
+		or <a href="committee.xpd">by committee assignment</a>.
+		(If you're looking for historical documents, see the
+		<a href="/formoreinfo.xpd">links page</a> for additional resources.)</p>
+	</Body-A>
+	
+	<Sidebar>
+		<Section Name="Browser Search">
+			<p>In Mozilla Firefox and Internet Explorer, you can add GovTrack to your
+			browser's toolbar search box.  Look inside the box to add it.</p>
+
+			<center><img src="/media/searchscreencap.png"/></center>
+
+			<p>To search previous Congresses, just add a slash and the Congress
+			number, like <i>H.R. 1828/108</i> or <i>accountability/107</i>.</p>
+		</Section>
+	</Sidebar>
+
+	<Body-B>
+		<xspforms:form id="billsearch" method="get">
+
+		<table>
+		<tr valign="top">
+			<td style="width: 9em"><b>Congress Term: </b></td>
+			<td>
+			<xspforms:select name="session" onchange="updateMemberList(this.value)">
+				<xspforms:option value="112">112th Congress (2011-2012)</xspforms:option>
+				<xspforms:option value="111">111th Congress (2009-2010)</xspforms:option>
+				<xspforms:option value="110">110th Congress (2007-2008)</xspforms:option>
+				<xspforms:option value="109">109th Congress (2005-2006)</xspforms:option>
+				<xspforms:option value="108">108th Congress (2003-2004)</xspforms:option>
+				<xspforms:option value="107">107th Congress (2001-2002)</xspforms:option>
+				<xspforms:option value="106">106th Congress (1999-2000)</xspforms:option>
+				<xspforms:option value="105">105th Congress (1997-1998)</xspforms:option>
+				<xspforms:option value="104">104th Congress (1995-1996)</xspforms:option>
+				<xspforms:option value="103">103rd Congress (1993-1994)</xspforms:option>
+			</xspforms:select>
+			<script>
+				function updateMemberList(session) {
+					AjaxSelect("billsearch_sponsor", "Loading...", "/congress/ajax_membersselect.xpd?session=" + session,
+					"(Select Sponsor)",
+						function() {
+							AjaxSelect("billsearch_cosponsor", "Loading...", "/congress/ajax_membersselect.xpd?session=" + session, "(Select Cosponsor)");
+						}
+						);
+					
+				}
+			</script>
+			</td>
+		</tr>	
+		<ifnosearch>
+		<tr>
+			<td colspan="2">
+			<ul id="help1" style="font-size: 90%; margin-left: 1em">
+			<li>There are many bills and resolutions with the same
+			number, like "H.R. 1828". Every two years, at the start of odd-numbered
+			years, Congress restarts its numbering from 1 again.  Each two-year
+			session is called a "Congress".  We're currently in the 111th Congress,
+			which started in 2009. You must choose a particular Congress Term above to search.</li>
+			</ul>
+			</td>
+		</tr>
+		</ifnosearch>
+		<tr valign="top">
+			<td><b>Search For: </b></td>
+			<td>
+				<xspforms:text name="q" defaultfromquery="1" size="40"/>
+			</td>
+		</tr>
+		</table>
+
+		<ifnosearch>
+		<p style="margin-left: 1em">You can search bills in several ways:</p>
+		<ul id="help2" style="font-size: 90%; margin-left: 2em">
+			<li>Enter a bill number above like <span style="font-size: 110%; font-family: Arial">H.R. 1828</span>. Be sure to choose the right Congress Term when looking for older legislation!</li>
+			<li>Enter keywords to search the bill's titles, summary, and full text. Use quotation marks to surround contiguous phrases and use "NOT" to exclude search terms.</li>
+			<li>Enter a section of the United States Code that the bill specificly cites. U.S.C. citations look like <span style="font-size: 110%; font-family: Arial">42 U.S.C. 1395w-4(d)</span>.</li>
+			<li>Or enter a public law number like <span style="font-size: 110%; font-family: Arial">P.L. 108-447</span>.</li>
+		</ul>
+		</ifnosearch>
+
+		<table>
+		<tr><td><b>Sponsor: </b></td> <td>
+			<select name="sponsor" id="billsearch_sponsor">
+			<option value="">(Any Sponsor)</option>
+			<sponsorlist/>
+			</select>
+		</td>
+		</tr>
+		<tr><td><b>Cosponsor: </b></td> <td>
+			<select name="cosponsor" id="billsearch_cosponsor">
+			<option value="">(Any Cosponsor)</option>
+			<cosponsorlist/>
+			</select>
+		</td></tr>
+	
+		<tr><td><b>Bill Status:</b></td> <td>
+			<!--<xspforms:select name="chamber">
+				<xspforms:option value="">Either Chamber</xspforms:option>
+				<xspforms:option value="h">House-originating Legislation</xspforms:option>
+				<xspforms:option value="s">Senate-originating Legislation</xspforms:option>
+			</xspforms:select>-->
+			<xspforms:select name="status">
+				<xspforms:option value="" text="(Any Status)"/>
+				<xspforms:option value="INTRODUCED,REFERRED" text="Introduced"/>
+				<xspforms:option value="REPORTED" text="Reported by Committee"/>
+				<xspforms:option value="PASSED:SIMPLERES,PASS_OVER:HOUSE,PASS_OVER:SENATE,FAIL:ORIGINATING:HOUSE,FAIL:ORIGINATING:SENATE" text="First Vote"/>
+				<xspforms:option value="PASSED:SIMPLERES" text="-- Simple Resolution Passed"/>
+				<xspforms:option value="PASS_OVER:HOUSE,PASS_OVER:SENATE" text="-- First Vote Passed (Others)"/>
+				<xspforms:option value="FAIL:ORIGINATING:HOUSE,FAIL:ORIGINATING:SENATE" text="-- First Vote Failed"/>
+				<xspforms:option value="PASSED:CONSTAMEND,PASSED:CONCURRENTRES,FAIL:SECOND:HOUSE,FAIL:SECOND:SENATE,PROV_KILL:PINGPONGFAIL,PASS_BACK:HOUSE,PASS_BACK:SENATE" text="Second Vote"/>
+				<xspforms:option value="PASSED:BILL" text="-- Bill Passed Congress"/>
+				<xspforms:option value="FAIL:SECOND:HOUSE,FAIL:SECOND:SENATE" text="-- Failed Second Vote"/>
+				<xspforms:option value="PROV_KILL:PINGPONGFAIL,PASS_BACK:HOUSE,PASS_BACK:SENATE" text="-- Differences Not Resolved"/>
+				<xspforms:option value="PASSED:SIMPLERES,PASSED:CONSTAMEND,PASSED:CONCURRENTRES" text="Resolution Passed"/>
+				<xspforms:option value="ENACTED:SIGNED,ENACTED:VETO_OVERRIDE" text="Enacted"/>
+				<xspforms:option value="ENACTED:SIGNED" text="-- Signed by President"/>
+				<xspforms:option value="ENACTED:VETO_OVERRIDE" text="-- by Veto Override"/>
+				<xspforms:option value="PROV_KILL:VETO,OVERRIDE_PASS_OVER:HOUSE,OVERRIDE_PASS_OVER:SENATE,VETOED:POCKET,VETOED:OVERRIDE_FAIL_ORIGINATING:HOUSE,VETOED:OVERRIDE_FAIL_ORIGINATING:SENATE,VETOED:OVERRIDE_FAIL_SECOND:HOUSE,VETOED:OVERRIDE_FAIL_SECOND:SENATE" text="Vetoed (Except Overridden)"/>
+				<xspforms:option value="PROV_KILL:SUSPENSIONFAILED,PROV_KILL:CLOTUREFAILED" text="Other"/>
+				<xspforms:option value="PROV_KILL:SUSPENSIONFAILED" text="-- Failed under Suspension"/>
+				<xspforms:option value="PROV_KILL:CLOTUREFAILED" text="-- Filibustered (Cloture Failed)"/>
+			</xspforms:select>
+		</td></tr>
+		<tr><td><b>Sort By:</b></td> <td>
+			<xspforms:select name="sort">
+				<xspforms:option value="">Relevance</xspforms:option>
+				<xspforms:option value="introduced">Introduced Date</xspforms:option>
+				<xspforms:option value="lastaction">Last Action</xspforms:option>
+			</xspforms:select>
+			(not quite working yet, sorry)
+		</td></tr>
+		</table>
+		
+		<p><xspforms:submit text="Search"/></p>
+		</xspforms:form>
+		
+		<script>
+			var se = getObj('billsearch_session').value;
+			if (se != <cursession/>)
+				updateMemberList(se);
+		</script>
+		
+		<Results/>
+		
+		<div>
+		<span id="btn_prev" style="display: none"><input type="button" value="&lt; Previous" onclick="nav(-1)"/></span>
+		<span id="btn_next" style="display: none"><input type="button" value="Next &gt;" onclick="nav(1)"/></span>
+		</div>
+		
+		<script>
+			var cur_start = 0, step = <resultlimit/>;
+			function nav(direction) {
+				DHTML_ShowHide('btn_prev', 0);
+				DHTML_ShowHide('btn_next', 0);
+				cur_start += step*direction;
+				ajax('search_results', 'Loading search results...', { start: cur_start }, btns);
+			}
+			function btns() {
+				if (step == 0)
+					SetInnerHtml('where', "");
+				else
+					SetInnerHtml('where', "Showing bills " + (cur_start+1) + " through " + (cur_start+step) + ".");
+				DHTML_ShowHide('btn_prev', lt(0, cur_start));
+				DHTML_ShowHide('btn_next', lt(cur_start+step, <resultcount/>));
+			}
+			btns();
+		</script>
+	</Body-B>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:HttpContext="HttpContext"
+		xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-bills = "assembly://GovTrackWeb/GovTrack.Web.Bills"
+		xmlns:govtrack-subjects = "assembly://GovTrackWeb/GovTrack.Web.Subjects"
+		xmlns:govtrack-search = "assembly://GovTrackWeb/GovTrack.Web.Pages.Congress.BillSearch"
+		xmlns:xspforms="xspforms"
+		exclude-result-prefixes="HttpContext govtrack-util govtrack-bills govtrack-subjects govtrack-search xspforms">
+
+		<xsl:variable name="results" select="govtrack-search:SearchNew()"/>
+		
+		<xsl:template match="resultcount">
+			<xsl:value-of select="$results/count"/>
+		</xsl:template>
+		
+		<xsl:template match="resultlimit">
+			<xsl:value-of select="count($results/results/*)"/>
+		</xsl:template>
+		
+		<xsl:template match="ifnosearch">
+			<xsl:if test="HttpContext:param('q')='' and HttpContext:param('sponsor')='' and HttpContext:param('cosponsor')='' and HttpContext:param('status')=''">
+				<xsl:apply-templates/>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template match="ErrorTextx">
+			<xsl:value-of select="xpd:perl('$error')"/>
+		</xsl:template>
+		
+		<xsl:template match="sponsorlist">
+			<CurrentMembersSelectOptions selected="{HttpContext:param('sponsor')}"/>
+		</xsl:template>
+		<xsl:template match="cosponsorlist">
+			<CurrentMembersSelectOptions selected="{HttpContext:param('cosponsor')}"/>
+		</xsl:template>
+		
+		<xsl:template match="cursession">
+			<xsl:value-of select="govtrack-util:GetCurrentSession()"/>
+		</xsl:template>
+
+		<xsl:template match="Results">
+			<xsl:if test="not(HttpContext:param('q')='' and HttpContext:param('sponsor')='' and HttpContext:param('cosponsor')='' and HttpContext:param('status')='')">
+				<hr/>
+				<p style="font-weight: bold">
+					<xsl:if test="$results/count &gt; 0">
+					<xsl:value-of select="$results/count"/> bill(s) matched your <xsl:value-of select="$results/method"/> for
+					<i><xsl:value-of select="HttpContext:param('q')"/></i>
+					<xsl:if test="HttpContext:param('q')=''">bills</xsl:if>
+					<xsl:if test="not(HttpContext:param('sponsor')='' and HttpContext:param('cosponsor')='')"> by sponsor or cosponsor</xsl:if>
+					<xsl:if test="not(HttpContext:param('status')='')"> by status</xsl:if>
+					<xsl:text>. </xsl:text>
+					</xsl:if>
+					<span id="where"/>
+					<xsl:if test="$results/count = 0">
+						No bills were found for your search.
+					</xsl:if>
+				</p>
+			</xsl:if>
+			
+			<div id="search_results">
+			<xsl:if test="$results/count &gt; 0">
+			<table>
+			<tr>
+				<th/>
+				<th>Bill</th>
+				<th>Status</th>
+				<th>Last Action</th>
+			</tr>
+			<xsl:for-each select="$results/results/*">
+				<tr style="background-color: #F5F5F5" valign="top">
+					<td style="padding-top: 5px">
+						<MonitorButton monitor="bill:{concat(type,session,'-',number)}" name="This Bill"/>
+					</td>
+					<td style="padding-top: .25em; padding-bottom: .25em">
+					<a href="{govtrack-bills:BillLink3(session, type, number)}">
+						<xsl:value-of select="title"/>
+					</a>
+					</td>
+					<td>
+						<nobr><xsl:value-of select="govtrack-bills:GetStatusIndexed(statusxml/*)"/></nobr>
+					</td>
+					<td>
+						<nobr><xsl:value-of select="statusdate"/></nobr>
+					</td>
+				</tr>
+			</xsl:for-each>
+			</table>
+			</xsl:if>
+			</div>
+		</xsl:template>
+
+	</Templates>
+   
+ </Page>

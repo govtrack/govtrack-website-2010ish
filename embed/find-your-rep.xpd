@@ -1,0 +1,502 @@
+<?xml-stylesheet type="text/xsl" xpath="div/Templates"?>
+<?xml-stylesheet type="filter/javascript" ?>
+<?cache server?>
+<?mime-type text/html?>
+<div>
+	<div style="font-size: 9pt">
+ 	<Body/>
+ 	</div>
+ 	
+<Templates xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        xmlns:http-context = "HttpContext"
+		  xmlns:govtrack-util = "assembly://GovTrackWeb/GovTrack.Web.Util"
+		  xmlns:govtrack-reps = "assembly://GovTrackWeb/GovTrack.Web.Reps"
+        exclude-result-prefixes="http-context govtrack-util govtrack-reps">
+        
+	<!--<xsl:variable name="geolocation" select="govtrack-util:CallAPI(concat('http://www.govtrack.us/perl/district-lookup.cgi?ip=', http-context:userip()), 'xml', 1)"/>-->
+
+	<xsl:template match="Body[http-context:param('step')='']">
+		<p style="text-align: center; margin-top: 0px; margin-bottom: 1.5em">Let’s find out which congressional district you live in!</p>
+
+		<h3>What’s your ZIP code?</h3>
+		<p>If you know your ZIP+4, even better! Enter that if you know it.</p>
+		
+		<div class="q">
+		<form onsubmit="return false;" name="zipcodeform">
+			<input type="hidden" name="step" value="zipcode"/>
+			<input type="hidden" name="state" value="{http-context:param('state')}"/>
+			<div>
+				<img src="http://www.govtrack.us/media/rightarrow.gif" style="margin-right: 1em" width="16" height="16"/>
+				ZIP Code or ZIP+4:
+				<input type="text" name="zipcode" size="10" maxlength="10" onkeyup="document.zipcodeform.submit.disabled=document.zipcodeform.zipcode.value==''" value="XXXXX-XXXX" style="color: #666" onfocus="if (this.value == 'XXXXX-XXXX') {{ this.value = ''; this.style.color=''; }}"/>
+				<input type="button" value="Next &gt;" style="margin-left: 1em" disabled="1" name="submit" onclick="FindYourRep_LoadPage(this.form);"/>
+			</div>
+		</form>
+		</div>
+
+		<h3 style="margin-top: 2em">What state do you live in?</h3>
+		<p>If you want to go right to the maps instead, select a state.</p>
+		<div class="q">
+   		<form onsubmit="FindYourRep_LoadPage(this); return false;" name="stateform">
+   			<input type="hidden" name="step" value="state"/>
+			<div>
+				<img src="http://www.govtrack.us/media/rightarrow.gif" style="margin-right: 1em" width="16" height="16"/>
+				<select name="state" onchange="document.stateform.submit.disabled=document.stateform.state.value==''">
+				<option value="">(Select State)</option>
+				<xsl:for-each select="govtrack-util:StateNames()">
+					<xsl:sort select="."/>
+					<option value="{govtrack-util:GetStateAbbr(.)}">
+						<!--<xsl:if test="govtrack-util:GetStateAbbr(.)=$geolocation/state"><xsl:attribute name="selected">1</xsl:attribute></xsl:if>-->
+						<xsl:value-of select="govtrack-util:Trunc(.,25)"/>
+					</option>
+				</xsl:for-each>
+				</select>
+				<input type="button" value="Next &gt;" style="margin-left: 1em" name="submit" onclick="FindYourRep_LoadPage(this.form);" disabled="1"/>
+				<!--
+				<input type="button" value="Next &gt;" style="margin-left: 1em" name="submit" onclick="FindYourRep_LoadPage(this.form);">
+					<xsl:if test="(count($geolocation/state)=0)"><xsl:attribute name="disabled">1</xsl:attribute></xsl:if>
+				</input>
+				<xsl:if test="not(count($geolocation/state)=0)">
+					<p style="font-style: italic; font-size: 85%">(We’re taking a guess for where you live based on your computer’s IP address.)</p>
+				</xsl:if>
+				-->
+			</div>
+		</form>
+		</div>
+	</xsl:template>
+		
+	<xsl:template match="Body[http-context:param('step')='state']">
+		<xsl:variable name="app" select="govtrack-util:GetStateApportionment(http-context:param('state'))"/>
+				
+		<h1 style="margin-top: 0px"><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/></h1>
+
+		<xsl:choose>
+			<xsl:when test="$app='delegate'">
+				<p><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>
+				sends a single delegate to the U.S. House of Representatives with limited voting privileges.
+				You can go right on to the next step to find out who that is.</p>
+				<form onsubmit="return false;">
+					<input type="hidden" name="step" value="district"/>
+					<input type="hidden" name="state" value="{http-context:param('state')}"/>
+					<input type="hidden" name="district" value="0"/>
+					<input type="button" value="Next &gt;" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+			</xsl:when>
+			
+			<xsl:when test="$app='1'">
+				<p><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>
+				is not divided into congressional districts. It has a single at-large congressional
+				district. You can go right on to the next step.</p>
+				<form onsubmit="return false;">
+					<input type="hidden" name="step" value="district"/>
+					<input type="hidden" name="state" value="{http-context:param('state')}"/>
+					<input type="hidden" name="district" value="0"/>
+					<input type="button" value="Next &gt;" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+			</xsl:when>
+			
+			<xsl:otherwise>
+			<p><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/> is
+			divided into <xsl:value-of select="$app"/> congressional districts. Do you already
+			know which district you are in?</p>
+				
+			<h4>I am not sure which district I live in:</h4>
+
+			<div class="q">
+			<!--
+			<xsl:choose>
+			<xsl:when test="$geolocation/state=http-context:param('state') and not(count($geolocation/district)=0)">
+				<p>We think you are at a computer in <xsl:value-of select="govtrack-util:GetStateName($geolocation/state)"/>’s
+					<xsl:value-of select="$geolocation/district"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix($geolocation/district)"/></sup> Congressional District.</p>
+		   		<form onsubmit="FindYourRep_LoadPage(this); return false;">
+		   			<input type="hidden" name="step" value="auto-district"/>
+		   			<input type="hidden" name="state" value="{$geolocation/state}"/>
+		   			<input type="hidden" name="district" value="{$geolocation/district}"/>
+					<div>
+					<img src="http://www.govtrack.us/media/rightarrow.gif" style="margin-right: 1em" width="16" height="16"/>
+					<input type="button" value="See If We Got It Right &gt;" style="margin-left: 1em" name="submit" onclick="FindYourRep_LoadPage(this.form);"/>
+					</div>
+		   		</form>
+				<p style="font-style: italic; font-size: 85%">(We’re taking a guess for where you live based on your computer’s IP address.)</p>
+			</xsl:when>
+			<xsl:otherwise>
+			-->
+				<p>We will help you find out. Just click the button:</p>
+				<form onsubmit="return false;">
+					<input type="hidden" name="step" value="find-district"/>
+					<input type="hidden" name="state" value="{http-context:param('state')}"/>
+					<img src="http://www.govtrack.us/media/rightarrow.gif" style="margin-right: 1em" width="16" height="16"/> <input type="button" value="Find District &gt;" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+			<!--
+			</xsl:otherwise>
+			</xsl:choose>
+			-->
+			</div>
+
+			<h4 style="margin-top: 1.5em">I know which district I live in:</h4>
+			<div class="q">
+			<p>Awesome! Enter it here. We’ll double check in the next step.</p>
+					
+			<form onsubmit="return false;" name="districtform">
+				<input type="hidden" name="step" value="check-district"/>
+				<input type="hidden" name="state" value="{http-context:param('state')}"/>
+	
+				<div>
+					<img src="http://www.govtrack.us/media/rightarrow.gif" style="margin-right: 1em" width="16" height="16"/>
+					<xsl:value-of select="govtrack-util:Trunc(govtrack-util:GetStateName(http-context:param('state')),25)"/>’s
+					<select name="district" onchange="document.districtform.submit.disabled=document.districtform.district.value==''">
+					<option value="">(Select District)</option>
+					<xsl:for-each select="govtrack-util:range(1, $app)">
+						<option value="{.}"><xsl:value-of select="govtrack-util:Ordinate(.)"/> District</option>
+					</xsl:for-each>
+					</select>
+					<input type="button" value="Next &gt;" style="margin-left: 1em" disabled="1" name="submit" onclick="FindYourRep_LoadPage(this.form);"/>
+				</div>
+			</form>
+			</div>
+					
+			<hr size="1" style="margin-top: 2em"/>
+
+			<form onsubmit="return false;">
+				<input type="hidden" name="step" value=""/>
+				<input type="button" value="Start Over" onclick="FindYourRep_LoadPage(this.form);"/>
+			</form>
+			
+			</xsl:otherwise>
+		</xsl:choose>
+				
+	</xsl:template>
+
+	<xsl:template match="Body[http-context:param('step')='zipcode']">
+		<xsl:variable name="districts" select="govtrack-reps:AddressToDistricts('zipcode', http-context:param('zipcode'))"/>
+		
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tr valign="top">
+		<td width="360" style="padding-right: 2em">
+
+		<xsl:if test="count($districts)=0">
+			<h3 style="margin-top: 0px">Invalid Zip Code</h3>
+			<p>What you entered is not a ZIP code or it is a military or other ZIP code not represented in Congress.</p>
+		</xsl:if>
+		<xsl:if test="count($districts) &gt; 1">
+			<h3 style="margin-top: 0px">Do you live here?</h3>
+
+			<p>Your ZIP code <b><xsl:value-of select="http-context:param('zipcode')"/></b> spans multiple congressional districts.</p>
+			
+			<p>Is this the right one? Zoom in to see if you live in the shaded region.</p>
+			
+			<form onsubmit="return false;" name="districtform">
+				<input type="hidden" name="step" value="district"/>
+				<input type="hidden" name="state" value="{$districts[1]/state}"/>
+				<div style="q">
+					<img src="http://www.govtrack.us/media/rightarrow.gif" style="margin-right: 1em" width="16" height="16"/>
+					<input type="button" value="Yes, It's Right" name="submit" onclick="FindYourRep_LoadPage(this.form);"/>
+				</div>
+				<div style="q">
+					<img src="http://www.govtrack.us/media/rightarrow.gif" style="margin-right: 1em" width="16" height="16"/>
+					<input type="button" value="No, Show Another" name="next" onclick="this.form.district.selectedIndex = ((this.form.district.selectedIndex+1) % {count($districts)}); if (this.form.district.selectedIndex==0) document.getElementById('seenall').innerHTML='You have gone through all of the districts for your zipcode.'; setTimeout(this.form.district.onchange, 1);"/>
+				</div>
+				<p id="seenall"></p>
+				<p style="margin-top: 1.5em; margin-bottom: 0px">Switch to:</p>
+				<div>
+					<select name="district" onchange="document.getElementById('map').src='http://www.govtrack.us/embed/mapframe.xpd?state={$districts[1]/state}&amp;district=' + document.districtform.district.value + '&amp;hide-footer=secretcode';">
+					<xsl:for-each select="$districts">
+						<option value="{district}"><xsl:value-of select="govtrack-util:GetStateName(state)"/>’s <xsl:value-of select="govtrack-util:Ordinate(district)"/> District</option>
+					</xsl:for-each>
+					</select>
+				</div>
+			</form>
+		</xsl:if>
+		<xsl:if test="count($districts) = 1">
+			<xsl:variable name="app" select="govtrack-util:GetStateApportionment($districts[1]/state)"/>
+			<xsl:choose>
+			<xsl:when test="$app='delegate'">
+				<h3 style="margin-top: 0px">U.S. Territory</h3>
+				<p><xsl:value-of select="govtrack-util:GetStateName($districts[1]/state)"/>
+				sends a single delegate to the U.S. House of Representatives with limited voting privileges.
+				You can go right on to the next step to find out who that is.</p>
+				<form onsubmit="return false;">
+					<input type="hidden" name="step" value="district"/>
+					<input type="hidden" name="state" value="{$districts[1]/state}"/>
+					<input type="hidden" name="district" value="0"/>
+					<input type="button" value="Next &gt;" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+			</xsl:when>
+			<xsl:when test="$app='1'">
+				<h3 style="margin-top: 0px">District At Large</h3>
+				<p><xsl:value-of select="govtrack-util:GetStateName($districts[1]/state)"/>
+				is not divided into congressional districts. It has a single at-large congressional
+				district. You can go right on to the next step.</p>
+				<form onsubmit="return false;">
+					<input type="hidden" name="step" value="district"/>
+					<input type="hidden" name="state" value="{$districts[1]/state}"/>
+					<input type="hidden" name="district" value="0"/>
+					<input type="button" value="Next &gt;" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+			</xsl:when>
+			<xsl:otherwise>
+				<h3 style="margin-top: 0px">Do you live here?</h3>
+				<p>Your ZIP code <b><xsl:value-of select="http-context:param('zipcode')"/></b> falls in <xsl:value-of select="govtrack-util:GetStateName($districts[1]/state)"/>’s
+				<b><xsl:value-of select="$districts[1]/district"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix($districts[1]/district)"/></sup> Congressional District</b>.</p>
+				<p>Check the map to make sure we identified your district correctly before going on.</p>
+			
+				<form onsubmit="return false;">
+					<input type="hidden" name="step" value="district"/>
+					<input type="hidden" name="state" value="{$districts[1]/state}"/>
+					<input type="hidden" name="district" value="{$districts[1]/district}"/>
+					<input type="button" value="Next &gt;" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+				<form onsubmit="return false;" style="margin-top: 1em">
+					<input type="hidden" name="step" value="state"/>
+					<input type="hidden" name="state" value="{$districts[1]/state}"/>
+					<input type="button" value="No It's Wrong &gt;" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+			
+		<hr size="1" style="margin-top: 3em"/>
+		<form onsubmit="return false;">
+			<input type="hidden" name="step" value=""/>
+			<input type="button" value="Start Over" onclick="FindYourRep_LoadPage(this.form);"/>
+		</form>
+
+		</td>
+		<td>
+		
+		<xsl:if test="not(count($districts) = 1)">
+		<iframe id="map" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://www.govtrack.us/embed/mapframe.xpd?state={$districts[1]/state}&amp;district={$districts[1]/district}&amp;hide-footer=secretcode">-</iframe>
+		</xsl:if>
+		<xsl:if test="count($districts) = 1">
+		<xsl:variable name="app" select="govtrack-util:GetStateApportionment($districts[1]/state)"/>
+		<xsl:if test="not($app='delegate' or $app='1')">
+			<iframe id="map" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://www.govtrack.us/embed/mapframe.xpd?state={$districts[1]/state}&amp;district={$districts[1]/district}&amp;hide-footer=secretcode">-</iframe>
+		</xsl:if>
+		</xsl:if>
+
+		</td>
+		</tr>
+		</table>
+	</xsl:template>
+	
+	<xsl:template match="Body[http-context:param('step')='check-district']">
+		<table>
+		<tr valign="top">
+		<td width="360" style="padding-right: 2em">
+			<p>You chose <b><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>’s
+			<xsl:value-of select="http-context:param('district')"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix(http-context:param('district'))"/></sup> Congressional District</b>.</p>
+			<p>Check the map just to make sure you identified your district correctly before going on.</p>
+			<form onsubmit="return false;">
+				<input type="hidden" name="step" value="district"/>
+				<input type="hidden" name="state" value="{http-context:param('state')}"/>
+				<input type="hidden" name="district" value="{http-context:param('district')}"/>
+				<input type="button" value="Next &gt;" onclick="FindYourRep_LoadPage(this.form);"/>
+			</form>
+			
+			<hr/>
+			<table>
+			<tr>
+			<td>
+			<form onsubmit="return false;">
+				<input type="hidden" name="step" value=""/>
+				<input type="button" value="Start Over" onclick="FindYourRep_LoadPage(this.form);"/>
+			</form>
+			</td>
+			<td>
+			<form onsubmit="return false;">
+				<input type="hidden" name="step" value="state"/>
+				<input type="hidden" name="state" value="{http-context:param('state')}"/>
+				<input type="button" value="Go Back" onclick="FindYourRep_LoadPage(this.form);"/>
+			</form>
+			</td>
+			</tr>
+			</table>
+
+		</td>
+		<td>
+		
+		<iframe id="map" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://www.govtrack.us/embed/mapframe.xpd?state={http-context:param('state')}&amp;district={http-context:param('district')}&amp;hide-footer=secretcode">-</iframe>
+
+		</td>
+		</tr>
+		</table>
+	</xsl:template>
+
+	<xsl:template match="Body[http-context:param('step')='auto-district']">
+		<table>
+		<tr valign="top">
+		<td width="360" style="padding-right: 2em">
+			<h3><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>’s
+			<xsl:value-of select="http-context:param('district')"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix(http-context:param('district'))"/></sup> Congressional District?</h3>
+
+			<p>We took a guess about your location. Is it right? Check that your residence
+			falls in the shaded region of the map.</p>
+
+			<center>
+			<form onsubmit="return false;">
+				<input type="hidden" name="step" value="district"/>
+				<input type="hidden" name="state" value="{http-context:param('state')}"/>
+				<input type="hidden" name="district" value="{http-context:param('district')}"/>
+				<input type="button" value="Yes, That’s Right" onclick="FindYourRep_LoadPage(this.form);"/>
+			</form>
+			<form onsubmit="return false;" style="padding-top: .5em">
+				<input type="hidden" name="step" value="state"/>
+				<input type="hidden" name="state" value="{http-context:param('state')}"/>
+				<input type="button" value="No, It’s Wrong" onclick="FindYourRep_LoadPage(this.form);"/>
+			</form>
+			<form onsubmit="return false;" style="padding-top: .5em">
+				<input type="hidden" name="step" value=""/>
+				<input type="button" value="Select Another State" onclick="FindYourRep_LoadPage(this.form);"/>
+			</form>
+			</center>
+
+			<p style="font-style: italic; font-size: 85%">(We’re taking a guess for where you live based on your computer’s IP address.)</p>
+		</td>
+		<td>
+		
+		<iframe id="map" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://www.govtrack.us/embed/mapframe.xpd?state={http-context:param('state')}&amp;district={http-context:param('district')}&amp;marker=0&amp;hide-footer=secretcode">-</iframe>
+
+		</td>
+		</tr>
+		</table>
+	</xsl:template>
+
+	<xsl:template match="Body[http-context:param('step')='district']">
+		<xsl:variable name="app" select="govtrack-util:GetStateApportionment(http-context:param('state'))"/>
+		<xsl:variable name="senreps" select="govtrack-reps:FindByState(http-context:param('state'))"/>
+
+		<table>
+		<tr valign="top">
+		<td style="padding-right: 2em" width="55%">
+			<xsl:if test="$app='delegate' or $app='1'">
+			<h1 style="margin-top: 0px"><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>’s
+			At-Large District</h1>
+			</xsl:if>
+			<xsl:if test="not($app='delegate' or $app='1')">
+			<h1 style="margin-top: 0px"><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>’s
+			<xsl:value-of select="http-context:param('district')"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix(http-context:param('district'))"/></sup> Congressional District</h1>
+			</xsl:if>
+
+			<p>Great! You figured out which congressional district you live in.
+			Check out who your senators and representative are to the right.</p>
+			
+			<p>When you are ready, you can return to the application that
+			sent you here.</p>
+			
+			<input type="button" value="Finish" onclick='FindYourRep_Callback("{http-context:param("state")}", "{http-context:param("district")}");'/>
+						
+			<hr/>
+				<table>
+				<tr>
+				<td>
+				<form onsubmit="return false;">
+					<input type="hidden" name="step" value=""/>
+					<input type="button" value="Start Over" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+				</td>
+				<td>
+				<xsl:if test="not($app='delegate' or $app='1')">
+				<form onsubmit="return false;">
+					<input type="hidden" name="step" value="state"/>
+					<input type="hidden" name="state" value="{http-context:param('state')}"/>
+					<input type="button" value="Change District" onclick="FindYourRep_LoadPage(this.form);"/>
+				</form>
+				</xsl:if>
+				</td>
+				</tr>
+				</table>
+		</td>
+		
+		<td style="border: 1px solid #999; padding: 0px .5em .5em .5em; background-color: #EEE; font-size: 90%">
+
+			<xsl:if test="not($app='delegate')">
+				<xsl:choose>
+				<xsl:when test="count($senreps[type='sen'])=2">
+					<p>The two senators from <xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/> are:</p>
+				</xsl:when>
+				<xsl:when test="count($senreps[type='sen'])=0">
+					<p>The senate seats are currently vacant in <xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>.</p>
+				</xsl:when>
+				<xsl:otherwise>
+					<p>States normally have two senators; however, a Senate seat is currently vacant in <xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>. Its serving senator is:</p>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			
+			<table>
+			<xsl:for-each select="$senreps[type='sen']">
+				<xsl:sort select="name"/>
+				<xsl:call-template name="ShowRep">
+					<xsl:with-param name="id" select="id"/>
+				</xsl:call-template>
+			</xsl:for-each>
+			</table>
+			
+			<xsl:variable name="reps" select="$senreps[type='rep' and district=http-context:param('district')]"/>
+			
+			<xsl:choose>
+			
+			<xsl:when test="$app = '1' and count($reps) &gt; 0">
+				<p>Your state’s Representative-at-Large is:</p>
+			</xsl:when>
+			<xsl:when test="$app = '1' and count($reps) = 0">
+				<p>Your state’s Representative-at-Large seat in the House of Representatives is currently vacant.</p>
+			</xsl:when>
+			
+			<xsl:when test="$app = 'delegate' and count($reps) &gt; 0">
+				<p><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>’s delegate to the House of Representatives is:</p>
+			</xsl:when>
+			<xsl:when test="$app = 'delegate' and count($reps) = 0">
+				<p><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>’s non-voting seat in the House of Representatives is currently vacant.</p>
+			</xsl:when>
+
+			<xsl:when test="count($reps) &gt; 0">
+				<p>The representative from <xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>’s
+				<xsl:value-of select="http-context:param('district')"/><sup><xsl:value-of select="govtrack-util:OrdinateSuffix(http-context:param('district'))"/></sup> congressional district is:</p>
+			</xsl:when>
+			<xsl:when test="count($reps) = 0">
+				<p><xsl:value-of select="govtrack-util:GetStateName(http-context:param('state'))"/>’s
+			<xsl:value-of select="govtrack-util:Ordinate(http-context:param('district'))"/> congressional district’s seat in the House of Representatives is currently vacant.</p>
+			</xsl:when>
+			
+			</xsl:choose>
+
+			<table>
+			<xsl:for-each select="$reps">
+				<xsl:call-template name="ShowRep">
+					<xsl:with-param name="id" select="id"/>
+				</xsl:call-template>
+			</xsl:for-each>
+			</table>
+		</td>
+		</tr>
+		</table>
+	</xsl:template>
+	
+	<xsl:template name="ShowRep">
+		<xsl:param name="id"/>
+		<tr height="61">
+		<td>
+			<xsl:choose>
+			<xsl:when test="govtrack-reps:HasImage($id)">
+				<a href="http://www.govtrack.us/congress/person.xpd?id={$id}" target="_blank">
+					<img src="http://www.govtrack.us/data/photos/{$id}-50px.jpeg" align="middle"
+						style="margin-right: 1em; border: 1px solid black"/>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<div style="font-size: 75%">(no image)</div>
+			</xsl:otherwise>
+			</xsl:choose>
+		</td>
+		<td>
+			<div>
+				<a href="http://www.govtrack.us/congress/person.xpd?id={$id}" target="_blank"><xsl:value-of select="name"/></a>
+			</div>
+		</td>
+		</tr>
+	</xsl:template>
+</Templates>
+
+</div>
+

@@ -1,0 +1,32 @@
+<?xml-stylesheet href="../style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<Title PrependSiteTitle="1">Tracking Congress</Title>
+
+	<Body-A>
+		<h1>Tracking Congress</h1>
+		
+		<p>Use GovTrack to follow the status of federal legislation and the events in 
+		Congress that interest you. We've got a few options for you. It's all free, of course.</p>
+		
+		<table style="margin-left: 1em">
+		<tr valign="top">
+			<td>
+				<img src="/media/tracker_chain.jpeg" alt=""/>
+			</td>
+			<td>
+				<div style="font-weight: bold"><a href="trackers.xpd">Trackers</a></div>
+				<div style="margin-bottom: 18px; font-size: 90%; color: #555555">Start by looking through our trackers to see what aspect of Congress you want to track.</div>
+				<div style="font-weight: bold"><a href="events.xpd">Your Tracked Events</a></div>
+				<div style="margin-bottom: 18px; font-size: 90%; color: #555555">The trackers you add make a personalized events page, or get it by RSS or email.</div>
+				<div style="font-weight: bold"><a href="yourmonitors.xpd">Edit Trackers</a></div>
+				<div style="margin-bottom: 18px; font-size: 90%; color: #555555">See what trackers you've selected or remove trackers.</div>
+			</td>
+		</tr>
+		</table>
+		
+		<IfLoggedIn><p><a href="account.xpd">Account Settings</a>: Edit your login information and email updates settings.</p></IfLoggedIn>
+		<IfNotLoggedIn><p>You are not logged in to a registered account. <a href="login.xpd?redirect=/users/account.xpd">Log in</a> to access your stored trackers or change your account settings like email updates.</p></IfNotLoggedIn>
+	</Body-A>
+
+</Page>

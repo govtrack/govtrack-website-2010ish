@@ -1,0 +1,34 @@
+<?xml-stylesheet href="style/master.xsl" type="text/xsl" ?>
+
+<Page>
+	<Title>About the Advertising on GovTrack</Title>
+
+	<Breadcrumbs><a href="about.xpd">About GovTrack</a></Breadcrumbs>
+	
+	<Body-A>
+		<h1 class="norule">About the Advertising on GovTrack</h1>
+
+		<p>GovTrack is a project of <a href="http://www.civicimpulse.com">Civic Impulse, LLC</a>,
+		technically a for-profit company, but one who thinks far more about how to do good
+		work than raising profits.
+		(<a href="about.xpd">You can read more about the site here.</a>) </p>
+		
+		<p>Advertising on GovTrack supports its small staff.
+		We run most ads from two ad exchanges, meaning we don't generally
+		pick who is advertising here. The ad selection is done automatically
+		based on the content of the page you are viewing. For instance,
+		if you see a political candidate it is certainly not an endorsement
+		from GovTrack. We probably don't even know it's there.
+		We also run direct advertising, such as the "VA Mortgage Center" link on the front page of GovTrack.</p>
+		
+		<p>Interested in advertising? Our ads reach 30,000+ unique visitors each day,
+		a group of politically interested people, and <a href="http://www.alexa.com/siteinfo/govtrack.us">according to Alexa</a>
+		a tilt toward female and aged 45+. But demographics and interest
+		varies considerably from page to page throughout the site, since
+		each bill in Congress draws a different segment of the population.
+		If there's a bill in Congress relevant to your business industry,
+		that's probably a good place for you to advertise.
+		Drop us a line if you would like to advertise on GovTrack: <contactemailaddress/>.</p>
+
+	</Body-A>
+</Page>

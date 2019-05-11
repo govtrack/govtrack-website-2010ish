@@ -1,0 +1,125 @@
+<html>
+	<head>
+		<title>WMS Server API Documentation</title>
+	</head>
+
+	<body>
+		<h1>WMS Server API Documentation</h1>
+		
+		<p>This is preliminary documentation for the HTTP API for Josh's experimental WMS project.</p>
+		
+		<h2>Overview</h2>
+
+		<p>The WMS server maintains a set of geospacial geometry features, polygons and points, and style layers
+		indicating how the geometry should be rendered in an image. Map tile images are served using the WMS
+		protocol, and the tiles can be used in layers with Google Maps, OpenLayers, and other map display widgets
+		for web pages.</p>
+		
+		<p>Geospacial features are grouped into "datasets". Each dataset has a name. Datasets contain a set of
+		regions, which are named using URIs. Each region can be composed of a set of polygons and points. Polygons
+		and points are specified in longitude/latitude pairs. Access to modify datasets is controlled by an API key password.</p>
+	
+		<p>Style information are grouped into layers. Each layer has a name. Access to modify layers
+		is controlled by an API key password.</p>
+		
+		<h2>Uploading a Dataset</h2>
+		
+		<p>Uploading a dataset means uploading longitude/latitude data for polygons and points in a particular dataset.
+		This can be accomplished by calling the API <tt>upload-geometry.cgi</tt> with the following parameters:</p>
+		
+		<table border="1">
+		<tr><th>Parameter</th> <th>Explanation</th> </tr>
+		<tr><th>key</th> <td>The API key issued by Josh that gives you write-access to particular datasets and layers.</td></tr>
+		<tr><th>dataset</th> <td>The name of the dataset to modify. The contents of the dataset are replaced with the new data.</td></tr>
+		<tr><th>geometry</th> <td>A table of polygon and point data. This parameter is composed of multiple lines. Each line represents a polygon or point. The lines are tab-delimited. The first column is the identifier of the region that this polygon or point is a part of. You are free to choose any string as the identifier, although using a URI is recommended. The second column starts with <tt>points:</tt> and is followed by a comma-separated list of longitude and latitude values. For a polygon, you will specify three or more pairs of long/lat values. For a point, just specify a single long/lat pair.</td></tr>
+		</table>
+		
+		<p>Here is an example of the <i>geometry</i> parameter. A polygon ("region1") and a point ("region2") are created in the dataset.</p>
+		
+		<pre>region1    points:-70,40, -80,40, -75,50
+region2    points:-75,45</pre>
+		
+		<p>One way to call the API is using the Linux <tt>wget</tt> command. Put all of the API parameters into a file, separating the parameters with ampersands:</p>
+		
+		<pre>key=test&dataset=test&geometry=
+region1    points:-70,40, -80,40, -75,50
+region2    points:-75,45</pre>
+
+		<p>Then run <tt>wget</tt>:</p>
+		
+		<pre>wget -O - --post-file <i>parametersfile.txt</i> http://www.govtrack.us/perl/wms/upload-geometry.cgi</pre>
+		
+		<h2>Uploading a Layer</h2>
+		
+		<p>Uploading a layer means uploading the coloring and other information needed to render the geospacial features in an image.
+		This can be accomplished by calling the API <tt>upload-styles.cgi</tt> with the following parameters:</p>
+		
+		<table border="1">
+		<tr><th>Parameter</th> <th>Explanation</th> </tr>
+		<tr><th>key</th> <td>The API key issued by Josh that gives you write-access to particular datasets and layers.</td></tr>
+		<tr><th>layer</th> <td>The name of the layer to modify. The contents of the layer are replaced with the new data.</td></tr>
+		<tr><th>dataset</th> <td>Optional. The name of the dataset containing the regions to include in this layer.</td></tr>
+		<tr><th>styles</th> <td>A table of region identifiers and style information. Each row represents a region (which may correspond to more than one polygon or point). Each row is tab-delimited. The first column is the identifier for a region contained in the dataset <i>dataset</i>. If the <i>dataset</i> parameter is not set, or to refer to a region in a different dataset, prefix the region identifier with the name of the dataset followed by the @-sign. The remaining columns specify style information. Each column is a <i>name:value</i> pair.</td></tr>
+		</table>
+		
+		<p>For the <i>styles</i> parameter, the following style attributes can be set:</p>
+		
+		<table border="1">
+		<tr><th>Style Name</th> <th>Explanation</th> <th>Example</th> </tr>
+		<tr><th>bordercolor</th> <td>The color of the outline of the shape. Leave out to not draw a border. An RGB color is used.</td> <td>255,0,0 (i.e. red)</td> </tr>
+		<tr><th>borderweight</th> <td>The thickness of the outline of the shape, in pixels. Leave out or set to zero to not draw a border.</td> <td>2</td> </tr>
+		<tr><th>fillcolor</th> <td>The color of the interior of the shape. Leave out to not shade the interior. An RGB color is used.</td> <td>255,0,0 (i.e. red)</td> </tr>
+		<tr><th>radius</th> <td>The radius of the circle, for point features only, in pixels.</td> <td>5</td> </tr>
+		<tr><th>textcolor</th> <td>The color of text label. An RGB color is used.</td> <td>255,0,0 (i.e. red)</td> </tr>
+		<tr><th>label</th> <td>The text of a label. Leave out to not draw a label.</td> <td>New York</td> </tr>
+		<tr><th>markerdata</th> <td>Arbitrary user data which is stored with the region and can be retreived through the <tt>get-markers.cgi</tt> API.</td> <td></td> </tr>
+		</table>
+		
+		<p>More information on RGB colors can be found <a href="http://en.wikipedia.org/wiki/RGB">here</a> and <a href="http://www.pitt.edu/~nisg/cis/web/cgi/rgb.html">here</a>.
+		The color components are specified on a 0-to-255 scale.</p>
+
+		<p>Here is an example of the <i>styles</i> parameter. Style information is set for "region1" and "region2" for the dataset created above, plus for the region representing New York, which is in the dataset "http://www.rdfabout.com/rdf/usgov/us/states" and is identified as "http://www.rdfabout.com/rdf/usgov/geo/us/ny".</p>
+		
+		<pre>region1    bordercolor:255,0,0 borderweight:1
+region2    bordercolor:0,0,255 borderweight:2  fillcolor:0,255,0   radius:5    label:ABC
+http://www.rdfabout.com/rdf/usgov/us/states@http://www.rdfabout.com/rdf/usgov/geo/us/ny bordercolor:255,0,0 borderweight:2</pre>
+		
+		<p>One way to call the API is using the Linux <tt>wget</tt> command. Put all of the API parameters into a file, separating the parameters with ampersands:</p>
+		
+		<pre>key=test&layer=test&dataset=test&styles=
+region1    bordercolor:255,0,0 borderweight:1
+region2    bordercolor:0,0,255 borderweight:2  fillcolor:0,255,0   radius:5    label:ABC
+http://www.rdfabout.com/rdf/usgov/us/states@http://www.rdfabout.com/rdf/usgov/geo/us/ny bordercolor:255,0,0 borderweight:2</pre>
+
+		<p>Then run <tt>wget</tt>:</p>
+		
+		<pre>wget -O - --post-file <i>parametersfile.txt</i> http://www.govtrack.us/perl/wms/upload-styles.cgi</pre>
+		
+		<p>Note that when using <tt>wget</tt>, the values of the parameters like label and markerdata must be URL-encoded.</p>
+		
+		<h2>Listing Regions in a Dataset or Layer</h2>
+		
+		<p>The <tt>list-regions.cgi</tt> API returns a table of region identifiers included in a layer or dataset. (A layer may not include all of
+		the regions in the datasets it uses). The API can return additional information
+		for each region. The following parameters can be used:</p>
+		
+		<table border="1">
+		<tr><th>Parameter</th> <th>Explanation</th> </tr>
+		<tr><th>layer</th> <td>Optional. Either the layer or dataset parameter must be given. The layer for which the regions should be listed.</td></tr>
+		<tr><th>dataset</th> <td>Optional. Either the layer or dataset parameter must be given. The dataset for which the regions should be listed.</td></tr>
+		<tr><th>fields</th> <td>The additional information to report for each region. This is a comma separated list potentially including "coord" (to return longitude and latitude pairs for a point in each region) and "area" (to report an area column for each region, in square miles), or an empty list to not report additional information.</td></tr>
+		<tr><th>header</th> <td>Optional. Set to 1 to include column headers in the output.</td></tr>
+		<tr><th>format</th> <td>Optional. Leave unspecified or set to 'text' to get a tab-separated table. Set to 'json' to get the results in a format suitable for JSON.</td></tr>
+		</table>
+		
+		<p>As an example, the following API call returns the region identifiers
+		for the dataset for the U.S. congressional districts and for each polygon
+		that makes up a part of a congressional district a central point within the district:</p>
+		
+		<p><a href="http://www.govtrack.us/perl/wms/list-regions.cgi?dataset=http://www.rdfabout.com/rdf/usgov/congress/house/110&amp;fields=coord&amp;header=1">http://www.govtrack.us/perl/wms/list-regions.cgi?dataset=http://www.rdfabout.com/rdf/usgov/congress/house/110&amp;fields=coord&amp;header=1</a></p>
+		
+		<p>If the fields parameter is empty, only a unique list of region identifiers
+		is returned, rather than a row for each polygon or point that makes up each region.</p>
+		
+	</body>
+</html>

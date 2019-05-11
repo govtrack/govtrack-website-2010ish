@@ -1,0 +1,146 @@
+<?xml-stylesheet xpath="/*/Templates" type="text/xsl" ?>
+<?mime-type application/atom+xml ?>
+<?cache public?>
+<?expires-in 6:00?>
+<atom:feed
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:xhtml="http://www.w3.org/1999/xhtml" 
+	>
+
+	<atom:title type="text"><description2/></atom:title>
+	<atom:subtitle type="text">Legislative events tracked by GovTrack.us in the following categories: <description/></atom:subtitle>
+	
+	<atom:author>
+		<atom:name>GovTrack.us</atom:name>
+		<atom:uri>http://www.govtrack.us/</atom:uri>
+		<atom:email>comments@govtrack.us</atom:email>
+	</atom:author>
+	<atom:generator uri="http://www.govtrack.us">www.GovTrack.us</atom:generator>
+	<atom:icon>http://www.govtrack.us/media/logo32x32.png</atom:icon>
+
+	<atom:id>http://www.govtrack.us/users/events.xpd?<query/></atom:id>
+	<feedlink/>
+	<atom:updated><date/></atom:updated>
+	<feedcategories/>
+
+	<items/>
+	
+	<Templates
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:http-context = "HttpContext"
+		xmlns:govtrack-util="assembly://GovTrackWeb/GovTrack.Web.Util"
+		xmlns:govtrack-login="assembly://GovTrackWeb/GovTrack.Web.Login"
+		xmlns:govtrack-events="assembly://GovTrackWeb/GovTrack.Web.Pages.Users.Events"
+		exclude-result-prefixes="http-context govtrack-util govtrack-login govtrack-events"
+		>
+		
+		<xsl:variable name="monitors" select="govtrack-events:GetMonitors()"/>
+		<xsl:variable name="events" select="govtrack-events:GetEvents(4, 1, 0)"/>
+		
+		<xsl:template match="old_date"><xsl:value-of select="govtrack-util:NowISOString()"/></xsl:template>
+		
+		<xsl:template match="date">
+			<xsl:if test="count($events)=0">
+				<xsl:value-of select="govtrack-util:TodayISOString()"/>
+			</xsl:if>
+			<xsl:for-each select="$events">
+				<xsl:sort select="date" order="descending"/>
+				<xsl:if test="position()=1">
+					<xsl:value-of select="govtrack-util:DTToISOString(date)"/>
+				</xsl:if>
+			</xsl:for-each>
+			<xsl:text>-05:00</xsl:text>
+		</xsl:template>
+		
+		<xsl:template match="description">
+			<xsl:for-each select="$monitors">
+				<xsl:variable name="m" select="govtrack-login:MonitorLink(.)"/>
+				<xsl:value-of select="$m/title"/>
+				<xsl:if test="not(position()=last())">, </xsl:if>
+			</xsl:for-each>			
+		</xsl:template>
+
+		<xsl:template match="feedcategories">
+			<xsl:for-each select="$monitors">
+				<xsl:variable name="m" select="govtrack-login:MonitorLink(.)"/>
+				<atom:category term="{$m/title}" label="{$m/title}"/>
+			</xsl:for-each>			
+		</xsl:template>
+
+		<xsl:template match="description2">
+			<xsl:choose>
+			<xsl:when test="count($monitors) &gt;= 2">
+				<xsl:text>GovTrack.us Tracked Events</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+			<xsl:for-each select="$monitors">
+				<xsl:variable name="m" select="govtrack-login:MonitorLink(.)"/>
+				<xsl:value-of select="$m/title"/>
+				<xsl:if test="not(position()=last())">, </xsl:if>
+			</xsl:for-each>
+			<xsl:text> -- Tracked by GovTrack.us</xsl:text>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:template>
+		
+		<xsl:template match="query">
+			<xsl:value-of select="govtrack-events:GetMonitorsEncodedFromQuery()"/>
+		</xsl:template>
+
+		<xsl:template match="feedlink">
+			<xsl:variable name="q" select="govtrack-events:GetMonitorsEncodedFromQuery()"/>
+			<atom:link href="http://www.govtrack.us/users/events.xpd?{$q}" type="text/html"/>
+			<atom:link rel="self" href="http://www.govtrack.us/users/events-atom.xpd?{$q}" type="application/atom+xml"/>
+		</xsl:template>
+
+		<xsl:template match="items" xml:space="preserve">
+			<xsl:for-each select="$events">
+				<xsl:sort select="date" order="descending"/>
+				
+				<atom:entry>
+					<atom:id><xsl:value-of select="link"/></atom:id>
+					<atom:updated><xsl:value-of select="govtrack-util:DTToISOString(date)"/>-05:00</atom:updated>
+					<xsl:for-each select="monitors/*">
+						<atom:category term="{text}" label="{text}"/>
+					</xsl:for-each>			
+					<atom:link href="{link}" type="text/html"/>
+					<atom:title type="text"><xsl:value-of select="typename"/>: <xsl:value-of select="title"/></atom:title>
+					<atom:content type="html" xml:lang="en" xml:space="default">
+						&lt;table&gt;
+						&lt;tr&gt;
+						&lt;td&gt;
+						<xsl:if test="not(summary = '')">
+							&lt;p&gt;<xsl:value-of select="summary"/>&lt;/p&gt;
+						</xsl:if>
+						<xsl:for-each select="specifics/*">
+							&lt;p&gt;
+							&lt;a href="<xsl:value-of select="link"/>"&gt;<xsl:value-of select="tag"/>&lt;/a&gt;
+							<xsl:if test="text">: <xsl:value-of select="text"/></xsl:if>
+							&lt;/p&gt;
+						</xsl:for-each>
+						<xsl:if test="not(http-context:param('hint')='no')">
+						&lt;p&gt;[This event matched these trackers:
+						<xsl:for-each select="monitors/*">
+							<xsl:if test="position()=last() and position() &gt; 1"> and </xsl:if>
+							&lt;a href="<xsl:value-of select="link"/>"&gt;<xsl:value-of select="text"/>&lt;/a&gt;
+							<xsl:if test="position() &lt; last() and position() &gt; 1">, </xsl:if>
+						</xsl:for-each>			
+						]&lt;/p&gt;
+						</xsl:if>
+						&lt;/td&gt;
+
+						<xsl:if test="image">
+							&lt;td&gt;
+								&lt;img src="<xsl:value-of select="image"/>" style="border: 1px solid #000088"/&gt;
+							&lt;/td&gt;
+						</xsl:if>
+
+						&lt;/tr&gt;
+						&lt;/table&gt;
+					</atom:content>
+				</atom:entry>
+			</xsl:for-each>
+		</xsl:template>
+	</Templates>
+</atom:feed>
+
